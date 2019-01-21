@@ -10,7 +10,7 @@ public class HomeController {
     @GetMapping("/")
     public String helloWorld(@RequestParam(required = false) String name) {
         if (name == null) {
-            return "Hello";
+            return "Jó munkát! :)";
         }
         return "Hello " + name;
     }
