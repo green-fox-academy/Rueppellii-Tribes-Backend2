@@ -3,11 +3,9 @@ package rueppellii.backend2.tribes.kingdom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rueppellii.backend2.tribes.user.TribesUser;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -20,5 +18,7 @@ public class Kingdom {
     private Long id;
     private String name;
 
+    @OneToOne
+    private TribesUser tribesUser;
 
 }
