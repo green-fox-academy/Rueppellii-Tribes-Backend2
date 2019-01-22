@@ -62,8 +62,23 @@ class KingdomServiceTest {
     @Test
     void saveKingdomWithNull() {
         Kingdom kingdom = new Kingdom();
+        ResponseEntity r = new ResponseEntity(HttpStatus.I_AM_A_TEAPOT);
+        assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
+    }
+
+    @Test
+    void saveKingdomWithEmptyName() {
+        Kingdom kingdom = new Kingdom();
         kingdom.setName("");
         ResponseEntity r = new ResponseEntity(HttpStatus.I_AM_A_TEAPOT);
+        assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
+    }
+
+    @Test
+    void saveKingdomWithValidName() {
+        Kingdom kingdom = new Kingdom();
+        kingdom.setName("Fillory");
+        ResponseEntity r = new ResponseEntity(HttpStatus.OK);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 }
