@@ -1,8 +1,10 @@
 package rueppellii.backend2.tribes.kingdom;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +16,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("Test")
 @SpringBootTest
-class KingdomServiceTest {
+public class KingdomServiceTest {
 
-    @Autowired
     private KingdomService kingdomService;
 
+    @Mock
+    public KingdomRepository kingdomRepository;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        kingdomService = new KingdomService(kingdomRepository);
+    }
+
     @Test
-    void saveKingdomWithNull() {
+    public void saveKingdomWithNull() {
         Kingdom kingdom = new Kingdom();
         ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
     @Test
-    void saveKingdomWithEmptyName() {
+    public void saveKingdomWithEmptyName() {
         Kingdom kingdom = new Kingdom();
         kingdom.setName("");
         ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -35,7 +45,7 @@ class KingdomServiceTest {
     }
 
     @Test
-    void saveKingdomWithValidName() {
+    public void saveKingdomWithValidName() {
         Kingdom kingdom = new Kingdom();
         kingdom.setName("Fillory");
         ResponseEntity r = new ResponseEntity(HttpStatus.OK);
