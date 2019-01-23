@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import rueppellii.backend2.tribes.security.services.UserPrinciple;
+
 import java.util.Date;
 
 import static rueppellii.backend2.tribes.security.SecurityConstants.EXPIRATION_TIME;

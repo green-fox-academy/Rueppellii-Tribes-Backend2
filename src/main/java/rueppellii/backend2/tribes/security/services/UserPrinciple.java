@@ -4,45 +4,36 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import rueppellii.backend2.tribes.user.ApplicationUser;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class UserPrinciple implements UserDetails {
+
+    //TODO ???
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private String username;
     @JsonIgnore
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrinciple(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrinciple(Long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
     }
 
     public static UserPrinciple build(ApplicationUser applicationUser) {
-        List<GrantedAuthority> authorities = applicationUser.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
 
         return new UserPrinciple(
                 applicationUser.getId(),
                 applicationUser.getUsername(),
-                applicationUser.getPassword(),
-                authorities
-        );
-
+                applicationUser.getPassword());
     }
 
     @Override

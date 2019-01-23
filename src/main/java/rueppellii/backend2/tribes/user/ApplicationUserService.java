@@ -16,15 +16,15 @@ public class ApplicationUserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<ApplicationUser> findByUsername(String username){
+    public Optional<ApplicationUser> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public Boolean existsByUsername(String username){
+    public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
-    public void save(ApplicationUser applicationUser){
+    public void save(ApplicationUser applicationUser) {
         userRepository.save(applicationUser);
     }
 

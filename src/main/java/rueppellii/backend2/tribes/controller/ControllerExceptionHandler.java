@@ -13,7 +13,7 @@ public class ControllerExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(UserNotFoundException.class)
-    ResponseEntity<ErrorMessage> notFoundHandler(UserNotFoundException ex){
+    ResponseEntity<ErrorMessage> notFoundHandler(UserNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(ex.getMessage()));
     }
 
