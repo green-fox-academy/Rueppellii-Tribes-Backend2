@@ -65,13 +65,14 @@ public class AuthRestAPIs {
         // Creating user's account and saving new kingdom
         Kingdom kingdom = new Kingdom();
         kingdom.setName(signUpRequest.getKingdom());
-        kingdomService.saveKingdom(kingdom);
+
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setUsername(signUpRequest.getUsername());
         applicationUser.setPassword(encoder.encode(signUpRequest.getPassword()));
         applicationUser.setKingdom(kingdom);
-
+        kingdom.setApplicationUser(applicationUser);
         applicationUserService.save(applicationUser);
+        kingdomService.saveKingdom(kingdom);
 
         return ResponseEntity.ok().body("User registered successfully!");
     }

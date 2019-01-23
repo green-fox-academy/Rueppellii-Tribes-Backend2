@@ -21,7 +21,7 @@ public class ApplicationUser {
     private String username;
     @NotBlank
     private String password;
-    @OneToOne
+    @OneToOne(mappedBy="applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
 
 }
