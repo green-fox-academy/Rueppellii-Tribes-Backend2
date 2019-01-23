@@ -21,6 +21,7 @@ public class ApplicationUser {
     private String username;
     @NotBlank
     private String password;
+    private String role;
     @OneToOne
     private Kingdom kingdom;
 

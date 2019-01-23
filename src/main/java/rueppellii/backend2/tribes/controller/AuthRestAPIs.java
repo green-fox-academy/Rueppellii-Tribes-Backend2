@@ -67,6 +67,7 @@ public class AuthRestAPIs {
         kingdom.setName(signUpRequest.getKingdom());
         kingdomService.saveKingdom(kingdom);
         ApplicationUser applicationUser = new ApplicationUser();
+        applicationUser.setRole("ROLE_USER");
         applicationUser.setUsername(signUpRequest.getUsername());
         applicationUser.setPassword(encoder.encode(signUpRequest.getPassword()));
         applicationUser.setKingdom(kingdom);
