@@ -7,9 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TribesApplication {
 
 
-  public static void main(String[] args) {
-    SpringApplication.run(TribesApplication.class, args);
-  }
-
+    public static void main(String[] args) {
+        SpringApplication.run(TribesApplication.class, args);
+    }
 }
 
