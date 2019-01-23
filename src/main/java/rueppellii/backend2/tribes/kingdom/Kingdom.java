@@ -21,6 +21,7 @@ public class Kingdom {
     @NotBlank
     private String name;
     @OneToOne
+    @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 
 }

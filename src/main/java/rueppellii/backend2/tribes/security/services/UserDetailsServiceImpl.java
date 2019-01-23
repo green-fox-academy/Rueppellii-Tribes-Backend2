@@ -12,7 +12,7 @@ import rueppellii.backend2.tribes.user.ApplicationUserService;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    ApplicationUserService applicationUserService;
+    private ApplicationUserService applicationUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
