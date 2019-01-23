@@ -11,17 +11,16 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Entity
 @Table(name = "users")
-public class TribesUser {
+public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
-
     @NotBlank
     private String username;
     @NotBlank
     private String password;
-
     @OneToOne
     private Kingdom kingdom;
 

@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+
 @Service
 public class KingdomService {
 
@@ -20,6 +22,6 @@ public class KingdomService {
             kingdomRepository.save(kingdom);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.kingdom;
+package rueppellii.backend2.tribes.exception;
 
 import javax.naming.AuthenticationException;
 
