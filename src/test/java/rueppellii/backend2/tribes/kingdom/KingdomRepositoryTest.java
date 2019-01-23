@@ -1,6 +1,6 @@
 package rueppellii.backend2.tribes.kingdom;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("Test")
 @DataJpaTest
-class KingdomRepositoryTest {
+public class KingdomRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;

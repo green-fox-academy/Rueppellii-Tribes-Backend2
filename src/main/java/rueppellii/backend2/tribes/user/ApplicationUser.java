@@ -21,7 +21,9 @@ public class ApplicationUser {
     private String username;
     @NotBlank
     private String password;
-    @OneToOne(mappedBy="applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private String role;
+    @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
+
 
 }

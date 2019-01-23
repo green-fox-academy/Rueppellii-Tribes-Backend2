@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.message.request.LoginForm;
@@ -66,6 +67,7 @@ public class AuthRestAPIs {
         Kingdom kingdom = new Kingdom();
         kingdom.setName(signUpRequest.getKingdom());
         ApplicationUser applicationUser = new ApplicationUser();
+        applicationUser.setRole("ROLE_USER");
         applicationUser.setUsername(signUpRequest.getUsername());
         applicationUser.setPassword(encoder.encode(signUpRequest.getPassword()));
         kingdom.setApplicationUser(applicationUser);
