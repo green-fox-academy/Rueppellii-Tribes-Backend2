@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class ApplicationUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
     @NotBlank
@@ -24,6 +24,4 @@ public class ApplicationUser {
     private String role;
     @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
-
-
 }
