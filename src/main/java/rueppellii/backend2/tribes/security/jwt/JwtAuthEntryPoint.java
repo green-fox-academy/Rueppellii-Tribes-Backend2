@@ -24,7 +24,6 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint, Serializable
                          AuthenticationException e)
             throws IOException, ServletException {
 
-
         ErrorResponse errorResponse = new ErrorResponse();
         ObjectMapper mapper = new ObjectMapper();
         errorResponse.setStatus("error");
@@ -34,7 +33,5 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint, Serializable
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         response.getWriter().write(responseMsg);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-
     }
 }

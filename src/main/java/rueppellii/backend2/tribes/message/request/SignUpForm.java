@@ -14,8 +14,6 @@ public class SignUpForm {
     @NotNull
     @NotBlank
     private String password;
-    @NotNull
-    @NotBlank
     private String kingdom;
 
 }
