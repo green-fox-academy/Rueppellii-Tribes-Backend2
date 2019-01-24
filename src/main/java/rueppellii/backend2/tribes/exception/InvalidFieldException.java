@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class InvalidSignUpFormException extends Exception {
+public class InvalidFieldException extends Exception {
 
     private List<FieldError> fieldErrorList;
 
-    public InvalidSignUpFormException(List<FieldError> fieldErrorList) {
+    public InvalidFieldException(List<FieldError> fieldErrorList) {
         this.fieldErrorList = fieldErrorList;
     }
 }

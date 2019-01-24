@@ -1,7 +1,6 @@
 package rueppellii.backend2.tribes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,11 +8,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import rueppellii.backend2.tribes.exception.InvalidSignUpFormException;
+import rueppellii.backend2.tribes.exception.InvalidPasswordException;
+import rueppellii.backend2.tribes.exception.InvalidFieldException;
 import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
+import rueppellii.backend2.tribes.exception.UserNotFoundException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.message.request.LoginForm;
@@ -25,7 +25,6 @@ import rueppellii.backend2.tribes.user.ApplicationUser;
 import rueppellii.backend2.tribes.user.ApplicationUserService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -48,29 +47,32 @@ public class AuthRestAPIs {
         this.kingdomService = kingdomService;
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginRequest) {
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginRequest,
+                                              BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFieldException(bindingResult.getFieldErrors());
+        }
+        if (applicationUserService.findByUsername(loginRequest.getUsername()).isPresent()) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtProvider.generateJwtToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+            String jwt = jwtProvider.generateJwtToken(authentication);
+            return ResponseEntity.ok(new JwtResponse(jwt));
+        }
+        throw new UserNotFoundException(loginRequest.getUsername());
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<SignUpResponse> registerUser(@RequestBody @Valid SignUpForm signUpRequest,
                                                        BindingResult bindingResult) throws Exception {
-
-        if(bindingResult.hasErrors()){
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            throw new InvalidSignUpFormException(fieldErrors);
+        if (bindingResult.hasErrors()) {
+            throw new InvalidFieldException(bindingResult.getFieldErrors());
         }
         if (!(applicationUserService.existsByUsername(signUpRequest.getUsername()))) {
 
@@ -89,6 +91,6 @@ public class AuthRestAPIs {
                     applicationUser.getUsername(),
                     applicationUser.getKingdom().getId()));
         }
-        throw new UserNameIsTakenException("Username already taken, please choose an other one.");
+        throw new UserNameIsTakenException();
     }
 }
