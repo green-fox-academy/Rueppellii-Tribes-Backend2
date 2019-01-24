@@ -22,7 +22,7 @@ class KingdomServiceTest {
     @Test
     void saveKingdomWithNull() {
         Kingdom kingdom = new Kingdom();
-        ResponseEntity r = new ResponseEntity(HttpStatus.I_AM_A_TEAPOT);
+        ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
@@ -30,7 +30,7 @@ class KingdomServiceTest {
     void saveKingdomWithEmptyName() {
         Kingdom kingdom = new Kingdom();
         kingdom.setName("");
-        ResponseEntity r = new ResponseEntity(HttpStatus.I_AM_A_TEAPOT);
+        ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
