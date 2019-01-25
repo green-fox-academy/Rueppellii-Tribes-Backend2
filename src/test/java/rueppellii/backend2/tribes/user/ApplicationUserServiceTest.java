@@ -36,7 +36,7 @@ class ApplicationUserServiceTest {
     private ApplicationUserRepository applicationUserRepository;
 
     @BeforeEach
-    public void init() {
+    void init() {
         applicationUser = new ApplicationUser();
         applicationUser.setUsername("TestUser");
         applicationUser.setPassword("password");
