@@ -16,8 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("Test")
 @SpringBootTest
-class KingdomServiceTest {
-
+public class KingdomServiceTest {
 
     private KingdomService kingdomService;
 
@@ -26,19 +25,20 @@ class KingdomServiceTest {
 
     @Before
     public void init(){
+
         MockitoAnnotations.initMocks(this);
         kingdomService = new KingdomService(kingdomRepository);
     }
 
     @Test
-    void saveKingdomWithNull() {
+    public void saveKingdomWithNull() {
         Kingdom kingdom = new Kingdom();
         ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
     @Test
-    void saveKingdomWithEmptyName() {
+    public void saveKingdomWithEmptyName() {
         Kingdom kingdom = new Kingdom();
         kingdom.setName("");
         ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -46,7 +46,7 @@ class KingdomServiceTest {
     }
 
     @Test
-    void saveKingdomWithValidName() {
+    public void saveKingdomWithValidName() {
         Kingdom kingdom = new Kingdom();
         kingdom.setName("Fillory");
         ResponseEntity r = new ResponseEntity(HttpStatus.OK);
