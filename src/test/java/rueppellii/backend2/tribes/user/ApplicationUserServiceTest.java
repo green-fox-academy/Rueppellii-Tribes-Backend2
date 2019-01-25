@@ -20,11 +20,17 @@ import rueppellii.backend2.tribes.security.jwt.JwtProvider;
 class ApplicationUserServiceTest {
 
     private ApplicationUserService applicationUserService;
-    private PasswordEncoder encoder;
-    private KingdomService kingdomService;
-    private JwtProvider jwtProvider;
-    private AuthenticationManager authenticationManager;
     private ApplicationUser applicationUser;
+
+    @Mock
+    private PasswordEncoder encoder;
+    @Mock
+    private KingdomService kingdomService;
+    @Mock
+    private JwtProvider jwtProvider;
+    @Mock
+    private AuthenticationManager authenticationManager;
+
 
     @Mock
     private ApplicationUserRepository applicationUserRepository;
