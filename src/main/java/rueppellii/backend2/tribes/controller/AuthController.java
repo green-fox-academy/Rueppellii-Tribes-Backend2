@@ -28,24 +28,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm,
                                               BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
-        if (applicationUserService.existsByUsername(loginForm.getUsername())) {
-            return applicationUserService.authenticateApplicationUser(loginForm);
-        }
-        throw new UserNotFoundException(loginForm.getUsername());
+
+        return applicationUserService.authenticateApplicationUser(loginForm, bindingResult);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm,
-                                                       BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
-        if (!(applicationUserService.existsByUsername(signUpForm.getUsername()))) {
-            return applicationUserService.saveApplicationUser(signUpForm);
-        }
-        throw new UserNameIsTakenException();
+                                          BindingResult bindingResult)
+            throws InvalidFieldException, UserNameIsTakenException {
+
+        return applicationUserService.saveApplicationUser(signUpForm, bindingResult);
     }
 }
