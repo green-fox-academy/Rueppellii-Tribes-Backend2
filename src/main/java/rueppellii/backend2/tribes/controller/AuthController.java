@@ -15,13 +15,13 @@ import rueppellii.backend2.tribes.user.ApplicationUserService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
-public class AuthRestAPIs {
+@RequestMapping("/auth")
+public class AuthController {
 
     private ApplicationUserService applicationUserService;
 
     @Autowired
-    public AuthRestAPIs(ApplicationUserService applicationUserService) {
+    public AuthController(ApplicationUserService applicationUserService) {
         this.applicationUserService = applicationUserService;
     }
 

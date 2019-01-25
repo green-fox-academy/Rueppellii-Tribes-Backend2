@@ -6,6 +6,7 @@ import rueppellii.backend2.tribes.kingdom.Kingdom;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,12 +19,12 @@ public class ApplicationUser {
     @Column(name = "user_id")
     private Long id;
     @NotBlank
+    @NotNull
     private String username;
     @NotBlank
+    @NotNull
     private String password;
     private String role;
     @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
-
-
 }
