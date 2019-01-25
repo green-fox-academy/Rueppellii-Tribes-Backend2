@@ -27,15 +27,20 @@ class ApplicationUserServiceTest {
     private KingdomService kingdomService;
     private JwtProvider jwtProvider;
     private AuthenticationManager authenticationManager;
+    private ApplicationUser applicationUser;
 
     @Mock
     private ApplicationUserRepository applicationUserRepository;
 
     @BeforeEach
     public void init() {
+        applicationUser = new ApplicationUser();
+        applicationUser.setUsername("TestUser");
+        applicationUser.setPassword("password");
         MockitoAnnotations.initMocks(this);
         applicationUserService = new ApplicationUserService(applicationUserRepository, encoder, kingdomService, jwtProvider, authenticationManager);
     }
+
     @Test
     void findByUsername() {
     }
