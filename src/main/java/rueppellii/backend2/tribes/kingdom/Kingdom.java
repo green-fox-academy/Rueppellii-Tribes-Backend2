@@ -7,6 +7,7 @@ import rueppellii.backend2.tribes.user.ApplicationUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,10 +19,10 @@ public class Kingdom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     @NotBlank
     private String name;
     @OneToOne
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
-
 }
