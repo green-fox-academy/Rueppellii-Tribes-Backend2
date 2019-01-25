@@ -1,8 +1,6 @@
 package rueppellii.backend2.tribes.security.jwt;
 
 import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import rueppellii.backend2.tribes.security.services.UserPrinciple;
@@ -14,8 +12,6 @@ import static rueppellii.backend2.tribes.security.SecurityConstants.SECRET;
 
 @Component
 public class JwtProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
     private String jwtSecret = SECRET;
     private Long jwtExpiration = EXPIRATION_TIME;

@@ -8,14 +8,12 @@ import javax.validation.constraints.*;
 @Getter
 @Setter
 public class SignUpForm {
-
+    @NotNull
     @NotBlank
     private String username;
-
+    @NotNull
     @NotBlank
     private String password;
-
-    @NotBlank
     private String kingdom;
 
 }

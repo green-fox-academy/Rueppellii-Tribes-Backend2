@@ -1,21 +1,48 @@
 package rueppellii.backend2.tribes.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import rueppellii.backend2.tribes.exception.ErrorMessage;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.exception.InvalidPasswordException;
+import rueppellii.backend2.tribes.exception.InvalidFieldException;
+import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
+import rueppellii.backend2.tribes.message.response.ErrorResponse;
 import rueppellii.backend2.tribes.exception.UserNotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler(UserNotFoundException.class)
-    ResponseEntity<ErrorMessage> notFoundHandler(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(ex.getMessage()));
+    @ExceptionHandler(UserNameIsTakenException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ErrorResponse usernameIsTakenHandler() {
+        return new ErrorResponse("Username already taken, please choose an other one.");
     }
 
+    @ResponseBody
+    @ExceptionHandler(InvalidFieldException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse invalidSignUpFormHandler(InvalidFieldException ex) {
+        List<FieldError> fieldErrors = ex.getFieldErrorList();
+        String errors = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
+        String errorMsg = "Missing parameter(s): " + errors + "!";
+        return new ErrorResponse(errorMsg);
+    }
 
+    @ResponseBody
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse notFoundHandler(UserNotFoundException ex) {
+        return new ErrorResponse("No such user: " + ex.getMessage() + "!");
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidPasswordException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    ErrorResponse invalidPasswordHandler() {
+        return new ErrorResponse("Wrong Password");
+    }
 }
