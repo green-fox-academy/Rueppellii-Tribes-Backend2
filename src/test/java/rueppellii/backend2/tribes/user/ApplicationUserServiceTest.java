@@ -44,4 +44,23 @@ class ApplicationUserServiceTest {
         applicationUserService = new ApplicationUserService(applicationUserRepository, encoder, kingdomService, jwtProvider, authenticationManager);
     }
 
+    @Test
+    void existsByUsernameTest() {
+
+    }
+
+    @Test
+    void saveApplicationUserTest() {
+
+    }
+
+    @Test
+    void kingdomNameValidationTest() {
+
+    }
+
+    @Test
+    void authenticateApplicationUserTest() {
+
+    }
 }
