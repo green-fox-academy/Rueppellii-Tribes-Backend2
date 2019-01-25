@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class ApplicationUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
     @NotBlank
