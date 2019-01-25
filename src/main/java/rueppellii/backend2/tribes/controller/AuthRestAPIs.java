@@ -20,7 +20,7 @@ import rueppellii.backend2.tribes.user.ApplicationUser;
 import rueppellii.backend2.tribes.user.ApplicationUserService;
 
 @RestController
-@RequestMapping("/api/auth")
+//@RequestMapping("/api/auth")
 public class AuthRestAPIs {
 
     private AuthenticationManager authenticationManager;
@@ -76,5 +76,10 @@ public class AuthRestAPIs {
         kingdomService.saveKingdom(kingdom);
 
         return ResponseEntity.ok().body("User registered successfully!");
+    }
+
+    @GetMapping("/")
+    public String proba() {
+        return "Proba";
     }
 }
