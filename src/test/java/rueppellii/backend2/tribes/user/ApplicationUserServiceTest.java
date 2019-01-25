@@ -30,8 +30,6 @@ class ApplicationUserServiceTest {
     private JwtProvider jwtProvider;
     @Mock
     private AuthenticationManager authenticationManager;
-
-
     @Mock
     private ApplicationUserRepository applicationUserRepository;
 
