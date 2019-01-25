@@ -30,13 +30,11 @@ class ApplicationUserServiceTest {
     private JwtProvider jwtProvider;
     @Mock
     private AuthenticationManager authenticationManager;
-
-
     @Mock
     private ApplicationUserRepository applicationUserRepository;
 
     @BeforeEach
-    public void init() {
+    void init() {
         applicationUser = new ApplicationUser();
         applicationUser.setUsername("TestUser");
         applicationUser.setPassword("password");
