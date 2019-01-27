@@ -7,6 +7,8 @@
     <bytecodeTargetLevel>
       <module name="rueppellii.backend2.tribes.main" target="1.8" />
       <module name="rueppellii.backend2.tribes.test" target="1.8" />
+      <module name="tribes_main" target="1.8" />
+      <module name="tribes_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

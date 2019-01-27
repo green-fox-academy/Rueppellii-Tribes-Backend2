@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rueppellii.backend2.tribes.iml" filepath="$PROJECT_DIR$/.idea/modules/rueppellii.backend2.tribes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tribes.iml" filepath="$PROJECT_DIR$/.idea/modules/tribes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tribes_main.iml" filepath="$PROJECT_DIR$/.idea/modules/tribes_main.iml" group="tribes" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tribes_test.iml" filepath="$PROJECT_DIR$/.idea/modules/tribes_test.iml" group="tribes" />
     </modules>
   </component>
 </project>

@@ -2,10 +2,9 @@ package rueppellii.backend2.tribes.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import rueppellii.backend2.tribes.exception.InvalidFieldException;
 import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
 import rueppellii.backend2.tribes.exception.UserNotFoundException;
 import rueppellii.backend2.tribes.message.request.LoginForm;
@@ -26,17 +25,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm,
-                                              BindingResult bindingResult) throws Exception {
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm)
+            throws MethodArgumentNotValidException, UserNotFoundException {
 
-        return applicationUserService.authenticateApplicationUser(loginForm, bindingResult);
+        return applicationUserService.authenticateApplicationUser(loginForm);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm,
-                                          BindingResult bindingResult)
-            throws InvalidFieldException, UserNameIsTakenException {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm)
+            throws MethodArgumentNotValidException, UserNameIsTakenException {
 
-        return applicationUserService.saveApplicationUser(signUpForm, bindingResult);
+        return applicationUserService.saveApplicationUser(signUpForm);
     }
 }
