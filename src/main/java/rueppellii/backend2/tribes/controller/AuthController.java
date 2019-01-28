@@ -3,6 +3,7 @@ package rueppellii.backend2.tribes.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.exception.InvalidFieldException;
@@ -26,26 +27,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm,
-                                              BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
-        if (applicationUserService.existsByUsername(loginForm.getUsername())) {
-            return applicationUserService.authenticateApplicationUser(loginForm);
-        }
-        throw new UserNotFoundException(loginForm.getUsername());
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm)
+            throws MethodArgumentNotValidException, UserNotFoundException {
+
+        return applicationUserService.authenticateApplicationUser(loginForm);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm,
-                                                       BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
-        if (!(applicationUserService.existsByUsername(signUpForm.getUsername()))) {
-            return applicationUserService.saveApplicationUser(signUpForm);
-        }
-        throw new UserNameIsTakenException();
+    public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm)
+            throws MethodArgumentNotValidException, UserNameIsTakenException {
+
+        return applicationUserService.saveApplicationUser(signUpForm);
     }
 }

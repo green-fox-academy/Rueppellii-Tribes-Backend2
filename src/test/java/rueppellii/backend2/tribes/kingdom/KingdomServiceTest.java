@@ -18,37 +18,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class KingdomServiceTest {
 
     private KingdomService kingdomService;
+    private Kingdom kingdom;
+    private ResponseEntity r;
 
     @Mock
-    public KingdomRepository kingdomRepository;
+    private KingdomRepository kingdomRepository;
 
     @BeforeEach
-    public void init(){
-
+    void init(){
+        kingdom = new Kingdom();
         MockitoAnnotations.initMocks(this);
         kingdomService = new KingdomService(kingdomRepository);
     }
 
     @Test
-    public void saveKingdomWithNull() {
-        Kingdom kingdom = new Kingdom();
-        ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
+    void saveKingdomWithNull() {
+        r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
     @Test
-    public void saveKingdomWithEmptyName() {
-        Kingdom kingdom = new Kingdom();
+    void saveKingdomWithEmptyName() {
         kingdom.setName("");
-        ResponseEntity r = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 
     @Test
-    public void saveKingdomWithValidName() {
-        Kingdom kingdom = new Kingdom();
+    void saveKingdomWithValidName() {
         kingdom.setName("Fillory");
-        ResponseEntity r = new ResponseEntity(HttpStatus.OK);
+        r = new ResponseEntity(HttpStatus.OK);
         assertThat(kingdomService.saveKingdom(kingdom)).isEqualTo(r);
     }
 }

@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.user;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import rueppellii.backend2.tribes.exception.InvalidFieldException;
+import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
+import rueppellii.backend2.tribes.exception.UserNotFoundException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.message.request.LoginForm;
@@ -36,30 +42,31 @@ public class ApplicationUserService {
         this.authenticationManager = authenticationManager;
     }
 
-    public Optional<ApplicationUser> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
-    public ResponseEntity<?> saveApplicationUser(SignUpForm signUpForm) {
+    public ResponseEntity<?> saveApplicationUser(SignUpForm signUpForm)
+            throws MethodArgumentNotValidException, UserNameIsTakenException {
 
-        Kingdom kingdom = new Kingdom();
-        kingdom.setName(kingdomNameValidation(signUpForm.getKingdom(), signUpForm.getUsername()));
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setRole("ROLE_USER");
-        applicationUser.setUsername(signUpForm.getUsername());
-        applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
-        kingdom.setApplicationUser(applicationUser);
-        applicationUser.setKingdom(kingdom);
-        userRepository.save(applicationUser);
-        kingdomService.saveKingdom(kingdom);
+        if (!(existsByUsername(signUpForm.getUsername()))) {
 
-        return ResponseEntity.ok(new SignUpResponse(applicationUser.getId(),
-                applicationUser.getUsername(),
-                applicationUser.getKingdom().getId()));
+            Kingdom kingdom = new Kingdom();
+            kingdom.setName(kingdomNameValidation(signUpForm.getKingdom(), signUpForm.getUsername()));
+            ApplicationUser applicationUser = new ApplicationUser();
+            applicationUser.setRole("ROLE_USER");
+            applicationUser.setUsername(signUpForm.getUsername());
+            applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
+            kingdom.setApplicationUser(applicationUser);
+            applicationUser.setKingdom(kingdom);
+            userRepository.save(applicationUser);
+            kingdomService.saveKingdom(kingdom);
+
+            return ResponseEntity.ok(new SignUpResponse(applicationUser.getId(),
+                    applicationUser.getUsername(),
+                    applicationUser.getKingdom().getId()));
+        }
+        throw new UserNameIsTakenException();
     }
 
     private String kingdomNameValidation(String kingdomName, String userName) {
@@ -69,14 +76,19 @@ public class ApplicationUserService {
         return kingdomName;
     }
 
-    public ResponseEntity<?> authenticateApplicationUser(LoginForm loginForm) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginForm.getUsername(),
-                        loginForm.getPassword()));
+    public ResponseEntity<?> authenticateApplicationUser(LoginForm loginForm)
+            throws MethodArgumentNotValidException, UserNotFoundException {
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateJwtToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        if (existsByUsername(loginForm.getUsername())) {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginForm.getUsername(),
+                            loginForm.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtProvider.generateJwtToken(authentication);
+            return ResponseEntity.ok(new JwtResponse(jwt));
+        }
+        throw new UserNotFoundException(loginForm.getUsername());
     }
 }
