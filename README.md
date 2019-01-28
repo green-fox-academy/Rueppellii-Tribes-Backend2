@@ -7,9 +7,11 @@ Group memebers: Lili, Andras, Archi, Gabor
 
 [Heroku Link](https://tribezzz.herokuapp.com/)
 
-Environment Variables: <br>
+### Environment Variables
 
 **Database connection**
+
+First create database "tribes" in mySQL
 
 | Key | Value |
 | --- | ----- | 
@@ -28,6 +30,6 @@ There are 3 Spring profiles available:
 
 | Profile | Purpose |
 | ------- | ------- |
-|Production | with Flyway set up and mySQL database |
+|Production | with Flyway set up, mySQL database |
 |Test | with H2 database |
 |Heroku | Flyway is disabled, PostgreSQL database |
