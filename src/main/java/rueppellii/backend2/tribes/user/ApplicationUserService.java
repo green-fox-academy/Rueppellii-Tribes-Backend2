@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.exception.InvalidFieldException;
 import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
 import rueppellii.backend2.tribes.exception.UserNotFoundException;
@@ -41,20 +42,13 @@ public class ApplicationUserService {
         this.authenticationManager = authenticationManager;
     }
 
-    public Optional<ApplicationUser> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     public Boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
-    public ResponseEntity<?> saveApplicationUser(SignUpForm signUpForm, BindingResult bindingResult)
-            throws InvalidFieldException, UserNameIsTakenException {
+    public ResponseEntity<?> saveApplicationUser(SignUpForm signUpForm)
+            throws MethodArgumentNotValidException, UserNameIsTakenException {
 
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
         if (!(existsByUsername(signUpForm.getUsername()))) {
 
             Kingdom kingdom = new Kingdom();
@@ -82,12 +76,9 @@ public class ApplicationUserService {
         return kingdomName;
     }
 
-    public ResponseEntity<?> authenticateApplicationUser(LoginForm loginForm, BindingResult bindingResult)
-            throws InvalidFieldException, UserNotFoundException {
+    public ResponseEntity<?> authenticateApplicationUser(LoginForm loginForm)
+            throws MethodArgumentNotValidException, UserNotFoundException {
 
-        if (bindingResult.hasErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldErrors());
-        }
         if (existsByUsername(loginForm.getUsername())) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
