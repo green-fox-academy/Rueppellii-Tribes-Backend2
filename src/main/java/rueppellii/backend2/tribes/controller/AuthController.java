@@ -28,13 +28,13 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginForm loginForm)
             throws MethodArgumentNotValidException, UserNotFoundException {
 
-        return applicationUserService.authenticateApplicationUser(loginForm);
+        return ResponseEntity.ok(applicationUserService.authenticateApplicationUser(loginForm));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody @Valid SignUpForm signUpForm)
             throws MethodArgumentNotValidException, UserNameIsTakenException {
 
-        return applicationUserService.saveApplicationUser(signUpForm);
+        return ResponseEntity.ok(applicationUserService.saveApplicationUser(signUpForm));
     }
 }

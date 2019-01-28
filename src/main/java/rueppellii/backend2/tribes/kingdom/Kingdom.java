@@ -22,7 +22,7 @@ public class Kingdom {
     @NotNull
     @NotBlank
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 }
