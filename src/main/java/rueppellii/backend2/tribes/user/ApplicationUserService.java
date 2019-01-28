@@ -49,7 +49,7 @@ public class ApplicationUserService {
             applicationUser.setRole("ROLE_USER");
             applicationUser.setUsername(signUpForm.getUsername());
             applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
-            applicationUser.setKingdom(createNewKingdom(signUpForm));
+            applicationUser.setKingdom(createNewKingdomAndSetName(signUpForm));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
             userRepository.save(applicationUser);
 
@@ -60,16 +60,13 @@ public class ApplicationUserService {
         throw new UserNameIsTakenException();
     }
 
-    private String kingdomNameValidation(String kingdomName, String userName) {
-        if (kingdomName.isEmpty()) {
-            return userName + "'s Kingdom";
-        }
-        return kingdomName;
-    }
-
-    private Kingdom createNewKingdom(SignUpForm signUpForm) {
+    private Kingdom createNewKingdomAndSetName(SignUpForm signUpForm) {
         Kingdom kingdom = new Kingdom();
-        kingdom.setName(kingdomNameValidation(signUpForm.getKingdom(), signUpForm.getUsername()));
+        if (signUpForm.getKingdom().isEmpty()) {
+            kingdom.setName(signUpForm.getUsername() + "'s Kingdom");
+        } else {
+            kingdom.setName(signUpForm.getKingdom());
+        }
         return kingdom;
     }
 
