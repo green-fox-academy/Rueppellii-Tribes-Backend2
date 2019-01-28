@@ -1,7 +1,9 @@
 package rueppellii.backend2.tribes.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.exception.InvalidPasswordException;
 import rueppellii.backend2.tribes.exception.InvalidFieldException;
@@ -23,10 +25,10 @@ public class ControllerExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(InvalidFieldException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse invalidSignUpFormHandler(InvalidFieldException ex) {
-        List<FieldError> fieldErrors = ex.getFieldErrorList();
+    ErrorResponse invalidFieldHandler(MethodArgumentNotValidException ex) {
+        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         String errors = fieldErrors.stream().map(FieldError::getField).collect(Collectors.joining(", "));
         String errorMsg = "Missing parameter(s): " + errors + "!";
         return new ErrorResponse(errorMsg);
