@@ -9,8 +9,25 @@ Group memebers: Lili, Andras, Archi, Gabor
 
 Environment Variables: <br>
 
-spring.profiles.active=${PROFILE} (<- should be Production for now) <br>
-spring.datasource.url=${JDBC_DATABASE_URL} (<- the name of your local database) <br>
-spring.datasource.username=${JDBC_DATABASE_NAME} (<- your mySQL username) <br>
-spring.datasource.password=${JDBC_DATABASE_PASSWORD} (<- your mySQL password) <br>
-spring.jpa.properties.hibernate.dialect=${HIBERNATE_DIALECT} (<- should be mySQL because of Flyway)
+**Database connection**
+
+| Key | Value |
+| --- | ----- | 
+|JDBC_DATABASE_URL | jdbc:mysql://localhost/tribes |
+|JDBC_DATABASE_NAME | *your local mysql username* |
+|JDBC_DATABASE_PASSWORD | *your local mysql password* |
+|HIBERNATE_DIALECT | org.hibernate.dialect.MySQL57Dialect |
+
+**Spring profiles**
+
+| Key | Value |
+| --- | ----- | 
+|PROFILE | Production or Test or Heroku |
+
+There are 3 Spring profiles available: 
+
+| Profile | Purpose |
+| ------- | ------- |
+|Production | with Flyway set up and mySQL database |
+|Test | with H2 database |
+|Heroku | Flyway is disabled, PostgreSQL database |
