@@ -1,6 +1,5 @@
 package rueppellii.backend2.tribes.user;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
-import rueppellii.backend2.tribes.message.request.LoginForm;
 import rueppellii.backend2.tribes.message.request.SignUpForm;
 import rueppellii.backend2.tribes.message.response.SignUpResponse;
 import rueppellii.backend2.tribes.security.jwt.JwtProvider;
@@ -33,8 +31,6 @@ class ApplicationUserServiceTest {
     private ApplicationUser applicationUser;
 
     private ResponseEntity response;
-
-    private LoginForm loginForm;
 
     private SignUpForm signUpForm;
 
