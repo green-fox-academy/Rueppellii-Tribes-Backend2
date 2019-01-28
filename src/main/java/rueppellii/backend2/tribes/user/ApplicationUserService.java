@@ -9,9 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import rueppellii.backend2.tribes.exception.InvalidFieldException;
 import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
 import rueppellii.backend2.tribes.exception.UserNotFoundException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
@@ -21,8 +19,6 @@ import rueppellii.backend2.tribes.message.request.SignUpForm;
 import rueppellii.backend2.tribes.message.response.JwtResponse;
 import rueppellii.backend2.tribes.message.response.SignUpResponse;
 import rueppellii.backend2.tribes.security.jwt.JwtProvider;
-
-import java.util.Optional;
 
 @Service
 public class ApplicationUserService {
