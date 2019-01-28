@@ -17,11 +17,4 @@ public class KingdomService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public ResponseEntity saveKingdom(Kingdom kingdom) {
-        if (kingdom.getName() != null && !kingdom.getName().isEmpty()) {
-            kingdomRepository.save(kingdom);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
 }
