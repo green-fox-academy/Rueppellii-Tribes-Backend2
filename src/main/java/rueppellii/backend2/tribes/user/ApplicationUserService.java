@@ -25,7 +25,6 @@ public class ApplicationUserService {
 
     private ApplicationUserRepository userRepository;
     private PasswordEncoder encoder;
-    private KingdomService kingdomService;
     private JwtProvider jwtProvider;
     private AuthenticationManager authenticationManager;
 
@@ -33,7 +32,6 @@ public class ApplicationUserService {
     public ApplicationUserService(ApplicationUserRepository userRepository, PasswordEncoder encoder, KingdomService kingdomService, JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.kingdomService = kingdomService;
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
     }
@@ -42,25 +40,22 @@ public class ApplicationUserService {
         return userRepository.existsByUsername(username);
     }
 
-    public ResponseEntity<?> saveApplicationUser(SignUpForm signUpForm)
+    public SignUpResponse saveApplicationUser(SignUpForm signUpForm)
             throws MethodArgumentNotValidException, UserNameIsTakenException {
 
         if (!(existsByUsername(signUpForm.getUsername()))) {
 
-            Kingdom kingdom = new Kingdom();
-            kingdom.setName(kingdomNameValidation(signUpForm.getKingdom(), signUpForm.getUsername()));
             ApplicationUser applicationUser = new ApplicationUser();
             applicationUser.setRole("ROLE_USER");
             applicationUser.setUsername(signUpForm.getUsername());
             applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
-            kingdom.setApplicationUser(applicationUser);
-            applicationUser.setKingdom(kingdom);
+            applicationUser.setKingdom(createNewKingdom(signUpForm));
+            applicationUser.getKingdom().setApplicationUser(applicationUser);
             userRepository.save(applicationUser);
-            kingdomService.saveKingdom(kingdom);
 
-            return ResponseEntity.ok(new SignUpResponse(applicationUser.getId(),
+            return new SignUpResponse(applicationUser.getId(),
                     applicationUser.getUsername(),
-                    applicationUser.getKingdom().getId()));
+                    applicationUser.getKingdom().getId());
         }
         throw new UserNameIsTakenException();
     }
@@ -72,7 +67,13 @@ public class ApplicationUserService {
         return kingdomName;
     }
 
-    public ResponseEntity<?> authenticateApplicationUser(LoginForm loginForm)
+    private Kingdom createNewKingdom(SignUpForm signUpForm) {
+        Kingdom kingdom = new Kingdom();
+        kingdom.setName(kingdomNameValidation(signUpForm.getKingdom(), signUpForm.getUsername()));
+        return kingdom;
+    }
+
+    public JwtResponse authenticateApplicationUser(LoginForm loginForm)
             throws MethodArgumentNotValidException, UserNotFoundException {
 
         if (existsByUsername(loginForm.getUsername())) {
@@ -83,7 +84,7 @@ public class ApplicationUserService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtProvider.generateJwtToken(authentication);
-            return ResponseEntity.ok(new JwtResponse(jwt));
+            return new JwtResponse(jwt);
         }
         throw new UserNotFoundException(loginForm.getUsername());
     }
