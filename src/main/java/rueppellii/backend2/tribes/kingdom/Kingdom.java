@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.kingdom;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class Kingdom {
     @NotNull
     @NotBlank
     private String name;
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;

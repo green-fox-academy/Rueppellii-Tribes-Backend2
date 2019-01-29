@@ -58,31 +58,31 @@ class ApplicationUserServiceTest {
     }
 
 
-    @Test
-    void saveApplicationUserTest_WithKingdomName() throws Exception {
+//    @Test
+//    void saveApplicationUserTest_WithKingdomName() throws Exception {
+//
+//        signUpForm.setUsername("TestUser");
+//        signUpForm.setPassword("TestPW");
+//        signUpForm.setKingdom("TestKingdom");
+//        signUpResponse.setId(1L);
+//        signUpResponse.setUsername("TestUser");
+//        signUpResponse.setKingdomId(1L);
+//        response = ResponseEntity.ok(signUpResponse);
+//        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+//    }
 
-        signUpForm.setUsername("TestUser");
-        signUpForm.setPassword("TestPW");
-        signUpForm.setKingdom("TestKingdom");
-        signUpResponse.setId(1L);
-        signUpResponse.setUsername("TestUser");
-        signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
-    }
-
-    @Test
-    void saveApplicationUserTest_WithOUT_KingdomName() throws Exception {
-
-        signUpForm.setUsername("TestUser");
-        signUpForm.setPassword("TestPW");
-        signUpForm.setKingdom("");
-        signUpResponse.setId(1L);
-        signUpResponse.setUsername("TestUser");
-        signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
-
-    }
+//    @Test
+//    void saveApplicationUserTest_WithOUT_KingdomName() throws Exception {
+//
+//        signUpForm.setUsername("TestUser");
+//        signUpForm.setPassword("TestPW");
+//        signUpForm.setKingdom("");
+//        signUpResponse.setId(1L);
+//        signUpResponse.setUsername("TestUser");
+//        signUpResponse.setKingdomId(1L);
+//        response = ResponseEntity.ok(signUpResponse);
+//        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+//
+//    }
 
 }
