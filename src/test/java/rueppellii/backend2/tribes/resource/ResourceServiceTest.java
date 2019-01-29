@@ -36,14 +36,14 @@ public class ResourceServiceTest {
 
     @Test
     void saveResourceWithValidType() {
-        resource.setType(ResourceType.RESOURCE_FOOD);
+        resource.setResource_type(ResourceType.RESOURCE_FOOD);
         r = new ResponseEntity(HttpStatus.OK);
         assertThat(resourceService.saveResource(resource)).isEqualTo(r);
     }
 
     @Test
     void saveResourceWithWrongType() {
-        resource.setType(ResourceType.RESOURCE_WOOD);
+        resource.setResource_type(ResourceType.RESOURCE_WOOD);
         r = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(resourceService.saveResource(resource)).isEqualTo(r);
     }
