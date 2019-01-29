@@ -3,11 +3,14 @@ package rueppellii.backend2.tribes.kingdom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.user.ApplicationUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -25,4 +28,8 @@ public class Kingdom {
     @OneToOne
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
+
+    @OneToMany(mappedBy = "kingdom")
+    public List<Resource> resource;
+
 }
