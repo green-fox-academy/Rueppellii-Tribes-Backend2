@@ -27,7 +27,7 @@ public class Resource {
 
     private Timestamp updated_at;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "kingdom_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "kingdomresource", joinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom kingdom;
 }
