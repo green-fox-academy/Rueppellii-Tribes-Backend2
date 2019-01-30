@@ -11,7 +11,6 @@ import rueppellii.backend2.tribes.security.services.UserPrinciple;
 public class KingdomService {
 
     private KingdomRepository kingdomRepository;
-    private ModelMapper modelMapper;
 
     @Autowired
     public KingdomService(KingdomRepository kingdomRepository) {
@@ -19,11 +18,9 @@ public class KingdomService {
     }
 
     public KingdomDTO getKingdomByUsername() throws KingdomNotValidException {
-        modelMapper = new ModelMapper();
-        UserPrinciple userPrinciple = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (kingdomRepository.findByApplicationUser_Username(userPrinciple.getUsername()).isPresent()) {
-            return modelMapper.map(kingdomRepository.findByApplicationUser_Username(userPrinciple.getUsername()).get(), KingdomDTO.class);
-        }
-        throw new KingdomNotValidException("You don't have a kingdom!");
+        ModelMapper modelMapper = new ModelMapper();
+        UserPrinciple loggedInUser = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser.getUsername()).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
+        return modelMapper.map(userKingdom, KingdomDTO.class);
     }
 }
