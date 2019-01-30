@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-public abstract class Building {
+public class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,9 +20,7 @@ public abstract class Building {
     private Timestamp started_at;
     private Timestamp finished_at;
 
-    public Building(BuildingType type) {
-        this.type = type;
+    public Building() {
+        this.level = 1;
     }
-
-    abstract void buildBuilding();
 }
