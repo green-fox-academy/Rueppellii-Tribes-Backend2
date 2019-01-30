@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public class ResourceService {
-    ResourceRepository resourceRepository;
+   private ResourceRepository resourceRepository;
 
     @Autowired
     public ResourceService(ResourceRepository resourceRepository) {
@@ -21,7 +21,8 @@ public class ResourceService {
         Optional<Resource> resource = resourceRepository.findById(id);
         if (resource.isPresent()) {
             return resource.get();
-        } else throw new IllegalArgumentException();
+        }
+        throw new IllegalArgumentException();
     }
 
     public List<Resource> findAll() {
@@ -39,6 +40,5 @@ public class ResourceService {
     public boolean validateType(Resource resource) {
         return resource.getResource_type() == ResourceType.RESOURCE_FOOD || resource.getResource_type() == ResourceType.RESOURCE_GOLD;
     }
-
 
 }
