@@ -16,8 +16,7 @@ public class ResourceServiceTest {
 
     private ResourceService resourceService;
     private Resource resource;
-    private ResponseEntity r;
-
+    private ResponseEntity response;
     @Mock
     private ResourceRepository resourceRepository;
 
@@ -30,21 +29,21 @@ public class ResourceServiceTest {
 
     @Test
     void saveResourceWithNull() {
-        r = new ResponseEntity(HttpStatus.BAD_REQUEST);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(r);
+        response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
 
     @Test
     void saveResourceWithValidType() {
         resource.setResource_type(ResourceType.RESOURCE_FOOD);
-        r = new ResponseEntity(HttpStatus.OK);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(r);
+        response = new ResponseEntity(HttpStatus.OK);
+        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
 
     @Test
     void saveResourceWithWrongType() {
         resource.setResource_type(ResourceType.RESOURCE_WOOD);
-        r = new ResponseEntity(HttpStatus.BAD_REQUEST);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(r);
+        response = new ResponseEntity(HttpStatus.BAD_REQUEST);
+        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
 }
