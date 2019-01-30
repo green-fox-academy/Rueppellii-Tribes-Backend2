@@ -67,8 +67,7 @@ class ApplicationUserServiceTest {
         signUpResponse.setId(1L);
         signUpResponse.setUsername("TestUser");
         signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(signUpResponse);
     }
 
     @Test
@@ -80,8 +79,7 @@ class ApplicationUserServiceTest {
         signUpResponse.setId(1L);
         signUpResponse.setUsername("TestUser");
         signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(signUpResponse);
 
     }
 

@@ -1,4 +1,6 @@
 package rueppellii.backend2.tribes.kingdom.army;
 
-public interface ArmyRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ArmyRepository extends JpaRepository<Army, Long> {
 }
