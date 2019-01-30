@@ -29,7 +29,8 @@ public class Kingdom {
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 
-    @OneToMany(mappedBy = "kingdom")
-    public List<Resource> resource;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "kingdomresource", joinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
+    public List<Resource> resources;
 
 }
