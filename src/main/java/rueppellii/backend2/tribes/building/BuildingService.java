@@ -1,9 +1,13 @@
 package rueppellii.backend2.tribes.building;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static rueppellii.backend2.tribes.building.BuildingFactory.makeBuilding;
 
+@Service
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
@@ -19,5 +23,9 @@ public class BuildingService {
                 buildingRepository.save(makeBuilding(t));
             }
         }
+    }
+
+    public List<Building> listBuildingsInKingdom(BuildingDTO) {
+        
     }
 }
