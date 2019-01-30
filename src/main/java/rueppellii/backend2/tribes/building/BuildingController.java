@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 public class BuildingController {
 
@@ -18,7 +16,8 @@ public class BuildingController {
     }
 
     @PostMapping("/kingdom/build")
-    public List<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO) {
+    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO) throws Exception {
         buildingService.createBuilding(buildingDTO);
+        return buildingService.listBuildingsInKingdom();
     }
 }
