@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.kingdom.troops;
+package rueppellii.backend2.tribes.troops;
 
 import lombok.Getter;
 import lombok.Setter;

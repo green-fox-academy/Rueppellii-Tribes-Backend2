@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.kingdom.troops;
+package rueppellii.backend2.tribes.troops;
 
 public class TroopFactory {
 

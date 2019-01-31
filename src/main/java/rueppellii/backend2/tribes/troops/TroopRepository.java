@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.kingdom.troops;
+package rueppellii.backend2.tribes.troops;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
