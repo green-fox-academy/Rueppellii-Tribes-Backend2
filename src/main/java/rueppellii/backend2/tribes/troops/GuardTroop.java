@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.kingdom.army.troops;
+package rueppellii.backend2.tribes.kingdom.troops;
 
 import javax.persistence.Entity;
 import java.sql.Timestamp;
@@ -14,8 +14,9 @@ public class GuardTroop extends Troop {
     @Override
     protected void troopBuilder() {
         this.setType(TroopTypes.GUARD);
-        this.setAttackPower(5);
-        this.setDefensePower(10);
+        this.setHP(80);
+        this.setAttack(5);
+        this.setDefense(10);
         this.setStartedAt(new Timestamp(System.currentTimeMillis()));
         this.setFinished(false);
     }
