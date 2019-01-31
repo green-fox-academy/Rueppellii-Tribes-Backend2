@@ -11,12 +11,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@Table(name = "buildings")
 public class Building {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long building_id;
 
+    @Enumerated(EnumType.STRING)
     private BuildingType type;
     private Integer level;
     private Integer HP;
