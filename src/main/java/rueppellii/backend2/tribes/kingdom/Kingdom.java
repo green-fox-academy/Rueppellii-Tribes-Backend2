@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.user.ApplicationUser;
 
 import javax.persistence.*;
@@ -34,4 +36,8 @@ public class Kingdom {
     @JsonManagedReference
     @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Building> kingdomsBuildings;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "kingdomresource", joinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
+    public List<Resource> resources;
 }
