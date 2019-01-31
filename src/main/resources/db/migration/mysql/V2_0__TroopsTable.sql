@@ -18,3 +18,4 @@ CREATE TABLE IF NOT EXISTS kingdom_troops (
   CONSTRAINT fk_troops FOREIGN KEY (troop_id) REFERENCES troops(troop_id),
   CONSTRAINT fk_kingdoms FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id)
 );
+
