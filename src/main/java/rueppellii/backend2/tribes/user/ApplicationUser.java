@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
@@ -25,6 +26,7 @@ public class ApplicationUser {
     @NotNull
     private String password;
     private String role;
+    @JsonManagedReference
     @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
 }

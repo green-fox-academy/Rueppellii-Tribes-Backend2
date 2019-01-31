@@ -23,21 +23,21 @@ import rueppellii.backend2.tribes.security.jwt.JwtProvider;
 @Service
 public class ApplicationUserService {
 
-    private ApplicationUserRepository userRepository;
+    private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
     private JwtProvider jwtProvider;
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository userRepository, PasswordEncoder encoder, KingdomService kingdomService, JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
+    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, KingdomService kingdomService, JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+        this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
     }
 
     public Boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+        return applicationUserRepository.existsByUsername(username);
     }
 
     public SignUpResponse saveApplicationUser(SignUpForm signUpForm)
@@ -51,7 +51,7 @@ public class ApplicationUserService {
             applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
             applicationUser.setKingdom(createNewKingdomAndSetName(signUpForm));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
-            userRepository.save(applicationUser);
+            applicationUserRepository.save(applicationUser);
 
             return new SignUpResponse(applicationUser.getId(),
                     applicationUser.getUsername(),
@@ -84,5 +84,9 @@ public class ApplicationUserService {
             return new JwtResponse(jwt);
         }
         throw new UserNotFoundException(loginForm.getUsername());
+    }
+
+    public ApplicationUser findUserByName(String name) {
+        return applicationUserRepository.findByUsername(name).get();
     }
 }
