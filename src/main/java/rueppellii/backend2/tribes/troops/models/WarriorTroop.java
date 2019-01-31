@@ -1,10 +1,13 @@
-package rueppellii.backend2.tribes.troops;
+package rueppellii.backend2.tribes.troops.models;
+
+import rueppellii.backend2.tribes.troops.models.Troop;
+import rueppellii.backend2.tribes.troops.models.TroopTypes;
 
 import javax.persistence.Entity;
 import java.sql.Timestamp;
 
 @Entity
-public class WarriorTroop extends Troop{
+public class WarriorTroop extends Troop {
 
     public WarriorTroop() {
         super();

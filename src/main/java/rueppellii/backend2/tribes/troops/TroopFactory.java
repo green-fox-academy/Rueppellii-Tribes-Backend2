@@ -1,8 +1,11 @@
 package rueppellii.backend2.tribes.troops;
 
-public class TroopFactory {
+import rueppellii.backend2.tribes.troops.models.Troop;
+import rueppellii.backend2.tribes.troops.models.TroopTypes;
 
-    static Troop troopBuilder(TroopTypes types) {
+class TroopFactory {
+
+   static Troop troopBuilder(TroopTypes types) {
         return types.createTroop();
     }
 }

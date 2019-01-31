@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.troops;
+package rueppellii.backend2.tribes.troops.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

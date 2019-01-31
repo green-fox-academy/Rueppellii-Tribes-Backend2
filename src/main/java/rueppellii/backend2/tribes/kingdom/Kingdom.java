@@ -3,7 +3,7 @@ package rueppellii.backend2.tribes.kingdom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rueppellii.backend2.tribes.troops.Troop;
+import rueppellii.backend2.tribes.troops.models.Troop;
 import rueppellii.backend2.tribes.user.ApplicationUser;
 
 import javax.persistence.*;

@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.troops;
+package rueppellii.backend2.tribes.troops.models;
 
 public enum TroopTypes {
     GUARD {
