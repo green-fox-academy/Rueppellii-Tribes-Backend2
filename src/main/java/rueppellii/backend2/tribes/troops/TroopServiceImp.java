@@ -35,8 +35,7 @@ public class TroopServiceImp implements TroopService {
     public Troop findById(Long troop_id) {
         if (troopRepository.findById(troop_id).isPresent()) {
             return troopRepository.findById(troop_id).get();
-        } else {
-            return null;
         }
+        return null;
     }
 }
