@@ -7,10 +7,8 @@ import lombok.Setter;
 import rueppellii.backend2.tribes.troops.models.Troop;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.user.ApplicationUser;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -23,7 +21,7 @@ public class Kingdom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
     @NotBlank
     private String name;
 
@@ -32,14 +30,14 @@ public class Kingdom {
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "troop_id", referencedColumnName = "troopId")})
+            @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")})
     private List<Troop> troops;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "kingdomresource", joinColumns = {
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "kingdom_resource", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
     public List<Resource> resources;

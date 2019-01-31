@@ -27,14 +27,14 @@ public class TroopServiceImp implements TroopService {
     }
 
     @Override
-    public void deleteTroop(Long troopId) {
-        troopRepository.deleteById(troopId);
+    public void deleteTroop(Long troop_id) {
+        troopRepository.deleteById(troop_id);
     }
 
     @Override
-    public Troop findById(Long troopId) {
-        if (troopRepository.findById(troopId).isPresent()) {
-            return troopRepository.findById(troopId).get();
+    public Troop findById(Long troop_id) {
+        if (troopRepository.findById(troop_id).isPresent()) {
+            return troopRepository.findById(troop_id).get();
         } else {
             return null;
         }

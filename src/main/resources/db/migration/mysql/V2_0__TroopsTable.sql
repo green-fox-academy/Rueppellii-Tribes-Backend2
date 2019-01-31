@@ -1,31 +1,18 @@
-CREATE TABLE IF NOT EXISTS users (
-  user_id BIGINT auto_increment,
-  username VARCHAR(255) UNIQUE,
-  password VARCHAR(255),
-  role VARCHAR(255),
-  PRIMARY KEY (user_id)
-);
 
-CREATE TABLE IF NOT EXISTS kingdoms (
-  id BIGINT auto_increment,
-  name VARCHAR(255) UNIQUE,
-  application_user_user_id BIGINT,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE troops (
+CREATE TABLE IF NOT EXISTS troops (
   troop_id BIGINT auto_increment,
+  dtype VARCHAR(255),
   type VARCHAR(255),
-  HP BIGINT,
-  attack BIGINT,
-  defense BIGINT,
+  HP INTEGER,
+  attack INTEGER,
+  defense INTEGER,
   started_at TIMESTAMP,
   finished_at TIMESTAMP,
   finished BOOLEAN,
   PRIMARY KEY (troop_id)
 );
 
-CREATE TABLE kingdom_troops (
+CREATE TABLE IF NOT EXISTS kingdom_troops (
   kingdom_id BIGINT,
   troop_id BIGINT,
   CONSTRAINT fk_troops FOREIGN KEY (troop_id) REFERENCES troops(troop_id),
