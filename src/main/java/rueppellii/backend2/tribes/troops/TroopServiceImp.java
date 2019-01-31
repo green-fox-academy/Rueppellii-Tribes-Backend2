@@ -17,15 +17,15 @@ public class TroopServiceImp implements TroopService {
         this.troopRepository = troopRepository;
     }
 
-
     @Override
     public void saveAndUpdateTroop(TroopDTO troopDTO) {
         for (TroopTypes types : TroopTypes.values()) {
-            if (TroopTypes.valueOf(troopDTO.getTroopType().toUpperCase().toUpperCase()).equals(types)) {
+            if (TroopTypes.valueOf(troopDTO.getTroopType().toUpperCase()).equals(types)) {
                 troopRepository.save(troopBuilder(types));
             }
         }
     }
+
     @Override
     public void deleteTroop(Long troopId) {
         troopRepository.deleteById(troopId);

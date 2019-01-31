@@ -13,9 +13,7 @@ CREATE TABLE IF NOT EXISTS kingdoms (
   PRIMARY KEY (id)
 );
 
-DROP TABLE army;
-
-CREATE TABLE IF NOT EXISTS troops (
+CREATE TABLE troops (
   troop_id BIGINT auto_increment,
   type VARCHAR(255),
   HP BIGINT,
@@ -25,4 +23,11 @@ CREATE TABLE IF NOT EXISTS troops (
   finished_at TIMESTAMP,
   finished BOOLEAN,
   PRIMARY KEY (troop_id)
+);
+
+CREATE TABLE kingdom_troops (
+  kingdom_id BIGINT,
+  troop_id BIGINT,
+  CONSTRAINT fk_troops FOREIGN KEY (troop_id) REFERENCES troops(troop_id),
+  CONSTRAINT fk_kingdoms FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id)
 );

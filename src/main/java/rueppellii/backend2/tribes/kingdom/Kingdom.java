@@ -29,8 +29,8 @@ public class Kingdom {
     private ApplicationUser applicationUser;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "army", joinColumns = {
+    @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "troop_id", referencedColumnName = "troopId")})
-    private List<Troop> troop;
+    private List<Troop> troops;
 }
