@@ -1,10 +1,13 @@
 package rueppellii.backend2.tribes.kingdom;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import rueppellii.backend2.tribes.troops.models.Troop;
+import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.user.ApplicationUser;
 import javax.persistence.*;
@@ -42,4 +45,7 @@ public class Kingdom {
             @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
     public List<Resource> resources;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Building> kingdomsBuildings;
 }
