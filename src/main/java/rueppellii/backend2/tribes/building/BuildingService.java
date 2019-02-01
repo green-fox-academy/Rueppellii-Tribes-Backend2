@@ -25,7 +25,7 @@ public class BuildingService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public Building createBuilding(BuildingDTO buildingDTO) throws Exception {
+    public void createBuilding(BuildingDTO buildingDTO) throws Exception {
         Building building;
         UserPrinciple loggedInUser = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Kingdom kingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser.getUsername()).orElseThrow(() -> new KingdomNotValidException("No kingdom"));
@@ -36,7 +36,6 @@ public class BuildingService {
                 kingdom.getKingdomsBuildings().add(building);
                 buildingRepository.save(building);
                 kingdomRepository.save(kingdom);
-                return building;
             }
         }
         throw new IllegalArgumentException("No such building type!");

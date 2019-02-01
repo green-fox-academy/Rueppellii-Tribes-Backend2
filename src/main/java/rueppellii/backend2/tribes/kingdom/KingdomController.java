@@ -16,7 +16,7 @@ public class KingdomController {
     }
 
     @GetMapping("/kingdom")
-    public Object showKingdom() throws KingdomNotValidException {
+    public KingdomDTO showKingdom() throws KingdomNotValidException {
         return kingdomService.getKingdomByUsername();
     }
 }
