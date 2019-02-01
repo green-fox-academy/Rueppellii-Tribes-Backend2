@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import rueppellii.backend2.tribes.security.UserService;
 import rueppellii.backend2.tribes.security.exceptions.InvalidJwtToken;
 import rueppellii.backend2.tribes.security.auth.jwt.extractor.TokenExtractor;
 import rueppellii.backend2.tribes.security.auth.jwt.verifier.TokenVerifier;
@@ -82,7 +81,7 @@ public class RefreshTokenEndpoint {
 
         if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
         List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getRole().authority()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
                 .collect(Collectors.toList());
 
         UserContext userContext = UserContext.create(applicationUser.getUsername(), authorities);

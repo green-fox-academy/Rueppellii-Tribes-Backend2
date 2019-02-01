@@ -13,14 +13,21 @@ import java.util.List;
 @NoArgsConstructor
 public class ApplicationUserDTO {
 
+    Long id;
+
     @NotBlank
-    String name;
+    String username;
     @NotBlank
     String password;
+
+    String kingdom;
     List<Role> roles;
 
-    public ApplicationUserDTO(@NotBlank String name, @NotBlank String password) {
-        this.name = name;
+    public ApplicationUserDTO(@NotBlank String username, @NotBlank String password, Long id, String kingdom, List<Role> roles) {
+        this.roles = roles;
+        this.kingdom = kingdom;
+        this.id = id;
+        this.username = username;
         this.password = password;
     }
 }

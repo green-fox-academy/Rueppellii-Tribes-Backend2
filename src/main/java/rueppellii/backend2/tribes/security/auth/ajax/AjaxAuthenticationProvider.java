@@ -24,11 +24,15 @@ import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 @Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
+
     private BCryptPasswordEncoder encoder;
-    @Autowired
     private ApplicationUserService applicationUserService;
 
+    @Autowired
+    public AjaxAuthenticationProvider(BCryptPasswordEncoder encoder, ApplicationUserService applicationUserService) {
+        this.encoder = encoder;
+        this.applicationUserService = applicationUserService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -40,13 +44,13 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
         ApplicationUser applicationUser = applicationUserService.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         if (!encoder.matches(password, applicationUser.getPassword())) {
-            throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
+            throw new BadCredentialsException("Wrong Password");
         }
 
         if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
 
         List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getRole().authority()))
+                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
                 .collect(Collectors.toList());
 
         UserContext userContext = UserContext.create(applicationUser.getUsername(), authorities);

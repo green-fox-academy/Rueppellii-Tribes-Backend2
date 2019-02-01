@@ -1,5 +1,7 @@
 package rueppellii.backend2.tribes.user.util;
 
+import lombok.Getter;
+
 public enum Role {
     ADMIN, USER;
 

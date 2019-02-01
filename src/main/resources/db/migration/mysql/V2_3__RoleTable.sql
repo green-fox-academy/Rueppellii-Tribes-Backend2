@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS user_role (
   role_id BIGINT auto_increment,
-  dtype VARCHAR(255),
-  role VARCHAR(255),
+  role_enum VARCHAR(255),
   PRIMARY KEY (role_id)
 );
+
+INSERT INTO user_role VALUES (1, 'USER');
+INSERT INTO user_role VALUES (2, 'ADMIN');
 
 CREATE TABLE IF NOT EXISTS app_user_user_role (
   user_id BIGINT,

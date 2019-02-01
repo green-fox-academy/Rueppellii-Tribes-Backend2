@@ -1,17 +1,10 @@
 package rueppellii.backend2.tribes.security.model;
 
-
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 
-/**
- *
- * @author vladimir.stankovic
- *
- * Aug 4, 2016
- */
 public class UserContext {
     private final String username;
     private final List<GrantedAuthority> authorities;
