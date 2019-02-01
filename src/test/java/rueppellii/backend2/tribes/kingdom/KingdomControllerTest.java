@@ -49,8 +49,8 @@ import static rueppellii.backend2.tribes.security.SecurityConstants.SECRET;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("Test")
-@AutoConfigureMockMvc
-@ContextConfiguration
+//@AutoConfigureMockMvc
+//@ContextConfiguration
 @WebMvcTest({KingdomController.class, TribesApplication.class})
 public class KingdomControllerTest {
 
@@ -138,4 +138,3 @@ public class KingdomControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 }
-
