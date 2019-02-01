@@ -1,8 +1,7 @@
-package rueppellii.backend2.tribes.user;
+package rueppellii.backend2.tribes.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,22 +17,30 @@ import rueppellii.backend2.tribes.message.request.LoginForm;
 import rueppellii.backend2.tribes.message.request.SignUpForm;
 import rueppellii.backend2.tribes.message.response.JwtResponse;
 import rueppellii.backend2.tribes.message.response.SignUpResponse;
-import rueppellii.backend2.tribes.security.jwt.JwtProvider;
+import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
+import rueppellii.backend2.tribes.user.util.Role;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ApplicationUserService {
 
     private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
-    private JwtProvider jwtProvider;
-    private AuthenticationManager authenticationManager;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, KingdomService kingdomService, JwtProvider jwtProvider, AuthenticationManager authenticationManager) {
+    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager) {
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
-        this.jwtProvider = jwtProvider;
-        this.authenticationManager = authenticationManager;
+    }
+
+    public Optional<ApplicationUser> findByUserName(String username) {
+        return applicationUserRepository.findByUsername(username);
     }
 
     public Boolean existsByUsername(String username) {
@@ -43,10 +50,15 @@ public class ApplicationUserService {
     public SignUpResponse saveApplicationUser(SignUpForm signUpForm)
             throws MethodArgumentNotValidException, UserNameIsTakenException {
 
-        if (!(existsByUsername(signUpForm.getUsername()))) {
+        ApplicationUserRole applicationUserRole = new ApplicationUserRole();
+        applicationUserRole.setRole(Role.USER);
+
+        List<ApplicationUserRole> applicationUserRoles = Arrays.asList(applicationUserRole);
+
+        if (!existsByUsername(signUpForm.getUsername())) {
 
             ApplicationUser applicationUser = new ApplicationUser();
-            applicationUser.setRole("ROLE_USER");
+            applicationUser.setRoles(applicationUserRoles);
             applicationUser.setUsername(signUpForm.getUsername());
             applicationUser.setPassword(encoder.encode(signUpForm.getPassword()));
             applicationUser.setKingdom(createNewKingdomAndSetName(signUpForm));
@@ -68,25 +80,5 @@ public class ApplicationUserService {
             kingdom.setName(signUpForm.getKingdom());
         }
         return kingdom;
-    }
-
-    public JwtResponse authenticateApplicationUser(LoginForm loginForm)
-            throws MethodArgumentNotValidException, UserNotFoundException {
-
-        if (existsByUsername(loginForm.getUsername())) {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginForm.getUsername(),
-                            loginForm.getPassword()));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtProvider.generateJwtToken(authentication);
-            return new JwtResponse(jwt);
-        }
-        throw new UserNotFoundException(loginForm.getUsername());
-    }
-
-    public ApplicationUser findUserByName(String name) {
-        return applicationUserRepository.findByUsername(name).get();
     }
 }

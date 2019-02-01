@@ -1,7 +1,6 @@
-package rueppellii.backend2.tribes.security.jwt;
+package rueppellii.backend2.tribes.security;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
@@ -16,12 +15,9 @@ import org.springframework.stereotype.Component;
 import rueppellii.backend2.tribes.message.response.ErrorResponse;
 
 @Component
-public class JwtAuthEntryPoint implements AuthenticationEntryPoint, Serializable {
-
+public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException e)
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex)
             throws IOException, ServletException {
 
         ErrorResponse errorResponse = new ErrorResponse();

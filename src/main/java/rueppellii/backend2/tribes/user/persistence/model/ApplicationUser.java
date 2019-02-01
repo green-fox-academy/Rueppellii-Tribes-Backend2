@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.user;
+package rueppellii.backend2.tribes.user.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
@@ -8,6 +8,8 @@ import rueppellii.backend2.tribes.kingdom.Kingdom;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,8 +27,20 @@ public class ApplicationUser {
     @NotBlank
     @NotNull
     private String password;
-    private String role;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "app_user_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
+    private List<ApplicationUserRole> roles = new ArrayList<>();
+
+
     @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
+
+    public void setRoles(List<ApplicationUserRole> roles) {
+        this.roles = roles;
+    }
 }
