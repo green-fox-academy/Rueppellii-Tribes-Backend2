@@ -14,7 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.message.request.SignUpForm;
 import rueppellii.backend2.tribes.message.response.SignUpResponse;
-import rueppellii.backend2.tribes.security.jwt.JwtProvider;
+import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
+import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import static org.mockito.Mockito.when;
 
@@ -67,8 +69,7 @@ class ApplicationUserServiceTest {
         signUpResponse.setId(1L);
         signUpResponse.setUsername("TestUser");
         signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(signUpResponse);
     }
 
     @Test
@@ -80,8 +81,7 @@ class ApplicationUserServiceTest {
         signUpResponse.setId(1L);
         signUpResponse.setUsername("TestUser");
         signUpResponse.setKingdomId(1L);
-        response = ResponseEntity.ok(signUpResponse);
-        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(response);
+        when(applicationUserService.saveApplicationUser(signUpForm)).thenReturn(signUpResponse);
 
     }
 

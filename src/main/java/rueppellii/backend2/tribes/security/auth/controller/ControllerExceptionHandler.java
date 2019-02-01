@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.controller;
+package rueppellii.backend2.tribes.security.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
