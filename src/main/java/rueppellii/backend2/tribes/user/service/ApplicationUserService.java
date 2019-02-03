@@ -33,6 +33,26 @@ public class ApplicationUserService {
         this.applicationUserRoleRepository = applicationUserRoleRepository;
     }
 
+    public List<ApplicationUserDTO> getAllUser(){
+        List<ApplicationUser> allUser = applicationUserRepository.findAll();
+        List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
+
+        for (ApplicationUser user : allUser) {
+            ApplicationUserDTO dto = new ApplicationUserDTO();
+            dto.setUsername(user.getUsername());
+            dto.setKingdom(user.getKingdom().getName());
+            List<Role> roles = new ArrayList<>();
+            for (int i = 0; i < user.getRoles().size(); i++) {
+                roles.add(user.getRoles().get(i).getRoleEnum());
+
+            }
+            dto.setRoles(roles);
+            allUserDTO.add(dto);
+
+        }
+        return allUserDTO;
+    }
+
     public Optional<ApplicationUser> findByUserName(String username) {
         return applicationUserRepository.findByUsername(username);
     }
@@ -49,7 +69,7 @@ public class ApplicationUserService {
             final ApplicationUser applicationUser = new ApplicationUser();
 
             List<ApplicationUserRole> userRoles = new ArrayList<>();
-            userRoles.add(applicationUserRoleRepository.findById(1L).get());
+            userRoles.add(applicationUserRoleRepository.findById(2L).get());
             applicationUser.setUsername(applicationUserDTO.getUsername());
             applicationUser.setPassword(encoder.encode(applicationUserDTO.getPassword()));
             applicationUser.setKingdom(createNewKingdomAndSetName(applicationUserDTO));
