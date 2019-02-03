@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import rueppellii.backend2.tribes.troops.models.Troop;
 import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.user.ApplicationUser;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -25,19 +24,28 @@ public class Kingdom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
     @NotBlank
     private String name;
+
     @JsonBackReference
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "kingdom_troops", joinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")})
+    private List<Troop> troops;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "kingdom_resource", joinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
+    public List<Resource> resources;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Building> kingdomsBuildings;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "kingdomresource", joinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
-    public List<Resource> resources;
 }

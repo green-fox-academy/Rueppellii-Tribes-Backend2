@@ -3,7 +3,6 @@ package rueppellii.backend2.tribes.resource;
 import lombok.Getter;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -28,6 +27,8 @@ public class Resource {
     private Timestamp updated_at;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "kingdomresource", joinColumns = {@JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    @JoinTable(name = "kingdom_resource", joinColumns = {
+            @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom kingdom;
 }
