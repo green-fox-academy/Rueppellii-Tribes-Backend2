@@ -34,13 +34,6 @@ import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 import static rueppellii.backend2.tribes.security.SecurityConstants.AUTHENTICATION_HEADER_NAME;
 import static rueppellii.backend2.tribes.security.SecurityConstants.TOKEN_SIGNING_KEY;
 
-/**
- * RefreshTokenEndpoint
- *
- * @author vladimir.stankovic
- * <p>
- * Aug 17, 2016
- */
 @RestController
 public class RefreshTokenEndpoint {
 
