@@ -24,11 +24,15 @@ import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 @Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
+
     private BCryptPasswordEncoder encoder;
-    @Autowired
     private ApplicationUserService applicationUserService;
 
+    @Autowired
+    public AjaxAuthenticationProvider(BCryptPasswordEncoder encoder, ApplicationUserService applicationUserService) {
+        this.encoder = encoder;
+        this.applicationUserService = applicationUserService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

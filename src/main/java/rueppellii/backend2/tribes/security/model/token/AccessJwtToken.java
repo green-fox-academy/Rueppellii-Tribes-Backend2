@@ -12,7 +12,7 @@ import io.jsonwebtoken.Claims;
  *
  *         May 31, 2016
  */
-public final class AccessJwtToken implements JwtToken {
+public final class AccessJwtToken extends TokenDTO implements JwtToken {
     private final String rawToken;
     @JsonIgnore private Claims claims;
 

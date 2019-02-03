@@ -15,9 +15,9 @@ public class BuildingController {
         this.buildingService = buildingService;
     }
 
-    @PostMapping("/kingdom/build")
-    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO) throws Exception {
-        buildingService.createBuilding(buildingDTO);
-        return buildingService.listBuildingsInKingdom();
-    }
+//    @PostMapping("/kingdom/build")
+//    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO) throws Exception {
+//        buildingService.createBuilding(buildingDTO);
+//        return buildingService.listBuildingsInKingdom();
+//    }
 }

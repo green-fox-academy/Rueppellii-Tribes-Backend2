@@ -2,6 +2,7 @@ package rueppellii.backend2.tribes.security.model.token;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import rueppellii.backend2.tribes.security.model.Scopes;
 import rueppellii.backend2.tribes.security.model.UserContext;
+import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
 
 import static rueppellii.backend2.tribes.security.SecurityConstants.*;
 
@@ -30,6 +32,8 @@ import static rueppellii.backend2.tribes.security.SecurityConstants.*;
 @Component
 public class JwtTokenFactory {
 
+    @Autowired
+    private ApplicationUserRepository userRepository;
     /**
      * Factory method for issuing new JWT Tokens.
      *
@@ -37,7 +41,7 @@ public class JwtTokenFactory {
      * @param roles
      * @return
      */
-    public AccessJwtToken createAccessJwtToken(UserContext userContext) {
+    public TokenDTO createAccessJwtToken(UserContext userContext) {
         if (StringUtils.isBlank(userContext.getUsername()))
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
@@ -84,5 +88,38 @@ public class JwtTokenFactory {
                 .compact();
 
         return new AccessJwtToken(token, claims);
+    }
+
+    public TokenDTO createTestRefreshToken(UserContext userContext, Long tokenLifetimeInMillisecond) {
+        if (StringUtils.isBlank(userContext.getUsername())) {
+            throw new IllegalArgumentException("Cannot create JWT Token without username");
+        }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        Date refreshTokenExpirationTime = Date.from(currentTime.atZone(ZoneId.systemDefault())
+                .plus(tokenLifetimeInMillisecond, ChronoUnit.MILLIS).toInstant());
+        return setupTokenDetails(userContext, currentTime, refreshTokenExpirationTime);
+    }
+
+    private TokenDTO setupTokenDetails(UserContext userContext,
+                              LocalDateTime currentTime,
+                              Date refreshTokenExpirationTime) {
+        Claims claims = Jwts.claims().setSubject(userContext.getUsername());
+        claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
+
+        int userIdForToken = Math.toIntExact(userRepository.getByUsername(userContext.getUsername()));
+        StringBuilder userIdForTokenString = new StringBuilder();
+        userIdForTokenString.append(userIdForToken);
+
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setId(userIdForTokenString.toString())
+                .setIssuer(TOKEN_ISSUER)
+                .setId(UUID.randomUUID().toString())
+                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(refreshTokenExpirationTime)
+                .signWith(SignatureAlgorithm.HS512, TOKEN_SIGNING_KEY)
+                .compact();
+        return new TokenDTO(new AccessJwtToken(token, claims), refreshTokenExpirationTime);
     }
 }

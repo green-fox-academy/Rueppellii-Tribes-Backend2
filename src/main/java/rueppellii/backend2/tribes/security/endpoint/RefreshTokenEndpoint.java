@@ -87,7 +87,7 @@ public class RefreshTokenEndpoint {
 
         UserContext userContext = UserContext.create(applicationUser.getUsername(), authorities);
 
-        return tokenFactory.createAccessJwtToken(userContext);
+        return (JwtToken) tokenFactory.createAccessJwtToken(userContext);
     }
 }
 

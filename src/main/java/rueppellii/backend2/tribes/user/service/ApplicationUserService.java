@@ -3,26 +3,18 @@ package rueppellii.backend2.tribes.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
-import rueppellii.backend2.tribes.exception.UserNotFoundException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.kingdom.KingdomService;
-import rueppellii.backend2.tribes.message.request.LoginForm;
 import rueppellii.backend2.tribes.message.request.SignUpForm;
-import rueppellii.backend2.tribes.message.response.JwtResponse;
 import rueppellii.backend2.tribes.message.response.SignUpResponse;
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.util.Role;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +26,7 @@ public class ApplicationUserService {
     private PasswordEncoder encoder;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager) {
+    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder) {
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
     }
@@ -80,5 +72,9 @@ public class ApplicationUserService {
             kingdom.setName(signUpForm.getKingdom());
         }
         return kingdom;
+    }
+
+    public Optional<ApplicationUser> findByUsername(String username) {
+        return (Optional<ApplicationUser>) applicationUserRepository.findByUsername(username);
     }
 }
