@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.troops.models;
+package rueppellii.backend2.tribes.troop.models;
 
 import javax.persistence.Entity;
 import java.sql.Timestamp;

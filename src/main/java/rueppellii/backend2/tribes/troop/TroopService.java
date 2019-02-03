@@ -1,6 +1,6 @@
-package rueppellii.backend2.tribes.troops;
+package rueppellii.backend2.tribes.troop;
 
-import rueppellii.backend2.tribes.troops.models.Troop;
+import rueppellii.backend2.tribes.troop.models.Troop;
 
 public interface TroopService {
 

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
-import rueppellii.backend2.tribes.troops.models.Troop;
+import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.troops.models;
+package rueppellii.backend2.tribes.troop.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "troops")
+@Table(name = "troops   ")
 public abstract class Troop {
 
     @Id
