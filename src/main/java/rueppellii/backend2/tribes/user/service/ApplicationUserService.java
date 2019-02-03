@@ -69,7 +69,11 @@ public class ApplicationUserService {
             final ApplicationUser applicationUser = new ApplicationUser();
 
             List<ApplicationUserRole> userRoles = new ArrayList<>();
-            userRoles.add(applicationUserRoleRepository.findById(2L).get());
+            try {
+                userRoles.add(applicationUserRoleRepository.findById(1L).orElseThrow(Exception::new));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             applicationUser.setUsername(applicationUserDTO.getUsername());
             applicationUser.setPassword(encoder.encode(applicationUserDTO.getPassword()));
             applicationUser.setKingdom(createNewKingdomAndSetName(applicationUserDTO));
