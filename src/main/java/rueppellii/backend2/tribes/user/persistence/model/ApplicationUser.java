@@ -36,6 +36,7 @@ public class ApplicationUser {
     @JsonManagedReference
     private List<ApplicationUserRole> roles = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToOne(mappedBy = "applicationUser", targetEntity = Kingdom.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Kingdom kingdom;
 

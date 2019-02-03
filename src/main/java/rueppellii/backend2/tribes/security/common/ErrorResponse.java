@@ -5,13 +5,6 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 
-/**
- * Error model for interacting with client.
- *
- * @author vladimir.stankovic
- *
- * Aug 3, 2016
- */
 public class ErrorResponse {
     // HTTP Response Status Code
     private final HttpStatus status;

@@ -116,10 +116,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
 
-//                .authorizeRequests()
-//                .antMatchers(API_ROOT_URL)// Protected API End-points
-//                .authenticated()
-//                .and()
+                .authorizeRequests()
+                .antMatchers(API_ROOT_URL)// Protected API End-points
+                .authenticated()
+                .and()
 
                 .addFilterBefore(new CustomCorsFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)

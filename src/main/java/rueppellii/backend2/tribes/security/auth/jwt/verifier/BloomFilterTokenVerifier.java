@@ -2,13 +2,6 @@ package rueppellii.backend2.tribes.security.auth.jwt.verifier;
 
 import org.springframework.stereotype.Component;
 
-/**
- * BloomFilterTokenVerifier
- *
- * @author vladimir.stankovic
- *
- * Aug 17, 2016
- */
 @Component
 public class BloomFilterTokenVerifier implements TokenVerifier {
     @Override

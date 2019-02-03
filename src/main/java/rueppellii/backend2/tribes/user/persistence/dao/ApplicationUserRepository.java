@@ -6,7 +6,6 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 
 import java.util.Optional;
 
-
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Long> {
     Optional<ApplicationUser> findByUsername(String username);
