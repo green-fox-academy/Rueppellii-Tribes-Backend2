@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "troops   ")
+@Table(name = "troops")
 public abstract class Troop {
 
     @Id
@@ -29,7 +29,7 @@ public abstract class Troop {
 
     private Boolean finished;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")}, inverseJoinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
