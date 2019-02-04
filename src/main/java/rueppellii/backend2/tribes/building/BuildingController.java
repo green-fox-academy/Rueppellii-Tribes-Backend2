@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api")
 public class BuildingController {
@@ -18,8 +20,8 @@ public class BuildingController {
     }
 
     @PostMapping("/kingdom/build")
-    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO) throws Exception {
-        buildingService.createBuilding(buildingDTO);
+    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO, Principal principal) throws Exception {
+        buildingService.createBuilding(buildingDTO, principal);
         return buildingService.listBuildingsInKingdom();
     }
 }
