@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.exception.KingdomNotValidException;
-import rueppellii.backend2.tribes.security.services.UserPrinciple;
+import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+
 
 @Service
 public class KingdomService {
@@ -18,9 +18,9 @@ public class KingdomService {
     }
 
     public KingdomDTO getKingdomByUsername() throws KingdomNotValidException {
-        ModelMapper modelMapper = new ModelMapper();
-        UserPrinciple loggedInUser = (UserPrinciple) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser.getUsername()).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
-        return modelMapper.map(userKingdom, KingdomDTO.class);
+        ModelMapper mapper = new ModelMapper();
+        String loggedInUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
+        return mapper.map(userKingdom, KingdomDTO.class);
     }
 }

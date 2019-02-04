@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS buildings (
   type VARCHAR(255),
   level INT,
   hp INT,
-  started_at TIMESTAMP,
-  finished_at TIMESTAMP,
+  started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  finished_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (building_id)
 );
 
