@@ -4,6 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -13,14 +17,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import rueppellii.backend2.tribes.TestTokenProvider;
 import rueppellii.backend2.tribes.TribesApplication;
-import rueppellii.backend2.tribes.security.model.UserContext;
-import rueppellii.backend2.tribes.security.model.token.AccessJwtToken;
 import rueppellii.backend2.tribes.security.model.token.JwtTokenFactory;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,33 +38,31 @@ public class KingdomControllerTest {
             Charset.forName("utf8"));
 
     private MockMvc mockMvc;
-    private AccessJwtToken token;
+    private String token;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private JwtTokenFactory jwtTokenFactory;
+
     @MockBean
     KingdomService kingdomService;
-
-    @Autowired
-    JwtTokenFactory jwtTokenFactory;
 
     @BeforeEach
     public void setup() {
         mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        UserContext userContext = UserContext.create("test", authorities);
-        token = jwtTokenFactory.createAccessJwtToken(userContext);
+        TestTokenProvider testTokenProvider = new TestTokenProvider(jwtTokenFactory);
+        token = testTokenProvider.createMockToken("test", "ROLE_USER");
     }
 
     @Test
     public void accessGetKingdom() throws Exception {
         mockMvc.perform(get("/api/kingdom")
                 .contentType(contentType)
-                .header("Authorization", "Bearer " + token.getToken()))
+                .header("Authorization", token))
                 .andExpect(status().isOk());
     }
 
@@ -71,7 +70,7 @@ public class KingdomControllerTest {
     public void accessGetKingdomWithFakeToken() throws Exception {
         mockMvc.perform(get("/api/kingdom")
                 .contentType(contentType)
-                .header("Authorization", "Bearer " + "fakeToken"))
+                .header("Authorization", "fakeToken"))
                 .andExpect(status().isUnauthorized());
     }
 }
