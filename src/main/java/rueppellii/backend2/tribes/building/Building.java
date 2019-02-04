@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "buildings")
-public class Building {
+public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
