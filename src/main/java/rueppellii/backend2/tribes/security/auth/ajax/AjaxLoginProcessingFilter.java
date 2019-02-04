@@ -57,7 +57,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         } else if (StringUtils.isBlank(loginRequest.getUsername())) {
             throw new AuthenticationServiceException("Missing parameter(s): username!");
         } else if (StringUtils.isBlank(loginRequest.getPassword())) {
-            throw new AuthenticationServiceException("Missing parameter(s): password");
+            throw new AuthenticationServiceException("Missing parameter(s): password!");
         }
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

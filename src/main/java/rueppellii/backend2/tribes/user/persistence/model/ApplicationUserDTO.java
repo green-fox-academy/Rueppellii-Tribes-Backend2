@@ -23,11 +23,4 @@ public class ApplicationUserDTO {
     String kingdom;
     List<Role> roles;
 
-    public ApplicationUserDTO(@NotBlank String username, @NotBlank String password, Long id, String kingdom, List<Role> roles) {
-        this.roles = roles;
-        this.kingdom = kingdom;
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
 }
