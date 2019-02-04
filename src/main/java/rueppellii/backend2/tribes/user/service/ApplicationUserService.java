@@ -54,8 +54,8 @@ public class ApplicationUserService {
         return allUserDTO;
     }
 
-    public ApplicationUser findByUserName(String username) {
-        return applicationUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+    public Optional<ApplicationUser> findByUserName(String username) {
+        return applicationUserRepository.findByUsername(username);
     }
 
     public Boolean existsByUsername(String username) {
