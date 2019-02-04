@@ -5,18 +5,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-<<<<<<< HEAD
-
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
-import rueppellii.backend2.tribes.troops.models.Troop;
-import rueppellii.backend2.tribes.building.Building;
-import rueppellii.backend2.tribes.resource.Resource;
-=======
 import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;

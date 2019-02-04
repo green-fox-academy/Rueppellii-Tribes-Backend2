@@ -2,16 +2,6 @@ package rueppellii.backend2.tribes.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import rueppellii.backend2.tribes.exception.UserNameIsTakenException;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.message.request.SignUpForm;
-import rueppellii.backend2.tribes.message.response.SignUpResponse;
-=======
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,18 +9,13 @@ import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRoleRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
-<<<<<<< HEAD
-import java.util.Arrays;
-=======
 import java.util.ArrayList;
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
 import java.util.List;
 import java.util.Optional;
 
@@ -42,11 +27,7 @@ public class ApplicationUserService {
     private ApplicationUserRoleRepository applicationUserRoleRepository;
 
     @Autowired
-<<<<<<< HEAD
-    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder) {
-=======
     public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, ApplicationUserRoleRepository applicationUserRoleRepository) {
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.applicationUserRoleRepository = applicationUserRoleRepository;
@@ -117,12 +98,4 @@ public class ApplicationUserService {
         }
         return kingdom;
     }
-
-<<<<<<< HEAD
-    public Optional<ApplicationUser> findByUsername(String username) {
-        return (Optional<ApplicationUser>) applicationUserRepository.findByUsername(username);
-    }
-=======
-
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
 }

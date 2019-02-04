@@ -52,15 +52,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
         LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
 
-<<<<<<< HEAD
-        //TODO I guess i have to take this apart for the correct response
-        if (StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
-            throw new AuthenticationServiceException("Username or Password not provided");
-        }
-
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(), loginRequest.getPassword());
-=======
         if (StringUtils.isBlank(loginRequest.getUsername()) && StringUtils.isBlank(loginRequest.getPassword())) {
             throw new AuthenticationServiceException("Missing Parameter(s): username, password!");
         } else if (StringUtils.isBlank(loginRequest.getUsername())) {
@@ -72,7 +63,6 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
                 loginRequest.getPassword());
->>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
 
         return this.getAuthenticationManager().authenticate(token);
     }
