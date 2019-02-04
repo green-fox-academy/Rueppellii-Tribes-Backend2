@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -22,16 +21,10 @@ import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository
 
 import static rueppellii.backend2.tribes.security.SecurityConstants.*;
 
-/**
- * Factory class that should be always used to create {@link JwtToken}.
- *
- * @author vladimir.stankovic
- *
- * May 31, 2016
- */
 @Component
 public class JwtTokenFactory {
 
+<<<<<<< HEAD
     @Autowired
     private ApplicationUserRepository userRepository;
     /**
@@ -42,6 +35,9 @@ public class JwtTokenFactory {
      * @return
      */
     public TokenDTO createAccessJwtToken(UserContext userContext) {
+=======
+    public AccessJwtToken createAccessJwtToken(UserContext userContext) {
+>>>>>>> 4fba8a431eccdaf170bf5c224994b9ad42154acf
         if (StringUtils.isBlank(userContext.getUsername()))
             throw new IllegalArgumentException("Cannot create JWT Token without username");
 
@@ -58,7 +54,7 @@ public class JwtTokenFactory {
                 .setIssuer(TOKEN_ISSUER)
                 .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
                 .setExpiration(Date.from(currentTime
-                        .plusMinutes(EXPIRATION_TIME)
+                        .plusMinutes(ACCESS_TOKEN_EXP_TIME)
                         .atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, TOKEN_SIGNING_KEY)
                 .compact();

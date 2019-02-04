@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.controller;
+package rueppellii.backend2.tribes.testController;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,4 +12,5 @@ public class TestRestAPIs {
     public String userAccess() {
         return ">>> User Contents!";
     }
+
 }

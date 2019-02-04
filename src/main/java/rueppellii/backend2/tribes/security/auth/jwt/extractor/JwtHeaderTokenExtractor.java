@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 
-import static rueppellii.backend2.tribes.security.SecurityConstants.HEADER_PREFIX;
+import static rueppellii.backend2.tribes.security.SecurityConstants.TOKEN_PREFIX;
 
 @Component
 public class JwtHeaderTokenExtractor implements TokenExtractor {
@@ -15,11 +15,11 @@ public class JwtHeaderTokenExtractor implements TokenExtractor {
             throw new AuthenticationServiceException("Authorization header cannot be blank!");
         }
 
-        if (header.length() < HEADER_PREFIX.length()) {
+        if (header.length() < TOKEN_PREFIX.length()) {
             throw new AuthenticationServiceException("Invalid authorization header size.");
         }
 
         //header.length() was redundant
-        return header.substring(HEADER_PREFIX.length());
+        return header.substring(TOKEN_PREFIX.length());
     }
 }

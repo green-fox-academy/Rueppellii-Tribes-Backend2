@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS troops (
   troop_id BIGINT auto_increment,
   dtype VARCHAR(255),
@@ -6,8 +5,8 @@ CREATE TABLE IF NOT EXISTS troops (
   HP INTEGER,
   attack INTEGER,
   defense INTEGER,
-  started_at TIMESTAMP,
-  finished_at TIMESTAMP,
+  started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  finished_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   finished BOOLEAN,
   PRIMARY KEY (troop_id)
 );

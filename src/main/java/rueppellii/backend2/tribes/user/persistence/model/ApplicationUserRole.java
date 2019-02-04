@@ -16,12 +16,20 @@ import java.util.List;
 public class ApplicationUserRole {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long role_id;
+    @Column(name = "role_id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role roleEnum;
 
     @ManyToMany(mappedBy = "roles")
     private List<ApplicationUser> user = new ArrayList<>();
+
+    public ApplicationUserRole() {
+    }
+
+    public ApplicationUserRole(Long id, Role roleEnum) {
+        this.id = id;
+        this.roleEnum = roleEnum;
+    }
 }

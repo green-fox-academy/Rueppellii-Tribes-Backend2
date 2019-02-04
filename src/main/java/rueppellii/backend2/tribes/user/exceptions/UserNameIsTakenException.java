@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.exception;
+package rueppellii.backend2.tribes.user.exceptions;
 
 public class UserNameIsTakenException extends Exception {
 

@@ -12,13 +12,6 @@ import io.jsonwebtoken.Jws;
 import rueppellii.backend2.tribes.security.exceptions.JwtExpiredTokenException;
 import rueppellii.backend2.tribes.security.model.Scopes;
 
-/**
- * RefreshToken
- *
- * @author vladimir.stankovic
- *
- * Aug 19, 2016
- */
 @SuppressWarnings("unchecked")
 public class RefreshToken implements JwtToken {
     private Jws<Claims> claims;
