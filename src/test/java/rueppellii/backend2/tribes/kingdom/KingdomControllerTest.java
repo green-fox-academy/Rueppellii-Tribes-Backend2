@@ -64,13 +64,9 @@ public class KingdomControllerTest {
     @Autowired
     private MockMvc mockMvc;
     private String userToken;
-    private Kingdom kingdom;
     private ApplicationUser testUser;
     private Kingdom testKingdom;
     private KingdomDTO testKingdomDTO;
-
-    @Mock
-    ApplicationUserService applicationUserService;
 
     @MockBean
     KingdomService kingdomService;
@@ -132,7 +128,7 @@ public class KingdomControllerTest {
 
     @Test
     public void notAccessGetKingdom() throws Exception {
-        mockMvc.perform(get("/kingdom")
+        mockMvc.perform(get("/auth/kingdom")
                 .contentType(contentType))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
