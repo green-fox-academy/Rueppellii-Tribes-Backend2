@@ -41,19 +41,5 @@ public class LoginTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(jwtAuthenticationRequest)))
                 .andExpect(status().isBadRequest());
-
     }
-
-//    @Test
-//    public void unSuccessfulAuthenticationNoUser() throws Exception {
-//        LoginRequest jwtAuthenticationRequest = new LoginRequest("testuser", "testpassword");
-//        this.mvc.perform(post("/api/auth/signin"))
-//                .header("X-requested-With", "XMLHttpRequest")
-//                .conentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(jwtAuthenticationRequest))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message"))
-//                .value("username not provided")
-//
-//    }
 }
