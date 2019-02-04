@@ -2,6 +2,7 @@ package rueppellii.backend2.tribes.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,8 +54,8 @@ public class ApplicationUserService {
         return allUserDTO;
     }
 
-    public Optional<ApplicationUser> findByUserName(String username) {
-        return applicationUserRepository.findByUsername(username);
+    public ApplicationUser findByUserName(String username) {
+        return applicationUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public Boolean existsByUsername(String username) {
