@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
 
+import java.security.Principal;
+
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api")
 public class KingdomController {
 
     private KingdomService kingdomService;
@@ -19,7 +21,7 @@ public class KingdomController {
     }
 
     @GetMapping("/kingdom")
-    public KingdomDTO showKingdom() throws KingdomNotValidException {
-        return kingdomService.getKingdomByUsername();
+    public KingdomDTO showKingdom(Principal principal) throws KingdomNotValidException {
+        return kingdomService.getKingdomByUsername(principal);
     }
 }

@@ -12,5 +12,5 @@ public class KingdomDTO {
 
     private Long id;
     private String name;
-    private List<Building> buildings;
+    private List<Building> kingdomsBuildings;
 }
