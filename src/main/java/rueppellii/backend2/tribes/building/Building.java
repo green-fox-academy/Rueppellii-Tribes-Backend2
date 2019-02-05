@@ -32,5 +32,7 @@ public abstract class Building {
 
     public Building() {
         this.level = 1;
+        this.started_at = new Timestamp(System.currentTimeMillis());
+        this.finished_at = new Timestamp(getStarted_at().getTime() + 5L);
     }
 }

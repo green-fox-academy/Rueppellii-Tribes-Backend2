@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.resource;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
@@ -25,6 +26,7 @@ public class Resource {
 
     private Timestamp updated_at;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinTable(name = "kingdom_resource", joinColumns = {
             @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {

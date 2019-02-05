@@ -20,8 +20,7 @@ public class BuildingController {
     }
 
     @PostMapping("/kingdom/build")
-    public Iterable<Building> buildNewBuilding(@RequestBody BuildingDTO buildingDTO, Principal principal) throws Exception {
-        buildingService.createBuilding(buildingDTO, principal);
-        return buildingService.listBuildingsInKingdom();
+    public Building buildNewBuilding(@RequestBody BuildingDTO buildingDTO, Principal principal) throws Exception {
+        return buildingService.createBuilding(buildingDTO, principal);
     }
 }

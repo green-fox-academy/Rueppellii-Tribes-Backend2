@@ -25,7 +25,7 @@ public class BuildingService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public void createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
+    public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
         Building building;
         JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
         UserContext userContext = (UserContext) authenticationToken.getPrincipal();
@@ -38,6 +38,7 @@ public class BuildingService {
                 userKingdom.getKingdomsBuildings().add(building);
                 buildingRepository.save(building);
                 kingdomRepository.save(userKingdom);
+                return building;
             }
         }
         throw new IllegalArgumentException("No such building type!");
