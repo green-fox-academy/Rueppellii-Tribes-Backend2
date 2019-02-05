@@ -34,7 +34,7 @@ public class ApplicationUserService {
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.applicationUserRoleRepository = applicationUserRoleRepository;
-        this.buildingService = 
+        this.buildingService = buildingService;
     }
 
     public List<ApplicationUserDTO> getAllUser(){
@@ -91,7 +91,7 @@ public class ApplicationUserService {
             applicationUser.setKingdom(createNewKingdomAndSetName(applicationUserDTO));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
             applicationUser.setRoles(userRoles);
-            Building building = cr
+//            Building building = new Building;
 
 
             applicationUserRepository.save(applicationUser);
@@ -111,6 +111,10 @@ public class ApplicationUserService {
             kingdom.setName(applicationUserDTO.getKingdom());
         }
         return kingdom;
+    }
+
+    public boolean isPasswordCorrect(String username, String password) {
+        return password.equals(applicationUserRepository.findByUsername(username).get().getPassword());
     }
 
 

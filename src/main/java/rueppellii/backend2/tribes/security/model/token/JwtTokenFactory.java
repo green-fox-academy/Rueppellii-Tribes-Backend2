@@ -81,39 +81,5 @@ public class JwtTokenFactory {
         return new AccessJwtToken(token, claims);
     }
 
-    public JwtToken createTestRefreshToken(UserContext userContext, Long tokenLifetimeInMilliseconds) {
-        if (StringUtils.isBlank(userContext.getUsername())) {
-            throw new IllegalArgumentException("Cannot create JWT Token without username");
-        }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        Date refreshTokenExpirationTime = Date.from(currentTime.atZone(ZoneId.systemDefault())
-                .plus(tokenLifetimeInMilliseconds, ChronoUnit.MILLIS).toInstant());
-
-        return setupTokenDetails(userContext, currentTime, refreshTokenExpirationTime);
-    }
-
-
-    private JwtToken setupTokenDetails(UserContext userContext, LocalDateTime currentTime, Date refreshTokenExpirationTime) {
-
-        Claims claims = Jwts.claims().setSubject(userContext.getUsername());
-        claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
-
-        int userIdForToken = applicationUserRepository.findById(userContext.getUsername());
-        StringBuilder userIdForTokenString = new StringBuilder();
-        userIdForTokenString.append(userIdForToken);
-        String token = Jwts.builder()
-                .setClaims(claims)
-                .setId(userIdForTokenString.toString())
-                .setIssuer(TOKEN_ISSUER)
-                .setId(UUID.randomUUID().toString())
-                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
-                .setExpiration(refreshTokenExpirationTime)
-                .signWith(SignatureAlgorithm.HS512, TOKEN_SIGNING_KEY)
-                .compact();
-
-        return new AccessJwtToken(token, claims);
-    }
 
 }

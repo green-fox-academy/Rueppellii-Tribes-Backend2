@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import rueppellii.backend2.tribes.TribesApplication;
-import rueppellii.backend2.tribes.common.TestTokenProvider;
 import rueppellii.backend2.tribes.kingdom.KingdomController;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.security.config.WebSecurityConfig;
