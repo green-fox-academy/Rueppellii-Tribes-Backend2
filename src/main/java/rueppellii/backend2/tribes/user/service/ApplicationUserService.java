@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
@@ -79,6 +80,8 @@ public class ApplicationUserService {
             applicationUser.setKingdom(createNewKingdomAndSetName(applicationUserDTO));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
             applicationUser.setRoles(userRoles);
+            Building building = cr
+
 
             applicationUserRepository.save(applicationUser);
 
