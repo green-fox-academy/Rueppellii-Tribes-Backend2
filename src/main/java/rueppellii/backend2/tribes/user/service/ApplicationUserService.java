@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.building.BuildingService;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
@@ -26,12 +27,14 @@ public class ApplicationUserService {
     private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
     private ApplicationUserRoleRepository applicationUserRoleRepository;
+    private BuildingService buildingService;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, ApplicationUserRoleRepository applicationUserRoleRepository) {
+    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, ApplicationUserRoleRepository applicationUserRoleRepository, BuildingService buildingService) {
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.applicationUserRoleRepository = applicationUserRoleRepository;
+        this.buildingService = 
     }
 
     public List<ApplicationUserDTO> getAllUser(){
