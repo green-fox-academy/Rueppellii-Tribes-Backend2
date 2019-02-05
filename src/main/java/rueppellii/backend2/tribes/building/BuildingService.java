@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
+import rueppellii.backend2.tribes.security.model.UserContext;
+
+import java.security.Principal;
 
 import static rueppellii.backend2.tribes.building.BuildingFactory.makeBuilding;
 
@@ -21,17 +25,19 @@ public class BuildingService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public Building createBuilding(BuildingDTO buildingDTO) throws Exception {
+    public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
         Building building;
-        String loggedInUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Kingdom kingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("No kingdom"));
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+        String loggedInUser = userContext.getUsername();
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(buildingDTO.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
-                building.setBuildingsKingdom(kingdom);
-                kingdom.getKingdomsBuildings().add(building);
+                building.setBuildingsKingdom(userKingdom);
+                userKingdom.getKingdomsBuildings().add(building);
                 buildingRepository.save(building);
-                kingdomRepository.save(kingdom);
+                kingdomRepository.save(userKingdom);
                 return building;
             }
         }

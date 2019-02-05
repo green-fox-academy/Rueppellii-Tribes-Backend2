@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.troop.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public abstract class Troop {
 
     private Boolean finished;
 
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")}, inverseJoinColumns = {
