@@ -32,12 +32,14 @@ public class Kingdom {
     @JoinColumn(name = "application_user_user_id")
     private ApplicationUser applicationUser;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")})
     private List<Troop> troops;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "kingdom_resource", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
