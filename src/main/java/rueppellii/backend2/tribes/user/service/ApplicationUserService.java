@@ -57,6 +57,10 @@ public class ApplicationUserService {
         return applicationUserRepository.findByUsername(username);
     }
 
+    public ApplicationUser findUser(String username) {
+        return applicationUserRepository.findByUsername(username).get();
+    }
+
     public Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
     }
@@ -70,7 +74,7 @@ public class ApplicationUserService {
 
             List<ApplicationUserRole> userRoles = new ArrayList<>();
             try {
-                userRoles.add(applicationUserRoleRepository.findById(2L).orElseThrow(Exception::new));
+                userRoles.add(applicationUserRoleRepository.findById(1L).orElseThrow(Exception::new));
             } catch (Exception e) {
                 e.printStackTrace();
             }
