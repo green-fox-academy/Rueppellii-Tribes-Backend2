@@ -21,6 +21,7 @@ public abstract class Troop {
     @Enumerated(EnumType.STRING)
     private TroopTypes type;
 
+    private Integer level;
     private Integer HP;
     private Integer attack;
     private Integer defense;
