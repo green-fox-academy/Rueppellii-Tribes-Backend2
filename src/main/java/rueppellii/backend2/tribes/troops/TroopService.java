@@ -1,11 +1,12 @@
 package rueppellii.backend2.tribes.troop;
 
-import rueppellii.backend2.tribes.timeService.TimeService;
+
 import rueppellii.backend2.tribes.troop.models.Troop;
+import rueppellii.backend2.tribes.troop.models.TroopTypes;
 
-public interface TroopService extends TimeService {
+public interface TroopService {
 
-    void saveTroop(TroopDTO troopDTO);
+    void saveTroop(TroopTypes troopType);
     void deleteTroop(Long troop_id);
     Troop findById(Long troop_id);
 }
