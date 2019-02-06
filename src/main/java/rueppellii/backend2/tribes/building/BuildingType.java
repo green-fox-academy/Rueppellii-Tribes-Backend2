@@ -23,4 +23,8 @@ public enum BuildingType {
     public Building buildBuilding() {
         return null;
     }
+
+    public String getName() {
+        return TOWNHALL.getName();
+    }
 }

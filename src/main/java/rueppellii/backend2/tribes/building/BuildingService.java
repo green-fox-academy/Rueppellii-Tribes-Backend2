@@ -45,4 +45,6 @@ public class BuildingService {
     public Iterable<Building> listBuildingsInKingdom() {
         return buildingRepository.findAll();
     }
+
+
 }

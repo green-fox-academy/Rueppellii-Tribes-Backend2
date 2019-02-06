@@ -41,6 +41,10 @@ public class ApplicationUserService {
         this.applicationUserRoleRepository = applicationUserRoleRepository;
     }
 
+    public void save(ApplicationUser applicationUser){
+        applicationUserRepository.save(applicationUser);
+    }
+
     public String getUsernameByPrincipal(Principal principal) {
         JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
         UserContext user = (UserContext) token.getPrincipal();

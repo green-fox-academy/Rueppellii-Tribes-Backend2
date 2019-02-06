@@ -7,7 +7,7 @@ import lombok.Setter;
 import rueppellii.backend2.tribes.building.*;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.models.Troop;
-import rueppellii.backend2.tribes.upgrade.persistence.UpgradeModel;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -51,8 +51,8 @@ public class Kingdom {
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "upgradesKingdom", targetEntity = UpgradeModel.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<UpgradeModel> kingdomsUpgrades;
+    @OneToMany(mappedBy = "progressKingdom", targetEntity = ProgressionModel.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
         TownHall townHall = new TownHall();

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,6 +23,7 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,6 +37,7 @@ public class ApplicationUserControllerTest {
     private ApplicationUser applicationUser;
     private Kingdom kingdom;
     private RegisterResponse registerResponse;
+    private ApplicationUserDTO applicationUserDTO;
 
     @MockBean
     ApplicationUserService applicationUserService;
@@ -83,18 +86,30 @@ public class ApplicationUserControllerTest {
 
     @Test
     public void successfulRegistrationWithOUTKingdomName() throws Exception {
+        registerResponse = new RegisterResponse();
+        registerResponse.setId(1L);
+        registerResponse.setUsername("TestUser");
+        registerResponse.setKingdomId(1L);
+        Mockito.when(applicationUserService.registerNewApplicationUser(Mockito.any(ApplicationUserDTO.class))).thenReturn(registerResponse);
         mvc.perform(post("/api/user/register")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content("{\n"
                         + " \"username\":\"TestUser\",\n"
                         + " \"password\":\"12345\",\n"
                         + " \"kingdom\":\"\"\n"
                         + "}"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", Is.is(1)))
+                .andExpect(jsonPath("$.username", Is.is("TestUser")))
+                .andExpect(jsonPath("$.kingdomId", Is.is(1)))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void unSuccessfulRegistrationUserNameIsTaken() throws Exception {
+        applicationUserDTO = new ApplicationUserDTO();
+        applicationUserDTO.setUsername("TestUser");
+        Mockito.when(applicationUserService.registerNewApplicationUser(applicationUserDTO)).thenThrow(UsernameNotFoundException.class);
         mvc.perform(post("/api/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n"
@@ -102,7 +117,7 @@ public class ApplicationUserControllerTest {
                         + " \"password\":\"12345\",\n"
                         + " \"kingdom\":\"\"\n"
                         + "}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
     }
 
 
