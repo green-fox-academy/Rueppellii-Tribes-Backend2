@@ -10,6 +10,8 @@ import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 
 import java.security.Principal;
 
+import java.security.Principal;
+
 
 @RestController
 @RequestMapping("/api")
@@ -23,8 +25,8 @@ public class KingdomController {
     }
 
     @GetMapping("/kingdom")
-    public Object showKingdom() throws KingdomNotValidException {
-        return kingdomService.getKingdomByUsername();
+    public KingdomDTO showKingdom(Principal principal) throws KingdomNotValidException {
+        return kingdomService.getKingdomByUsername(principal);
     }
 
 

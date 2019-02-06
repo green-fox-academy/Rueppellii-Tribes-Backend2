@@ -1,11 +1,13 @@
 package rueppellii.backend2.tribes.building;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.user.service.ApplicationUserService;
+
+import java.security.Principal;
 
 import static rueppellii.backend2.tribes.building.BuildingFactory.makeBuilding;
 
@@ -14,24 +16,26 @@ public class BuildingService {
 
     private BuildingRepository buildingRepository;
     private KingdomRepository kingdomRepository;
+    private ApplicationUserService applicationUserService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository, KingdomRepository kingdomRepository) {
+    public BuildingService(BuildingRepository buildingRepository, KingdomRepository kingdomRepository, ApplicationUserService applicationUserService) {
         this.buildingRepository = buildingRepository;
         this.kingdomRepository = kingdomRepository;
+        this.applicationUserService = applicationUserService;
     }
 
-    public Building createBuilding(BuildingDTO buildingDTO) throws Exception {
+    public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
         Building building;
-        String loggedInUser = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Kingdom kingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("No kingdom"));
+        String loggedInUser = applicationUserService.getUsernameByPrincipal(principal);
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(buildingDTO.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
-                building.setBuildingsKingdom(kingdom);
-                kingdom.getKingdomsBuildings().add(building);
+                building.setBuildingsKingdom(userKingdom);
+                userKingdom.getKingdomsBuildings().add(building);
                 buildingRepository.save(building);
-                kingdomRepository.save(kingdom);
+                kingdomRepository.save(userKingdom);
                 return building;
             }
         }

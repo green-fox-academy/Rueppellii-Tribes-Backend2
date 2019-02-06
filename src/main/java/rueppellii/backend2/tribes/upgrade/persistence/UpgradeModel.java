@@ -24,7 +24,8 @@ public class UpgradeModel {
     private String objectToUpgrade;
     private Long timeToCreate;
 
-    public UpgradeModel(Long duration) {
+    public UpgradeModel(String objectToUpgrade, Long duration) {
+        this.objectToUpgrade = objectToUpgrade;
         this.timeToCreate = System.currentTimeMillis() + duration;
     }
 }

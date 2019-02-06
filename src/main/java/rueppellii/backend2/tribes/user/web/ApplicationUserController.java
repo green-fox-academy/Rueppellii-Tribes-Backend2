@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class ApplicationUserController {
 
     private ApplicationUserService applicationUserService;
 
     @Autowired
-    public UserController(ApplicationUserService applicationUserService) {
+    public ApplicationUserController(ApplicationUserService applicationUserService) {
         this.applicationUserService = applicationUserService;
     }
 

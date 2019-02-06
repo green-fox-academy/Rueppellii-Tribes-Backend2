@@ -2,7 +2,10 @@ package rueppellii.backend2.tribes.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +25,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationUserService {
@@ -37,12 +41,13 @@ public class ApplicationUserService {
         this.applicationUserRoleRepository = applicationUserRoleRepository;
     }
 
-    public String getUsername(Principal principal){
+    public String getUsernameByPrincipal(Principal principal) {
         JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
         UserContext user = (UserContext) token.getPrincipal();
         return user.getUsername();
     }
-    public List<ApplicationUserDTO> getAllUser(){
+
+    public List<ApplicationUserDTO> getAllUser() {
         List<ApplicationUser> allUser = applicationUserRepository.findAll();
         List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
 
@@ -53,25 +58,26 @@ public class ApplicationUserService {
             List<Role> roles = new ArrayList<>();
             for (int i = 0; i < user.getRoles().size(); i++) {
                 roles.add(user.getRoles().get(i).getRoleEnum());
-
             }
             dto.setRoles(roles);
             allUserDTO.add(dto);
-
         }
         return allUserDTO;
     }
 
-    public Optional<ApplicationUser> findByUserName(String username) {
-        return applicationUserRepository.findByUsername(username);
+    public UserContext createUserContext(String username) {
+        ApplicationUser applicationUser = findByUserName(username);
+
+        if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
+        List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
+                .collect(Collectors.toList());
+
+        return UserContext.create(applicationUser.getUsername(), authorities);
     }
 
-    public ApplicationUser findUser(String username) {
-        if (applicationUserRepository.findByUsername(username).isPresent()) {
-            return applicationUserRepository.findByUsername(username).get();
-        } else {
-            return null;
-        }
+    public ApplicationUser findByUserName(String username) throws UsernameNotFoundException {
+        return applicationUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public Boolean existsByUsername(String username) {

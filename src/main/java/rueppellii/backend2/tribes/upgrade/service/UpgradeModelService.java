@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.upgrade.persistence.UpgradeModelRepository;
 
 @Service
-public class UpgradeService {
+public class UpgradeModelService {
 
     private UpgradeModelRepository upgradeModelRepository;
 
     @Autowired
-    public UpgradeService(UpgradeModelRepository upgradeModelRepository) {
+    public UpgradeModelService(UpgradeModelRepository upgradeModelRepository) {
         this.upgradeModelRepository = upgradeModelRepository;
     }
 

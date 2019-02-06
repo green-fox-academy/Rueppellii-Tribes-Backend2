@@ -41,10 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = TribesApplication.class)
 public class LoginTest {
 
-    private MediaType conentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
-
     private MockMvc mockMvc;
     private AccessJwtToken token;
     private ApplicationUserDTO applicationUserDTO;
@@ -90,10 +86,14 @@ public class LoginTest {
     @Test
     @WithMockUser
     public void successfulLogin () throws Exception {
-        Mockito.when(applicationUserService.findUser("test"))
+        Mockito.when(applicationUserService.findByUserName("test"))
                 .thenReturn(applicationUser);
-        mockMvc.perform(get("/api/kingdom")
-                .contentType(conentType)
+        mockMvc.perform(get("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{\n"
+                        + " \"username\":\"test\",\n"
+                        + " \"password\":\"password\",\n"
+                        + "}")
                 .header("X-Requested-With", "XMLHttpRequest")
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isOk());
