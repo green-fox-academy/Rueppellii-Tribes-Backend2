@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "resource")
+@Table(name = "resources")
 public class Resource {
 
     @Id

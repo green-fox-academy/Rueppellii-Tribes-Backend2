@@ -10,11 +10,12 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
+@Table(name = "progression")
 public class ProgressionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long progression_id;
 
     @JsonBackReference
     @ManyToOne
@@ -24,6 +25,4 @@ public class ProgressionModel {
     private String objectToProgress;
     private Long timeToCreate;
     private Long gameObjectId;
-    private Boolean create;
-
 }

@@ -24,6 +24,7 @@ public class ProgressionController {
     private ApplicationUserService applicationUserService;
     private ProgressionModelService progressionModelService;
     private TimeService timeService;
+    private TimeServiceDTO timeServiceDTO;
 
     @Autowired
     public ProgressionController(ApplicationUserService applicationUserService, ProgressionModelService progressionModelService, TimeService timeService) {
@@ -34,7 +35,7 @@ public class ProgressionController {
 
     @PostMapping("/upgrade/{actionCode}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void upgrade(ProgressionDTO progressionDTO, Principal principal, @PathVariable(name = "actionCode") Integer actionCode) throws UsernameNotFoundException {
+    public void upgrade(@RequestBody ProgressionDTO progressionDTO, Principal principal, @PathVariable(name = "actionCode") Integer actionCode) throws UsernameNotFoundException {
         String userName = applicationUserService.getUsernameByPrincipal(principal);
         ApplicationUser applicationUser = applicationUserService.findByUserName(userName);
 
@@ -50,13 +51,13 @@ public class ProgressionController {
         //TODO Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
 
 
-        //TODO the second parameter for the ProgressionModel comes from TimeService which calculates the duration of ProgressionModel(applicationUser, actionCode, progressionDTO.getObjectToUpgrade())
+        //TODO the second parameter for the ProgressionModel comes from TimeService which calculates the duration of ProgressionModel(applicationUser, actionCode, progressionDTO.getObjectToProgress())
         //TODO Will return a Long with the duration
-        TimeServiceDTO timeServiceDTO = timeService.calculateDuration(applicationUser,actionCode,progressionDTO.getObjectToUpgrade());
+        timeServiceDTO = new TimeServiceDTO();
+        timeServiceDTO = timeService.calculateDuration(applicationUser, actionCode, progressionDTO.getObjectToProgress());
 
         ProgressionModel progressionModel = new ProgressionModel();
-        progressionModel.setCreate(progressionModelService.actionHandler(actionCode));
-        progressionModel.setObjectToProgress(progressionDTO.getObjectToUpgrade());
+        progressionModel.setObjectToProgress(progressionDTO.getObjectToProgress());
         progressionModel.setTimeToCreate(timeServiceDTO.getDuration());
         if(actionCode > 0) {
             progressionModel.setGameObjectId(timeServiceDTO.getGameObjectToProgressId());
