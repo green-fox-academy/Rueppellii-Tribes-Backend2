@@ -6,16 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.building.Farm;
+import rueppellii.backend2.tribes.building.TownHall;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
+
 @Entity
 @Table(name = "kingdoms")
 public class Kingdom {
@@ -47,4 +50,10 @@ public class Kingdom {
     @JsonManagedReference
     @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Building> kingdomsBuildings;
+
+
+    public Kingdom() {
+        kingdomsBuildings = new ArrayList<>();
+        kingdomsBuildings.add(new TownHall());
+    }
 }

@@ -2,11 +2,11 @@ package rueppellii.backend2.tribes.troop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.timeService.TimeConstans;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.troop.models.TroopTypes;
 
 import java.sql.Timestamp;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static rueppellii.backend2.tribes.troop.TroopFactory.troopBuilder;
@@ -46,13 +46,18 @@ public class TroopServiceImp implements TroopService {
     }
 
     @Override
-    public Long setLevelBonus(Integer currentLevel) {
-        buildingTime -= currentLevel * 30;
+    public Long levelBonus(Integer currentLevel) {
+        buildingTime -= currentLevel * 30 + TimeConstans.getTEASER();
         return buildingTime;
     }
 
     @Override
-    public Timestamp setConstructingTime(Long second) {
+    public Timestamp constructingTime(Long buildingTime) {
         return new Timestamp(System.currentTimeMillis() + buildingTime);
+    }
+
+    @Override
+    public Timestamp upgradingTime(Long buildingTime) {
+        return null;
     }
 }
