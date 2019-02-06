@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -89,7 +90,7 @@ public class LoginTest {
         applicationUser = new ApplicationUser();
         applicationUser.setId(1L);
         applicationUser.setUsername("TestUser");
-        applicationUser.setPassword("12345");  //don't know it needs or not
+        applicationUser.setPassword("12345");
         applicationUser.setKingdom(kingdomTest);
     }
 
@@ -112,7 +113,8 @@ public class LoginTest {
                 .andExpect(jsonPath("$.refreshToken").exists())
                 .andExpect(jsonPath("$.refreshToken").isNotEmpty())
                 .andExpect(jsonPath("$.refreshTokenExpiration").exists())
-                .andExpect(jsonPath("$.refreshTokenExpiration").isNumber());
+                .andExpect(jsonPath("$.refreshTokenExpiration").isNumber())
+                .andDo(print());
     }
 
 }
