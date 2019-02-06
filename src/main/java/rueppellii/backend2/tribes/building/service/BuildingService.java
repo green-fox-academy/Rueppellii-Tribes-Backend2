@@ -1,15 +1,19 @@
-package rueppellii.backend2.tribes.building;
+package rueppellii.backend2.tribes.building.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.kingdom.KingdomRepository;
+import rueppellii.backend2.tribes.building.utility.BuildingDTO;
+import rueppellii.backend2.tribes.building.utility.BuildingType;
+import rueppellii.backend2.tribes.building.persistence.repository.BuildingRepository;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import java.security.Principal;
 
-import static rueppellii.backend2.tribes.building.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 
 @Service
 public class BuildingService {

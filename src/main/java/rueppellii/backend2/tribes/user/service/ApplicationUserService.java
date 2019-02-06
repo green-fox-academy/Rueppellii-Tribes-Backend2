@@ -12,7 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
@@ -24,7 +24,6 @@ import rueppellii.backend2.tribes.user.util.Role;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

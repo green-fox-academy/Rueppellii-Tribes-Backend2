@@ -1,8 +1,8 @@
-package rueppellii.backend2.tribes.kingdom;
+package rueppellii.backend2.tribes.kingdom.utility;
 
 import lombok.Getter;
 import lombok.Setter;
-import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.models.Troop;
 

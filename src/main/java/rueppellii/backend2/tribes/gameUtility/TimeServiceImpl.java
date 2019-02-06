@@ -1,7 +1,7 @@
 package rueppellii.backend2.tribes.gameUtility;
 
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 

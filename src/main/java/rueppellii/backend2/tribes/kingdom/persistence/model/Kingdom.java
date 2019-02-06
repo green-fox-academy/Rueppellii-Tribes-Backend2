@@ -1,10 +1,10 @@
-package rueppellii.backend2.tribes.kingdom;
+package rueppellii.backend2.tribes.kingdom.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
-import rueppellii.backend2.tribes.building.*;
+import rueppellii.backend2.tribes.building.persistence.model.*;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import javax.persistence.*;
 import java.sql.Timestamp;
 

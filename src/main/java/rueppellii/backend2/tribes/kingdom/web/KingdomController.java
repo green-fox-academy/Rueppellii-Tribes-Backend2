@@ -1,14 +1,12 @@
-package rueppellii.backend2.tribes.kingdom;
+package rueppellii.backend2.tribes.kingdom.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
-import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
-
-import java.security.Principal;
 
 import java.security.Principal;
 

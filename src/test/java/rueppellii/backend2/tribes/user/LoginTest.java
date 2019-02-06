@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import rueppellii.backend2.tribes.TribesApplication;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.security.model.token.AccessJwtToken;
 import rueppellii.backend2.tribes.security.model.token.JwtTokenFactory;
@@ -28,7 +28,6 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 

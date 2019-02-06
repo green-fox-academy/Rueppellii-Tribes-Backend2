@@ -1,9 +1,12 @@
-package rueppellii.backend2.tribes.kingdom;
+package rueppellii.backend2.tribes.kingdom.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
 

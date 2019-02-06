@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
