@@ -4,7 +4,7 @@ public enum BuildingType {
 
     TOWNHALL {
         public Building buildBuilding() {
-            return new TownHall();
+                return new TownHall();
         }
     }, FARM {
         public Building buildBuilding() {

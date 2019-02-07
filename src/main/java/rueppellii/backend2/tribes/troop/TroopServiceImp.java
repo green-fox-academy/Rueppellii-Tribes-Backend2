@@ -2,62 +2,34 @@ package rueppellii.backend2.tribes.troop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.timeService.TimeConstans;
-import rueppellii.backend2.tribes.troop.models.Troop;
-import rueppellii.backend2.tribes.troop.models.TroopTypes;
-
-import java.sql.Timestamp;
-import java.util.concurrent.TimeUnit;
-
-import static rueppellii.backend2.tribes.troop.TroopFactory.troopBuilder;
+import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 
 @Service
-public class TroopServiceImp implements TroopService {
+public class TroopServiceImp {
 
     private TroopRepository troopRepository;
-    private Long buildingTime;
+    private KingdomRepository kingdomRepository;
 
     @Autowired
-    public TroopServiceImp(TroopRepository troopRepository) {
+    public TroopServiceImp(TroopRepository troopRepository, KingdomRepository kingdomRepository) {
         this.troopRepository = troopRepository;
-        buildingTime = TimeUnit.MINUTES.toSeconds(5);
+        this.kingdomRepository = kingdomRepository;
     }
 
-    @Override
-    public void saveTroop(TroopDTO troopDTO) {
-        for (TroopTypes types : TroopTypes.values()) {
-            if (TroopTypes.valueOf(troopDTO.getTroopType().toUpperCase()).equals(types)) {
-                 troopRepository.save(troopBuilder(types));
-            }
+    public void saveTroop(Long kingdomId, Troop troop) {
+        if (kingdomRepository.findById(kingdomId).isPresent()) {
+                troopRepository.save(troop);
         }
     }
 
-    @Override
     public void deleteTroop(Long troop_id) {
         troopRepository.deleteById(troop_id);
     }
 
-    @Override
     public Troop findById(Long troop_id) {
         if (troopRepository.findById(troop_id).isPresent()) {
             return troopRepository.findById(troop_id).get();
         }
-        return null;
-    }
-
-    @Override
-    public Long levelBonus(Integer currentLevel) {
-        buildingTime -= currentLevel * 30 + TimeConstans.getTEASER();
-        return buildingTime;
-    }
-
-    @Override
-    public Timestamp constructingTime(Long buildingTime) {
-        return new Timestamp(System.currentTimeMillis() + buildingTime);
-    }
-
-    @Override
-    public Timestamp upgradingTime(Long buildingTime) {
         return null;
     }
 }

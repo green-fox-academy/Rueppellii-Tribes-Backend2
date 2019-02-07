@@ -1,7 +1,7 @@
 package rueppellii.backend2.tribes.security;
 
 public class SecurityConstants {
-    public static final String TOKEN_SIGNING_KEY = "xm8EV6Hy5RMFK4EEACIDAwQus"; //should be stored in a local variable
+    public static final String TOKEN_SIGNING_KEY = System.getenv("SIGNING_KEY"); //should be stored in a local variable
     public static final String AUTHENTICATION_HEADER_NAME = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTHENTICATION_URL = "/api/auth/login";

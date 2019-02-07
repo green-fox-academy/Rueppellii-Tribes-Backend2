@@ -1,25 +1,21 @@
-package rueppellii.backend2.tribes.troop.models;
+package rueppellii.backend2.tribes.troop;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "troops")
-public abstract class Troop {
+public class Troop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long troop_id;
-
-    @Enumerated(EnumType.STRING)
-    private TroopTypes type;
 
     private Integer level;
     private Integer HP;
@@ -28,13 +24,17 @@ public abstract class Troop {
     private Timestamp startedAt;
     private Timestamp finishedAt;
 
-    private Boolean finished;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")}, inverseJoinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom kingdom;
 
-    protected abstract void troopBuilder();
+    public Troop() {
+        this.level = 1;
+        this.HP =   100;
+        this.attack = 20;
+        this.defense = 10;
+        this.startedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
