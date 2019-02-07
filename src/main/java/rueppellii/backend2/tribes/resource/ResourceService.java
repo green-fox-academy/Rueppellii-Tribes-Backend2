@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +34,7 @@ public class ResourceService {
     }
 
     public ResponseEntity saveResource(Resource resource) {
-        if ((resource.getResource_type() != null) && validateType(resource)) {
+        if ((resource.getType() != null) && validateType(resource)) {
             resourceRepository.save(resource);
             return ResponseEntity.status(HttpStatus.OK).build();
         }
@@ -44,7 +42,7 @@ public class ResourceService {
     }
 
     public boolean validateType(Resource resource) {
-        return resource.getResource_type() == ResourceType.RESOURCE_FOOD || resource.getResource_type() == ResourceType.RESOURCE_GOLD;
+        return resource.getType() == ResourceType.RESOURCE_FOOD || resource.getType() == ResourceType.RESOURCE_GOLD;
     }
 
     public Integer usingResource(Resource resource) {
@@ -52,6 +50,20 @@ public class ResourceService {
             return resource.getAmount() - 10;           //amount added only for example
         }
         return null;
+    }
+
+    public Resource returnResource(ResourceType type, Long id) throws Exception {
+        return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new Exception());
+    }
+
+    public void minusGoldAmount(Integer gold, Long kingdomId) throws Exception {
+        Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
+        resource.setAmount(resource.getAmount() - gold);
+    }
+
+    public void plusGoldAmount(Integer gold, Long kingdomId) throws Exception {
+        Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
+        resource.setAmount(resource.getAmount() + gold);
     }
 
 //    public boolean hasEnoughResource(ResourceType resourceType, Kingdom kingdom, int amountNeeded) {

@@ -20,12 +20,12 @@ public class KingdomService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public KingdomDTO getKingdomByUsername(Principal principal) throws KingdomNotValidException {
+    public Kingdom getKingdomByUsername(String loggedInUser) throws KingdomNotValidException {
+        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
+    }
+
+    public KingdomDTO mapKingdomDTO(Kingdom kingdom) {
         ModelMapper mapper = new ModelMapper();
-        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
-        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
-        String loggedInUser = userContext.getUsername();
-        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
-        return mapper.map(userKingdom, KingdomDTO.class);
+        return mapper.map(kingdom, KingdomDTO.class);
     }
 }

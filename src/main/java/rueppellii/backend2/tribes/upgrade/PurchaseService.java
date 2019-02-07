@@ -3,85 +3,61 @@ package rueppellii.backend2.tribes.upgrade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.kingdom.KingdomRepository;
+import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
 import rueppellii.backend2.tribes.resource.Resource;
-import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
-import rueppellii.backend2.tribes.security.model.UserContext;
+import rueppellii.backend2.tribes.resource.ResourceService;
+import rueppellii.backend2.tribes.resource.ResourceType;
 import rueppellii.backend2.tribes.troop.models.Troop;
 import rueppellii.backend2.tribes.troop.models.TroopTypes;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PurchaseService {
 
-    private KingdomRepository kingdomRepository;
+    private KingdomService kingdomService;
+    private ResourceService resourceService;
 
     @Autowired
-    public PurchaseService(KingdomRepository kingdomRepository) {
-        this.kingdomRepository = kingdomRepository;
+    public PurchaseService(KingdomService kingdomService, ResourceService resourceService) {
+        this.kingdomService = kingdomService;
+        this.resourceService = resourceService;
     }
 
-//    public String findLoggedInUsername(Principal principal) {
-//        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
-//        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
-//        return userContext.getUsername();
+    public Integer getGold(Long kingdomId) throws Exception {
+        return resourceService.returnResource(ResourceType.RESOURCE_GOLD, kingdomId).getAmount();
+    }
+//
+//    public List<Resource> returnKingdomsResources(String userName) throws KingdomNotValidException {
+//        Kingdom kingdom = findUsersKingdom(userName);
+//        List<Resource> kingdomsResources = new ArrayList<>();
+//        for (Resource gold : kingdom.getKingdomsResources()) {
+//            if (gold.getType().getTypeName().equals("RESOURCE_GOLD")) {
+//                kingdomsResources.add(gold);
+//            }
+//        }
+//        for (Resource food : kingdom.getKingdomsResources()) {
+//            if (food.getType().getTypeName().equals("RESOURCE_FOOD")) {
+//                kingdomsResources.add(food);
+//            }
+//        }
+//        return kingdomsResources;
 //    }
 
-    public Kingdom findUsersKingdom(String userName) throws KingdomNotValidException {
-        return kingdomRepository.findByApplicationUser_Username(userName).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
-    }
 
-    public Integer getKingdomsGoldAmount(String userName) throws KingdomNotValidException {
-        Integer goldAmount = 0;
-        Kingdom userKingdom = findUsersKingdom(userName);
-        for (Resource gold : userKingdom.getKingdomsResources()) {
-            if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
-                goldAmount = gold.getAmount();
-            }
-        }
-        return goldAmount;
+    public boolean hasEnoughGold(Long kingdomId, Integer amount) throws Exception {
+        return getGold(kingdomId) > amount;
     }
-
-    public List<Resource> returnKingdomsResources(String userName) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(userName);
-        List<Resource> kingdomsResources = new ArrayList<>();
-        for (Resource gold : kingdom.getKingdomsResources()) {
-            if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
-                kingdomsResources.add(gold);
-            }
-        }
-        for (Resource food : kingdom.getKingdomsResources()) {
-            if (food.getResource_type().getTypeName().equals("RESOURCE_FOOD")) {
-                kingdomsResources.add(food);
-            }
-        }
-        return kingdomsResources;
-    }
-
-    public void makeTroop(String userName, TroopTypes type) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(userName);
-        for (Troop troop : kingdom.getTroops()) {
-            if (troop.getType().equals(type)) {
-                troop.getType().createTroop();
-            }
-        }
-    }
-
-    public boolean hasEnoughGold(String userName, Integer amount) throws KingdomNotValidException {
-                return getKingdomsGoldAmount(userName) > amount;
-    }
-
-    public void buyTroop(String userName, TroopTypes type) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(userName);
-        Integer troopPrice = 10;
-        if (hasEnoughGold(userName, troopPrice)) {
-            kingdom.setKingdomsResources(returnKingdomsResources(userName));
-            makeTroop(userName, type);
-            kingdomRepository.save(kingdom);
-        }
-    }
+//
+//    public void buyTroop(String userName, TroopTypes type) throws KingdomNotValidException {
+//        Kingdom kingdom = findUsersKingdom(userName);
+//        Integer troopPrice = 10;
+//        if (hasEnoughGold(userName, troopPrice)) {
+//            kingdom.setKingdomsResources(returnKingdomsResources(userName));
+//            makeTroop(userName, type);
+//            kingdomRepository.save(kingdom);
+//        }
+//    }
 }

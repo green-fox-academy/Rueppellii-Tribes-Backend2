@@ -20,7 +20,7 @@ public abstract class Resource {
     private Long resource_id;
 
     @Enumerated(EnumType.STRING)
-    private ResourceType resource_type;
+    private ResourceType type;
     private Integer amount;
     private Timestamp updated_at;
 
