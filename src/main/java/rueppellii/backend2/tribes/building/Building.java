@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "Building_Type")
 @Table(name = "buildings")
 public abstract class Building {
 
@@ -18,8 +20,10 @@ public abstract class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long building_id;
 
+    @Transient
     @Enumerated(EnumType.STRING)
     private BuildingType type;
+
     private Integer level;
     private Integer HP;
     private Timestamp started_at;
