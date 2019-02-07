@@ -25,8 +25,7 @@ public enum ResourceType {
         return typeName;
     }
 
-//TODO add buildresource method like in building
-
+    //TODO add buildresource method like in building
     //TODO add this to the ServiceImpl like in the troops
     //TODO add the resources to classes as well
     //TODO create separate classes for Food and Gold

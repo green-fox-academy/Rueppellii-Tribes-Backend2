@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
-//    Resource findByResource_type (ResourceType resourceType, long kingdomId);
+    Resource findByResource_typeAndResourcesKingdom_Id (ResourceType resourceType, long kingdomId);
 }

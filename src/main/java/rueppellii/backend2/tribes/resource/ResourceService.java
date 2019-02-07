@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
+import rueppellii.backend2.tribes.troop.TroopService;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +17,12 @@ public class ResourceService {
     private ResourceRepository resourceRepository;
     private KingdomService kingdomService;
     private KingdomRepository kingdomRepository;
+    private TroopService troopService;
 
     @Autowired
-    public ResourceService(ResourceRepository resourceRepository) {
+    public ResourceService(ResourceRepository resourceRepository, TroopService troopService) {
         this.resourceRepository = resourceRepository;
+        this.troopService = troopService;
     }
 
     public Resource getResourceById(Long id) {
@@ -69,53 +71,53 @@ public class ResourceService {
 //    public Timestamp getTimeStamp(Resource resource) {
 //        return new Timestamp(resource.getUpdated_at());
 //    }
-
     public long currentTimeDifference(long id) {
         //return TimeService's method
         return id;
     }
 
+    //TODO add a Timeservice method for amount / minute
+
 /**
  * And you can multiply the difference with your model's +amount / minutes field
  */
 
-    /**
-     * set the amount of the resource, and the timestamp, and update the database
-     */
-//    public void setAmountOfGold(Kingdom kingdom, int goldAmount) {
-//        Resource gold = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_FOOD, kingdom.getId());
-//        gold.setAmount(goldAmount);
-//        kingdomRepository.save(kingdom);
-//    }
-//
-//    public void setAmountOfFood
-//            (Kingdom kingdom, int foodAmount) {
-//        Resource food = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_GOLD, kingdom.getId());
-//        food.setAmount(foodAmount);
-//        kingdomRepository.save(kingdom);
-//    }
+    public int goldAmountPerMinute(Kingdom kingdom) {
+        Resource gold = resourceRepository.findByResource_typeAndResourcesKingdom_Id(ResourceType.RESOURCE_GOLD, kingdom.getId());
+        int goldAmount = gold.getAmount();
+        int timepassed = 10;        //TODO add Timeservice method
+        int goldamountPerMinute = goldAmount + goldAmount / timepassed;
+        return goldamountPerMinute;
+    }
 
+    //TODO set the amount of the resource, and the timestamp, and update the database
+
+    public void setAmountOfGold(Kingdom kingdom, int goldAmount) {
+        Resource gold = resourceRepository.findByResource_typeAndResourcesKingdom_Id(ResourceType.RESOURCE_FOOD, kingdom.getId());
+        gold.setAmount(goldAmount);
+        kingdomRepository.save(kingdom);
+    }
+
+    public void setAmountOfFood(Kingdom kingdom, int foodAmount) {
+        Resource food = resourceRepository.findByResource_typeAndResourcesKingdom_Id(ResourceType.RESOURCE_GOLD, kingdom.getId());
+        food.setAmount(foodAmount);
+        kingdomRepository.save(kingdom);
+    }
 
     /**
      * if one troop is created, set food amount / minutes to actual -1
      */
-//
-//    //ask Laci
-//    public int foodAmountPerMinute(Resource resource) {
-//
-//    }
+    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, ResourceType resourceType) {
+        Resource food = resourceRepository.findByResource_typeAndResourcesKingdom_Id(resourceType, kingdom.getId());
+        int numberOfTroops = kingdom.getTroops().size();
+        int foodAmount = food.getAmount();
+        int timepassed = 10;        //TODO add Timeservice method
+        int foodAmountPerMinute = foodAmount + foodAmount / timepassed;
+        if (numberOfTroops == numberOfTroops + 1){
+            foodAmount -= 1;
+        }
+    }
 
-    /**
-     * method for creating a building
-     */
-
-    /**
-     * method for creating a troop
-     */
-
-    /**
-     * method for upgrade???
-     */
 
 
 }
