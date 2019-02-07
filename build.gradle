@@ -41,7 +41,3 @@ dependencies {
     compile('org.modelmapper:modelmapper:1.1.0')
     annotationProcessor("org.projectlombok:lombok")
 }
-
-test {
-    environment "SIGNING_KEY", "secret"
-}
