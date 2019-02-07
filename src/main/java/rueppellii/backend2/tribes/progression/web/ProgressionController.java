@@ -51,7 +51,7 @@ public class ProgressionController {
         //TODO Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
 
 
-        //TODO the second parameter for the ProgressionModel comes from TimeService which calculates the duration of ProgressionModel(applicationUser, actionCode, progressionDTO.getObjectToProgress())
+        //TODO  comes from TimeService which calculates the readyToProgress of ProgressionModel(applicationUser, actionCode, progressionDTO.getObjectToProgress())
         //TODO Will return a Long with the duration
         timeServiceDTO = new TimeServiceDTO();
         timeServiceDTO = timeService.calculateDuration(applicationUser, actionCode, progressionDTO.getObjectToProgress());

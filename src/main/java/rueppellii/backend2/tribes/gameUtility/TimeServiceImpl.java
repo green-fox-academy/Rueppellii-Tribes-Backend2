@@ -22,33 +22,33 @@ public class TimeServiceImpl implements TimeService {
         if (actionCode > 0) {
             //TODO this is gonna be upgrade
             if (gameObjectToProgress.equals("TOWNHALL")) {
-                timeServiceDTO.setDuration(TOWNHALL_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (TOWNHALL_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
                 timeServiceDTO.setGameObjectToProgressId(getBuildingIdToProgress(applicationUser, actionCode, gameObjectToProgress));
             } else if (gameObjectToProgress.equals("BARRACKS")) {
-                timeServiceDTO.setDuration(BARRACKS_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (BARRACKS_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
                 timeServiceDTO.setGameObjectToProgressId(getBuildingIdToProgress(applicationUser, actionCode, gameObjectToProgress));
             } else if (gameObjectToProgress.equals("FARM")) {
-                timeServiceDTO.setDuration(FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
                 timeServiceDTO.setGameObjectToProgressId(getBuildingIdToProgress(applicationUser, actionCode, gameObjectToProgress));
             } else if (gameObjectToProgress.equals("MINE")) {
-                timeServiceDTO.setDuration(FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
                 timeServiceDTO.setGameObjectToProgressId(getBuildingIdToProgress(applicationUser, actionCode, gameObjectToProgress));
             } else if (gameObjectToProgress.equals("TROOP")) {
-                timeServiceDTO.setDuration(TROOP_CREATION_TIME / actionCode);
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (TROOP_CREATION_TIME / actionCode));
                 timeServiceDTO.setGameObjectToProgressId(getTroopIdToProgress(applicationUser, actionCode, gameObjectToProgress));
             }
         } else {
             //TODO this is gonna be create
             if (gameObjectToProgress.equals("TOWNHALL")) {
-                timeServiceDTO.setDuration(TOWNHALL_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (TOWNHALL_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
             } else if (gameObjectToProgress.equals("BARRACKS")) {
-                timeServiceDTO.setDuration(BARRACKS_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (BARRACKS_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
             } else if (gameObjectToProgress.equals("FARM")) {
-                timeServiceDTO.setDuration(FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
             } else if (gameObjectToProgress.equals("MINE")) {
-                timeServiceDTO.setDuration(FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser));
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (FARM_UPGRADE_TIME / getLevelOfTownHall(applicationUser)));
             } else if (gameObjectToProgress.equals("TROOP")) {
-                timeServiceDTO.setDuration(TROOP_CREATION_TIME / actionCode);
+                timeServiceDTO.setDuration(System.currentTimeMillis() + (TROOP_CREATION_TIME / actionCode));
             }
         }
         return timeServiceDTO;
