@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.resource;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,9 +12,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @Table(name = "resource")
-public class Resource {
+public abstract class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,20 +21,14 @@ public class Resource {
 
     @Enumerated(EnumType.STRING)
     private ResourceType resource_type;
-
-    @NotBlank
     private Integer amount;
+    private Timestamp updated_at;
 
-    private long updated_at;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonBackReference
+    @ManyToOne
     @JoinTable(name = "kingdom_resource", joinColumns = {
             @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
-    private Kingdom kingdom;
+    private Kingdom resourcesKingdom;
 
-    public Resource(ResourceType resource_type) {
-        if (resource_type.equals(ResourceType.RESOURCE_GOLD))
-        this.amount = 100;
-    }
 }

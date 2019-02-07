@@ -54,21 +54,21 @@ public class ResourceService {
         return null;
     }
 
-    public boolean hasEnoughResource(ResourceType resourceType, Kingdom kingdom, int amountNeeded) {
-        Resource resourceToCheck = resourceRepository.findByTypeAndKingdomId(resourceType, kingdom.getId());
-        if (resourceToCheck.getAmount() >= amountNeeded) {
-            return true;
-        }
-        return false;
-    }
+//    public boolean hasEnoughResource(ResourceType resourceType, Kingdom kingdom, int amountNeeded) {
+//        Resource resourceToCheck = resourceRepository.findByResource_typeAndKingdom_Id(resourceType, kingdom.getId());
+//        if (resourceToCheck.getAmount() >= amountNeeded) {
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     /**
      * Use the TimeService method to calculate the resource model's timestamp and the current time difference
      */
-    public Timestamp getTimeStamp(Resource resource) {
-        return new Timestamp(resource.getUpdated_at());
-    }
+//    public Timestamp getTimeStamp(Resource resource) {
+//        return new Timestamp(resource.getUpdated_at());
+//    }
 
     public long currentTimeDifference(long id) {
         //return TimeService's method
@@ -82,28 +82,40 @@ public class ResourceService {
     /**
      * set the amount of the resource, and the timestamp, and update the database
      */
-    public void setAmountOfGold(Kingdom kingdom, int goldAmount) {
-        Resource gold = resourceRepository.findByTypeAndKingdomId(ResourceType.RESOURCE_FOOD, kingdom.getId());
-        gold.setAmount(goldAmount);
-        kingdomRepository.save(kingdom);
-    }
-
-    public void setAmountOfFood
-            (Kingdom kingdom, int foodAmount) {
-        Resource food = resourceRepository.findByTypeAndKingdomId(ResourceType.RESOURCE_GOLD, kingdom.getId());
-        food.setAmount(foodAmount);
-        kingdomRepository.save(kingdom);
-    }
+//    public void setAmountOfGold(Kingdom kingdom, int goldAmount) {
+//        Resource gold = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_FOOD, kingdom.getId());
+//        gold.setAmount(goldAmount);
+//        kingdomRepository.save(kingdom);
+//    }
+//
+//    public void setAmountOfFood
+//            (Kingdom kingdom, int foodAmount) {
+//        Resource food = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_GOLD, kingdom.getId());
+//        food.setAmount(foodAmount);
+//        kingdomRepository.save(kingdom);
+//    }
 
 
     /**
      * if one troop is created, set food amount / minutes to actual -1
      */
+//
+//    //ask Laci
+//    public int foodAmountPerMinute(Resource resource) {
+//
+//    }
 
-    //ask Laci
-    public int foodAmountPerMinute(Resource resource) {
+    /**
+     * method for creating a building
+     */
 
-    }
+    /**
+     * method for creating a troop
+     */
+
+    /**
+     * method for upgrade???
+     */
 
 
 }

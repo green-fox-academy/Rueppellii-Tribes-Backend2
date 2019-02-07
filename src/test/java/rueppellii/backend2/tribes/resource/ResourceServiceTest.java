@@ -22,7 +22,7 @@ public class ResourceServiceTest {
 
     @BeforeEach
     void init() {
-        resource = new Resource();
+        //resource = new Resource();
         MockitoAnnotations.initMocks(this);
         resourceService = new ResourceService(resourceRepository);
     }
