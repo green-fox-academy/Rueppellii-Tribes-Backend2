@@ -4,21 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import rueppellii.backend2.tribes.TribesApplication;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
-import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
 import rueppellii.backend2.tribes.resource.ResourceService;
+import rueppellii.backend2.tribes.troop.TroopServiceImp;
 import rueppellii.backend2.tribes.upgrade.PurchaseService;
-import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
-import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -38,15 +30,18 @@ public class PurchaseServiceTest {
     @Mock
     ResourceService resourceService;
 
+    @Mock
+    TroopServiceImp troopService;
+
     @BeforeEach
     void setUp() {
-        purchaseService = new PurchaseService(kingdomService, resourceService);
+        purchaseService = new PurchaseService(kingdomService, resourceService, troopService);
         kingdom = new Kingdom();
     }
 
     @Test
     void returnsKingdomsGold() throws Exception {
         Integer gold = 100;
-        assertEquals(gold, purchaseService.getGold(kingdom.getId()));
+        assertEquals(gold, purchaseService.getKingdomsGoldAmount(kingdom.getId()));
     }
 }

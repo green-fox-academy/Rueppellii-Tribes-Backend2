@@ -20,4 +20,5 @@ public class TroopController {
     public void createNewTroop(@RequestBody Troop troop){
         troopServiceImp.saveTroop(troop);
     }
+
 }

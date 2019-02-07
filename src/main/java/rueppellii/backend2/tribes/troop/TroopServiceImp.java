@@ -27,4 +27,8 @@ public class TroopServiceImp {
         }
         return null;
     }
+
+    public Troop findByIds(Long id, Long kingdomId) throws Exception {
+        return troopRepository.findByIdAndKingdom_Id(id, kingdomId).orElseThrow(() -> new Exception());
+    }
 }

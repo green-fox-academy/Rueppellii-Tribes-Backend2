@@ -45,13 +45,6 @@ public class ResourceService {
         return resource.getType() == ResourceType.RESOURCE_FOOD || resource.getType() == ResourceType.RESOURCE_GOLD;
     }
 
-    public Integer usingResource(Resource resource) {
-        if (validateType(resource)) {
-            return resource.getAmount() - 10;           //amount added only for example
-        }
-        return null;
-    }
-
     public Resource returnResource(ResourceType type, Long id) throws Exception {
         return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new Exception());
     }
@@ -59,20 +52,14 @@ public class ResourceService {
     public void minusGoldAmount(Integer gold, Long kingdomId) throws Exception {
         Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
         resource.setAmount(resource.getAmount() - gold);
+        saveResource(resource);
     }
 
     public void plusGoldAmount(Integer gold, Long kingdomId) throws Exception {
         Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
         resource.setAmount(resource.getAmount() + gold);
+        saveResource(resource);
     }
-
-//    public boolean hasEnoughResource(ResourceType resourceType, Kingdom kingdom, int amountNeeded) {
-//        Resource resourceToCheck = resourceRepository.findByResource_typeAndKingdom_Id(resourceType, kingdom.getId());
-//        if (resourceToCheck.getAmount() >= amountNeeded) {
-//            return true;
-//        }
-//        return false;
-//    }
 
 
     /**

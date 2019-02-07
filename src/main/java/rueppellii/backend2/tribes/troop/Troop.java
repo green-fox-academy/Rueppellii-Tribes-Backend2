@@ -16,7 +16,7 @@ public class Troop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long troop_id;
+    private Long id;
 
     private Integer level;
     private Integer HP;
@@ -28,7 +28,7 @@ public class Troop {
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "kingdom_troops", joinColumns = {
-            @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "troop_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom kingdom;
 
