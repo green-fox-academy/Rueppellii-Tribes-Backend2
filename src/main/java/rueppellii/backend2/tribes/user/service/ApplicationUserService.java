@@ -40,6 +40,12 @@ public class ApplicationUserService {
         this.applicationUserRoleRepository = applicationUserRoleRepository;
     }
 
+    public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
+
+        return applicationUserRepository.findByUsername(getUsernameByPrincipal(principal))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + getUsernameByPrincipal(principal)));
+    }
+
     public void save(ApplicationUser applicationUser){
         applicationUserRepository.save(applicationUser);
     }

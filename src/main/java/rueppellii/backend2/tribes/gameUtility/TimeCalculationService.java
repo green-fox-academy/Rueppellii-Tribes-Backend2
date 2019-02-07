@@ -8,17 +8,17 @@ import rueppellii.backend2.tribes.building.service.BuildingService;
 @Service
 public class TimeCalculationService {
 
-    private BuildingService buildingService;
-
-    @Autowired
-    public TimeCalculationService(BuildingService buildingService) {
-        this.buildingService = buildingService;
-    }
-
-    public Long calculateTownHallcreationTime() {
-
-        return System.currentTimeMillis() + (buildingService.)
-    }
+//    private BuildingService buildingService;
+//
+//    @Autowired
+//    public TimeCalculationService(BuildingService buildingService) {
+//        this.buildingService = buildingService;
+//    }
+//
+//    public Long calculateTownHallcreationTime() {
+//
+//        return System.currentTimeMillis() + (buildingService.)
+//    }
 
 
 }
