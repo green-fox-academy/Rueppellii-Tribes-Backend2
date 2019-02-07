@@ -39,7 +39,7 @@ public class PurchaseService {
     public Integer getKingdomsGoldAmount(Principal principal) throws KingdomNotValidException {
         Integer goldAmount = 0;
         Kingdom userKingdom = findUsersKingdom(principal);
-        for (Resource gold : userKingdom.getResources()) {
+        for (Resource gold : userKingdom.getKingdomsResources()) {
             if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
                 goldAmount = gold.getAmount();
             }
@@ -50,12 +50,12 @@ public class PurchaseService {
     public List<Resource> returnKingdomsResources(Principal principal) throws KingdomNotValidException {
         Kingdom kingdom = findUsersKingdom(principal);
         List<Resource> kingdomsResources = new ArrayList<>();
-        for (Resource gold : kingdom.getResources()) {
+        for (Resource gold : kingdom.getKingdomsResources()) {
             if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
                 kingdomsResources.add(gold);
             }
         }
-        for (Resource food : kingdom.getResources()) {
+        for (Resource food : kingdom.getKingdomsResources()) {
             if (food.getResource_type().getTypeName().equals("RESOURCE_FOOD")) {
                 kingdomsResources.add(food);
             }
@@ -80,7 +80,7 @@ public class PurchaseService {
         Kingdom kingdom = findUsersKingdom(principal);
         Integer troopPrice = 10;
         if (hasEnoughGold(principal, troopPrice)) {
-            kingdom.setResources(returnKingdomsResources(principal));
+            kingdom.setKingdomsResources(returnKingdomsResources(principal));
             makeTroop(principal, type);
             kingdomRepository.save(kingdom);
         }
