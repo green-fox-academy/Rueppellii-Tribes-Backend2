@@ -25,20 +25,19 @@ public class PurchaseService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public String findLoggedInUsername(Principal principal) {
-        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
-        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
-        return userContext.getUsername();
+//    public String findLoggedInUsername(Principal principal) {
+//        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+//        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+//        return userContext.getUsername();
+//    }
+
+    public Kingdom findUsersKingdom(String userName) throws KingdomNotValidException {
+        return kingdomRepository.findByApplicationUser_Username(userName).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
     }
 
-    public Kingdom findUsersKingdom(Principal principal) throws KingdomNotValidException {
-        String loggedInUser = findLoggedInUsername(principal);
-        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
-    }
-
-    public Integer getKingdomsGoldAmount(Principal principal) throws KingdomNotValidException {
+    public Integer getKingdomsGoldAmount(String userName) throws KingdomNotValidException {
         Integer goldAmount = 0;
-        Kingdom userKingdom = findUsersKingdom(principal);
+        Kingdom userKingdom = findUsersKingdom(userName);
         for (Resource gold : userKingdom.getKingdomsResources()) {
             if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
                 goldAmount = gold.getAmount();
@@ -47,8 +46,8 @@ public class PurchaseService {
         return goldAmount;
     }
 
-    public List<Resource> returnKingdomsResources(Principal principal) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(principal);
+    public List<Resource> returnKingdomsResources(String userName) throws KingdomNotValidException {
+        Kingdom kingdom = findUsersKingdom(userName);
         List<Resource> kingdomsResources = new ArrayList<>();
         for (Resource gold : kingdom.getKingdomsResources()) {
             if (gold.getResource_type().getTypeName().equals("RESOURCE_GOLD")) {
@@ -63,8 +62,8 @@ public class PurchaseService {
         return kingdomsResources;
     }
 
-    public void makeTroop(Principal principal, TroopTypes type) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(principal);
+    public void makeTroop(String userName, TroopTypes type) throws KingdomNotValidException {
+        Kingdom kingdom = findUsersKingdom(userName);
         for (Troop troop : kingdom.getTroops()) {
             if (troop.getType().equals(type)) {
                 troop.getType().createTroop();
@@ -72,16 +71,16 @@ public class PurchaseService {
         }
     }
 
-    public boolean hasEnoughGold(Principal principal, Integer amount) throws KingdomNotValidException {
-                return getKingdomsGoldAmount(principal) > amount;
+    public boolean hasEnoughGold(String userName, Integer amount) throws KingdomNotValidException {
+                return getKingdomsGoldAmount(userName) > amount;
     }
 
-    public void buyTroop(Principal principal, TroopTypes type) throws KingdomNotValidException {
-        Kingdom kingdom = findUsersKingdom(principal);
+    public void buyTroop(String userName, TroopTypes type) throws KingdomNotValidException {
+        Kingdom kingdom = findUsersKingdom(userName);
         Integer troopPrice = 10;
-        if (hasEnoughGold(principal, troopPrice)) {
-            kingdom.setKingdomsResources(returnKingdomsResources(principal));
-            makeTroop(principal, type);
+        if (hasEnoughGold(userName, troopPrice)) {
+            kingdom.setKingdomsResources(returnKingdomsResources(userName));
+            makeTroop(userName, type);
             kingdomRepository.save(kingdom);
         }
     }
