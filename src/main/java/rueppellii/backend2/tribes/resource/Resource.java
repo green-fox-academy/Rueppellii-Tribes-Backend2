@@ -1,11 +1,13 @@
 package rueppellii.backend2.tribes.resource;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
@@ -20,8 +22,12 @@ public abstract class Resource {
     private Long resource_id;
 
     @Enumerated(EnumType.STRING)
-    private ResourceType resource_type;
+    private ResourceType type;
+
+    @Min(value = 0L)
     private Integer amount;
+
+    @JsonIgnore
     private Timestamp updated_at;
 
     @JsonBackReference
