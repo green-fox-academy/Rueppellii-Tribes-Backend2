@@ -18,7 +18,7 @@ public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long building_id;
+    private Long id;
 
     @Transient
     @Enumerated(EnumType.STRING)

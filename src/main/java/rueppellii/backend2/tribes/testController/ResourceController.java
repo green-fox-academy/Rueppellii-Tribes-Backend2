@@ -2,6 +2,7 @@ package rueppellii.backend2.tribes.testController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.building.BuildingDTO;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
@@ -52,6 +53,26 @@ public class ResourceController {
         String loggedInUser = userContext.getUsername();
         Kingdom kingdom = kingdomService.getKingdomByUsername(loggedInUser);
         purchaseService.upgradeTroop(kingdom.getId(), idDTO.getId());
+        return kingdom;
+    }
+
+    @PostMapping("/kingdom/building/build")
+    public Kingdom makeBuilding(Principal principal, @RequestBody BuildingDTO buildingDTO) throws Exception {
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+        String loggedInUser = userContext.getUsername();
+        Kingdom kingdom = kingdomService.getKingdomByUsername(loggedInUser);
+        purchaseService.buyBuilding(kingdom.getId(), buildingDTO);
+        return kingdom;
+    }
+
+    @PostMapping("/kingdom/building/upgrade")
+    public Kingdom upgradeBuilding(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+        String loggedInUser = userContext.getUsername();
+        Kingdom kingdom = kingdomService.getKingdomByUsername(loggedInUser);
+        purchaseService.upgradeBuilding(kingdom.getId(), idDTO.getId());
         return kingdom;
     }
 }

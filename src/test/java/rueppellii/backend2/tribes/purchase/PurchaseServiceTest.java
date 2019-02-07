@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import rueppellii.backend2.tribes.building.BuildingService;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.resource.ResourceService;
@@ -33,9 +34,12 @@ public class PurchaseServiceTest {
     @Mock
     TroopServiceImp troopService;
 
+    @Mock
+    BuildingService buildingService;
+
     @BeforeEach
     void setUp() {
-        purchaseService = new PurchaseService(kingdomService, resourceService, troopService);
+        purchaseService = new PurchaseService(kingdomService, resourceService, troopService, buildingService);
         kingdom = new Kingdom();
     }
 

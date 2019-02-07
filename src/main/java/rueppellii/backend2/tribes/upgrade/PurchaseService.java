@@ -2,6 +2,9 @@ package rueppellii.backend2.tribes.upgrade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.Building;
+import rueppellii.backend2.tribes.building.BuildingDTO;
+import rueppellii.backend2.tribes.building.BuildingService;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.resource.ResourceService;
@@ -15,12 +18,14 @@ public class PurchaseService {
     private KingdomService kingdomService;
     private ResourceService resourceService;
     private TroopServiceImp troopServiceImp;
+    private BuildingService buildingService;
 
     @Autowired
-    public PurchaseService(KingdomService kingdomService, ResourceService resourceService, TroopServiceImp troopServiceImp) {
+    public PurchaseService(KingdomService kingdomService, ResourceService resourceService, TroopServiceImp troopServiceImp, BuildingService buildingService) {
         this.kingdomService = kingdomService;
         this.resourceService = resourceService;
         this.troopServiceImp = troopServiceImp;
+        this.buildingService = buildingService;
     }
 
     public Integer getKingdomsGoldAmount(Long kingdomId) throws Exception {
@@ -50,6 +55,26 @@ public class PurchaseService {
         if (hasEnoughGold(kingdomId, upgradePrice)) {
             troop.setLevel(desiredLevel);
             troopServiceImp.saveTroop(troop);
+            resourceService.minusGoldAmount(upgradePrice, kingdomId);
+        }
+    }
+
+    public void buyBuilding(Long kingdomId, BuildingDTO buildingDTO) throws Exception {
+        Kingdom kingdom = kingdomService.getKingdomById(kingdomId);
+        Integer buildingPrice = 100;
+        if (hasEnoughGold(kingdomId, buildingPrice)) {
+            resourceService.minusGoldAmount(buildingPrice, kingdomId);
+            buildingService.createBuilding(buildingDTO, kingdom.getApplicationUser().getUsername());
+        }
+    }
+
+    public void upgradeBuilding(Long kingdomId, Long buildingId) throws Exception {
+        Building building = buildingService.findByIds(buildingId, kingdomId);
+        Integer desiredLevel = building.getLevel() + 1;
+        Integer upgradePrice = 100 * desiredLevel;
+        if (hasEnoughGold(kingdomId, upgradePrice)) {
+            building.setLevel(desiredLevel);
+            buildingService.saveBuilding(building);
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
         }
     }
