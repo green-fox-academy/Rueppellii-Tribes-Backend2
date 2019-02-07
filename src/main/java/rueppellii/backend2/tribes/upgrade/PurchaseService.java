@@ -8,8 +8,6 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.resource.ResourceService;
 import rueppellii.backend2.tribes.resource.ResourceType;
-import rueppellii.backend2.tribes.troop.models.Troop;
-import rueppellii.backend2.tribes.troop.models.TroopTypes;
 
 import java.util.ArrayList;
 import java.util.List;

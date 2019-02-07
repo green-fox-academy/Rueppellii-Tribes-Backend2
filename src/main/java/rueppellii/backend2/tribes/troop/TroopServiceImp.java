@@ -2,15 +2,9 @@ package rueppellii.backend2.tribes.troop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.troop.models.Troop;
-import rueppellii.backend2.tribes.troop.models.TroopTypes;
-
-import java.util.Optional;
-
-import static rueppellii.backend2.tribes.troop.TroopFactory.troopBuilder;
 
 @Service
-public class TroopServiceImp implements TroopService {
+public class TroopServiceImp {
 
     private TroopRepository troopRepository;
 
@@ -19,21 +13,14 @@ public class TroopServiceImp implements TroopService {
         this.troopRepository = troopRepository;
     }
 
-    @Override
-    public void saveTroop(TroopDTO troopDTO) {
-        for (TroopTypes types : TroopTypes.values()) {
-            if (TroopTypes.valueOf(troopDTO.getTroopType().toUpperCase()).equals(types)) {
-                 troopRepository.save(troopBuilder(types));
-            }
-        }
+    public void saveTroop(Troop troop) {
+        troopRepository.save(troop);
     }
 
-    @Override
     public void deleteTroop(Long troop_id) {
         troopRepository.deleteById(troop_id);
     }
 
-    @Override
     public Troop findById(Long troop_id) {
         if (troopRepository.findById(troop_id).isPresent()) {
             return troopRepository.findById(troop_id).get();

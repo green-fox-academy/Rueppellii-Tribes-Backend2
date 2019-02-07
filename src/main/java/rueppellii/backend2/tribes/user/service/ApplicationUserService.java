@@ -58,6 +58,14 @@ public class ApplicationUserService {
         return applicationUserRepository.findByUsername(username);
     }
 
+    public ApplicationUser findUser(String username) {
+        if (applicationUserRepository.findByUsername(username).isPresent()) {
+            return applicationUserRepository.findByUsername(username).get();
+        } else {
+            return null;
+        }
+    }
+
     public Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
     }
