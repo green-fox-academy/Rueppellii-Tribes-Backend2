@@ -9,9 +9,12 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 
@@ -50,5 +53,13 @@ public class BuildingService {
         return buildingRepository.findAll();
     }
 
-
+    public Integer getLevelOfTownHall(ApplicationUser applicationUser) {
+        List<Building> townhall = applicationUser
+                .getKingdom()
+                .getKingdomsBuildings()
+                .stream()
+                .filter(building -> building.getType().getName().matches("TOWNHALL"))
+                .collect(Collectors.toList());
+        return townhall.get(0).getLevel();
+    }
 }

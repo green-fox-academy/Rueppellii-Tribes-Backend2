@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.building.utility.BuildingDTO;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
+import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/building")
 public class BuildingController {
 
     private BuildingService buildingService;
@@ -22,8 +23,10 @@ public class BuildingController {
         this.buildingService = buildingService;
     }
 
-    @PostMapping("/kingdom/build")
-    public Building buildNewBuilding(@RequestBody BuildingDTO buildingDTO, Principal principal) throws Exception {
+    @PostMapping("/{id}")
+    public void createNewBuilding(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws Exception {
         return buildingService.createBuilding(buildingDTO, principal);
     }
+
+
 }
