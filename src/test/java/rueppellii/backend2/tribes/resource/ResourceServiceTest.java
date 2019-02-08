@@ -24,10 +24,10 @@ public class ResourceServiceTest {
     private ResourceRepository resourceRepository;
 
     @BeforeEach
-    void init() {
-        MockitoAnnotations.initMocks(this);
-        resourceService = new ResourceService(resourceRepository);
-    }
+//    void init() {
+//        MockitoAnnotations.initMocks(this);
+//        resourceService = new ResourceService(resourceRepository);
+//    }
 
     @Test
     void saveResourceWithNull() {

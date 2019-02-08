@@ -16,5 +16,4 @@ public enum ResourceType {
     public Resource produceResource() {
         return null;
     }
-
 }

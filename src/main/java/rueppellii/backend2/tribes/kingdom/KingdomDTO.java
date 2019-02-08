@@ -6,7 +6,6 @@ import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
 import rueppellii.backend2.tribes.troop.Troop;
 
-
 import java.util.List;
 
 @Getter
@@ -15,7 +14,7 @@ public class KingdomDTO {
 
     private Long id;
     private String name;
+    private List<Troop> kingdomsTroops;
+    private List<Resource> kingdomsResources;
     private List<Building> kingdomsBuildings;
-    private List<Troop> troops;
-    private List<Resource> resources;
 }

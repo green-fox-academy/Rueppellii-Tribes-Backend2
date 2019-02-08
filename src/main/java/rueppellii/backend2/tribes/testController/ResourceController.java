@@ -68,7 +68,7 @@ public class ResourceController {
     @PostMapping("/troop/create")
     @ResponseStatus(HttpStatus.OK)
     public void createNewTroop(@RequestBody Troop troop, Kingdom kingdom, Long kingdomId) throws Exception {
-        int numberOfTroops = kingdom.getTroops().size();
+        int numberOfTroops = kingdom.getKingdomsTroops().size();
         troopServiceImp.saveTroop(troop);
         int updatedTroops = numberOfTroops + 1;
         resourceServiceImp.updateFoodPerMinuteBasedOnTroop(kingdom, kingdomId);

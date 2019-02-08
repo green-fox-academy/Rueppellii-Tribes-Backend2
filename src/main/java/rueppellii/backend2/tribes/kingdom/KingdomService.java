@@ -43,4 +43,6 @@ public class KingdomService {
         String loggedInUser = userContext.getUsername();
         return getKingdomByUsername(loggedInUser);
     }
+
 }
+
