@@ -24,7 +24,7 @@ public abstract class Resource {
     @Enumerated(EnumType.STRING)
     private ResourceType type;
     private Integer amount;
-    private Integer amountPerMinute;
+    private Integer resourcePerMinute;
     private Timestamp updated_at;
 
     @JsonBackReference
