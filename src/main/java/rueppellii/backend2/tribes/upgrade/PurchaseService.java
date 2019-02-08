@@ -9,6 +9,7 @@ import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
 import rueppellii.backend2.tribes.resource.ResourceService;
 import rueppellii.backend2.tribes.resource.ResourceType;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.Troop;
 import rueppellii.backend2.tribes.troop.TroopServiceImp;
 
@@ -28,8 +29,8 @@ public class PurchaseService {
         this.buildingService = buildingService;
     }
 
-    public Integer getKingdomsGoldAmount(Long kingdomId) throws Exception {
-        return resourceService.returnResource(ResourceType.RESOURCE_GOLD, kingdomId).getAmount();
+    public Integer getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
+        return resourceService.returnResource(ResourceType.GOLD, kingdomId).getAmount();
     }
 
     public boolean hasEnoughGold(Long kingdomId, Integer amount) throws Exception {
@@ -45,7 +46,9 @@ public class PurchaseService {
             troopServiceImp.saveTroop(troop);
             kingdom.getKingdomsTroops().add(troop);
             kingdomService.saveKingdom(kingdom);
+            return;
         }
+        throw new NoResourceException("You don't have enough gold!");
     }
 
     public void upgradeTroop(Long kingdomId, Long troopId) throws Exception {
@@ -56,16 +59,20 @@ public class PurchaseService {
             troop.setLevel(desiredLevel);
             troopServiceImp.saveTroop(troop);
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
+            return;
         }
+        throw new NoResourceException("You don't have enough gold!");
     }
 
     public void buyBuilding(Long kingdomId, BuildingDTO buildingDTO) throws Exception {
         Kingdom kingdom = kingdomService.getKingdomById(kingdomId);
         Integer buildingPrice = 100;
-        if (hasEnoughGold(kingdomId, buildingPrice)) {
+         if (hasEnoughGold(kingdomId, buildingPrice)) {
             resourceService.minusGoldAmount(buildingPrice, kingdomId);
             buildingService.createBuilding(buildingDTO, kingdom.getApplicationUser().getUsername());
+            return;
         }
+        throw new NoResourceException("You don't have enough gold!");
     }
 
     public void upgradeBuilding(Long kingdomId, Long buildingId) throws Exception {
@@ -76,6 +83,8 @@ public class PurchaseService {
             building.setLevel(desiredLevel);
             buildingService.saveBuilding(building);
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
+            return;
         }
+        throw new NoResourceException("You don't have enough gold!");
     }
 }

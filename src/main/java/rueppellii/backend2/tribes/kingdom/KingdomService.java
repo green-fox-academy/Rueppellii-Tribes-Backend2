@@ -36,4 +36,11 @@ public class KingdomService {
         ModelMapper mapper = new ModelMapper();
         return mapper.map(kingdom, KingdomDTO.class);
     }
+
+    public Kingdom findKingdomByPrincipal(Principal principal) throws KingdomNotValidException {
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+        String loggedInUser = userContext.getUsername();
+        return getKingdomByUsername(loggedInUser);
+    }
 }

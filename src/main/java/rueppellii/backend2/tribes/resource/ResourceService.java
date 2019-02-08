@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.KingdomService;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ResourceService {
@@ -21,12 +21,8 @@ public class ResourceService {
         this.resourceRepository = resourceRepository;
     }
 
-    public Resource getResourceById(Long id) {
-        Optional<Resource> resource = resourceRepository.findById(id);
-        if (resource.isPresent()) {
-            return resource.get();
-        }
-        throw new IllegalArgumentException();
+    public Resource provideResource(ResourceType type) {
+        return type.produceResource();
     }
 
     public List<Resource> findAll() {
@@ -42,79 +38,22 @@ public class ResourceService {
     }
 
     public boolean validateType(Resource resource) {
-        return resource.getType() == ResourceType.RESOURCE_FOOD || resource.getType() == ResourceType.RESOURCE_GOLD;
+        return resource.getType() == ResourceType.FOOD || resource.getType() == ResourceType.GOLD;
     }
 
-    public Resource returnResource(ResourceType type, Long id) throws Exception {
-        return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new Exception());
+    public Resource returnResource(ResourceType type, Long id) throws NoResourceException {
+        return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new NoResourceException("No resource found!"));
     }
 
-    public void minusGoldAmount(Integer gold, Long kingdomId) throws Exception {
-        Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
+    public void minusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException {
+        Resource resource = returnResource(ResourceType.GOLD, kingdomId);
         resource.setAmount(resource.getAmount() - gold);
         saveResource(resource);
     }
 
-    public void plusGoldAmount(Integer gold, Long kingdomId) throws Exception {
-        Resource resource = returnResource(ResourceType.RESOURCE_GOLD, kingdomId);
+    public void plusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException {
+        Resource resource = returnResource(ResourceType.GOLD, kingdomId);
         resource.setAmount(resource.getAmount() + gold);
         saveResource(resource);
     }
-
-
-    /**
-     * Use the TimeService method to calculate the resource model's timestamp and the current time difference
-     */
-//    public Timestamp getTimeStamp(Resource resource) {
-//        return new Timestamp(resource.getUpdated_at());
-//    }
-
-    public long currentTimeDifference(long id) {
-        //return TimeService's method
-        return id;
-    }
-
-/**
- * And you can multiply the difference with your model's +amount / minutes field
- */
-
-    /**
-     * set the amount of the resource, and the timestamp, and update the database
-     */
-//    public void setAmountOfGold(Kingdom kingdom, int goldAmount) {
-//        Resource gold = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_FOOD, kingdom.getId());
-//        gold.setAmount(goldAmount);
-//        kingdomRepository.save(kingdom);
-//    }
-//
-//    public void setAmountOfFood
-//            (Kingdom kingdom, int foodAmount) {
-//        Resource food = resourceRepository.findByResource_typeAndKingdom_Id(ResourceType.RESOURCE_GOLD, kingdom.getId());
-//        food.setAmount(foodAmount);
-//        kingdomRepository.save(kingdom);
-//    }
-
-
-    /**
-     * if one troop is created, set food amount / minutes to actual -1
-     */
-//
-//    //ask Laci
-//    public int foodAmountPerMinute(Resource resource) {
-//
-//    }
-
-    /**
-     * method for creating a building
-     */
-
-    /**
-     * method for creating a troop
-     */
-
-    /**
-     * method for upgrade???
-     */
-
-
 }

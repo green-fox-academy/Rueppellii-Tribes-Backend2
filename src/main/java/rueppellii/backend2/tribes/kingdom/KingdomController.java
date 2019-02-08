@@ -24,10 +24,7 @@ public class KingdomController {
 
     @GetMapping("/kingdom")
     public KingdomDTO showKingdom(Principal principal) throws KingdomNotValidException {
-        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
-        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
-        String loggedInUser = userContext.getUsername();
-        Kingdom kingdom = kingdomService.getKingdomByUsername(loggedInUser);
+        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
         return kingdomService.mapKingdomDTO(kingdom);
     }
 }

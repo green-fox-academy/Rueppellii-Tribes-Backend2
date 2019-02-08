@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 public class Gold extends Resource {
 
     public Gold() {
-        setType(ResourceType.RESOURCE_GOLD);
+        setType(ResourceType.GOLD);
         setAmount(100);
         setUpdated_at(new Timestamp(System.currentTimeMillis()));
     }
