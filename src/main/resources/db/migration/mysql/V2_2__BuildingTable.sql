@@ -1,8 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS buildings (
   building_id BIGINT auto_increment,
-  dtype VARCHAR(255),
-  type VARCHAR(255),
+  building_type VARCHAR(255),
   level INT,
   hp INT,
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

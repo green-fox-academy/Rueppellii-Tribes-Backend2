@@ -7,24 +7,26 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("Test")
 public class ResourceServiceTest {
 
     private ResourceService resourceService;
     private Resource resource;
     private ResponseEntity response;
+
     @Mock
     private ResourceRepository resourceRepository;
 
     @BeforeEach
     void init() {
-//        resource = new Resource();
         MockitoAnnotations.initMocks(this);
-//        resourceService = new ResourceService(resourceRepository);
+        resourceService = new ResourceService(resourceRepository);
     }
 
     @Test
@@ -35,7 +37,7 @@ public class ResourceServiceTest {
 
     @Test
     void saveResourceWithValidType() {
-        resource.setType(ResourceType.RESOURCE_FOOD);
+        resource.setType(ResourceType.FOOD);
         response = new ResponseEntity(HttpStatus.OK);
         assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }

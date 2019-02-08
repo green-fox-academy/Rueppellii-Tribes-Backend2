@@ -1,34 +1,29 @@
-package rueppellii.backend2.tribes.troop.models;
+package rueppellii.backend2.tribes.troop;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "troops")
-public abstract class Troop {
+public class Troop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long troop_id;
 
-    @Enumerated(EnumType.STRING)
-    private TroopTypes type;
-
+    private Integer level;
     private Integer HP;
     private Integer attack;
     private Integer defense;
     private Timestamp startedAt;
     private Timestamp finishedAt;
-
-    private Boolean finished;
 
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
@@ -37,5 +32,11 @@ public abstract class Troop {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom kingdom;
 
-    protected abstract void troopBuilder();
+    public Troop() {
+        this.level = 1;
+        this.HP =   100;
+        this.attack = 20;
+        this.defense = 10;
+        this.startedAt = new Timestamp(System.currentTimeMillis());
+    }
 }

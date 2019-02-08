@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import rueppellii.backend2.tribes.building.Building;
 import rueppellii.backend2.tribes.resource.Resource;
-import rueppellii.backend2.tribes.troop.models.Troop;
+import rueppellii.backend2.tribes.troop.Troop;
+
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public class Food extends Resource {
 
     public Food() {
-        setType(ResourceType.RESOURCE_FOOD);
+        setType(ResourceType.FOOD);
         setAmount(0);
         setUpdated_at(new Timestamp(System.currentTimeMillis()));
     }
