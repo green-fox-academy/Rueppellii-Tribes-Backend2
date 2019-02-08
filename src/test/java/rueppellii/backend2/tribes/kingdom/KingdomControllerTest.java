@@ -55,7 +55,7 @@ public class KingdomControllerTest {
 
     @Test
     public void accessGetKingdom() throws Exception {
-        mockMvc.perform(get("/api/kingdom")
+        mockMvc.perform(get("/api/kingdomName")
                 .contentType(contentType)
                 .header("Authorization", token))
                 .andExpect(status().isOk());
@@ -63,7 +63,7 @@ public class KingdomControllerTest {
 
     @Test
     public void accessGetKingdomWithFakeToken() throws Exception {
-        mockMvc.perform(get("/api/kingdom")
+        mockMvc.perform(get("/api/kingdomName")
                 .contentType(contentType)
                 .header("Authorization", "fakeToken"))
                 .andExpect(status().isUnauthorized());

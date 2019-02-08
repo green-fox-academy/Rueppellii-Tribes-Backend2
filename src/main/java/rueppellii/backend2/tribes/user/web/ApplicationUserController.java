@@ -9,6 +9,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
@@ -32,9 +34,8 @@ public class ApplicationUserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody @Valid ApplicationUserDTO applicationUserDTO)
-            throws MethodArgumentNotValidException, UserNameIsTakenException {
-
-        return ResponseEntity.ok(applicationUserService.registerNewApplicationUser(applicationUserDTO));
+            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+        return ResponseEntity.ok(applicationUserService.registerApplicationUser(applicationUserDTO));
     }
 
     @GetMapping("")
@@ -61,5 +62,14 @@ public class ApplicationUserController {
         String errorMsg = "Missing parameter(s): " + errors + "!";
         return new ErrorResponse(errorMsg);
     }
+
+    @ResponseBody
+    @ExceptionHandler(UserRoleNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse userRoleNotFoundHandler(UserRoleNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+
 
 }

@@ -35,7 +35,7 @@ public class BuildingService {
     public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
         Building building;
         String loggedInUser = applicationUserService.getUsernameByPrincipal(principal);
-        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdomName!"));
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(buildingDTO.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);

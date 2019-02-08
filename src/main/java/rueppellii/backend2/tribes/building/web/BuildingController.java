@@ -40,8 +40,8 @@ public class BuildingController {
 //        if(actionCode > 0) {
 //            progressionModel.setGameObjectId(timeServiceDTO.getGameObjectToProgressId());
 //        }
-//        progressionModel.setProgressKingdom(applicationUser.getKingdom());
-//        applicationUser.getKingdom().getKingdomsProgresses().add(progressionModel);
+//        progressionModel.setProgressKingdom(applicationUser.getKingdomName());
+//        applicationUser.getKingdomName().getKingdomsProgresses().add(progressionModel);
 //        applicationUserService.save(applicationUser);
 //    }
 
