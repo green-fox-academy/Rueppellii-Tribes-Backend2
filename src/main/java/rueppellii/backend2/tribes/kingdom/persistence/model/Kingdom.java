@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+
 import rueppellii.backend2.tribes.building.persistence.model.*;
-import rueppellii.backend2.tribes.resource.Resource;
-import rueppellii.backend2.tribes.troop.models.Troop;
+import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.resource.presistence.model.Food;
+import rueppellii.backend2.tribes.resource.presistence.model.Gold;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -36,18 +40,21 @@ public class Kingdom {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "kingdom_troops", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "troop_id", referencedColumnName = "troop_id")})
-    private List<Troop> troops;
+            @JoinColumn(name = "troop_id", referencedColumnName = "id")})
+    private List<Troop> kingdomsTroops;
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_resource", joinColumns = {
+    @JoinTable(name = "kingdom_resources", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
-    public List<Resource> resources;
+            @JoinColumn(name = "resource_id", referencedColumnName = "id")})
+    public List<Resource> kingdomsResources;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "kingdom_buildings", joinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "building_id", referencedColumnName = "id")})
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
@@ -55,20 +62,21 @@ public class Kingdom {
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
+        //TODO: this should be set by the KindomService/starterKit method
         TownHall townHall = new TownHall();
         Barracks barracks = new Barracks();
         Farm farm = new Farm();
         Mine mine = new Mine();
-        townHall.setBuildingsKingdom(this);
-        barracks.setBuildingsKingdom(this);
-        farm.setBuildingsKingdom(this);
-        mine.setBuildingsKingdom(this);
+        Gold gold = new Gold();
+        Food food = new Food();
+        kingdomsResources = new ArrayList<>();
+        kingdomsResources.add(gold);
+        kingdomsResources.add(food);
         kingdomsBuildings = new ArrayList<>();
         kingdomsBuildings.add(townHall);
         kingdomsBuildings.add(barracks);
         kingdomsBuildings.add(farm);
         kingdomsBuildings.add(mine);
-
 
     }
 }

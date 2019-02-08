@@ -45,7 +45,6 @@ public class ApplicationUserController {
     }
 
 
-
     @ResponseBody
     @ExceptionHandler(UserNameIsTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -69,7 +68,5 @@ public class ApplicationUserController {
     ErrorResponse userRoleNotFoundHandler(UserRoleNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
-
-
 
 }

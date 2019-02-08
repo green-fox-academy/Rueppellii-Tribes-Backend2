@@ -32,10 +32,9 @@ public class BuildingService {
         this.applicationUserService = applicationUserService;
     }
 
-    public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
+    public Building createBuilding(BuildingDTO buildingDTO, String loggedInUserName) throws Exception {
         Building building;
-        String loggedInUser = applicationUserService.getUsernameByPrincipal(principal);
-        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdomName!"));
+        Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUserName).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdomName!"));
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(buildingDTO.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
@@ -49,8 +48,13 @@ public class BuildingService {
         throw new IllegalArgumentException("No such building type!");
     }
 
-    public Iterable<Building> listBuildingsInKingdom() {
-        return buildingRepository.findAll();
+    public void saveBuilding(Building building) {
+        buildingRepository.save(building);
+    }
+
+    //TODO: this should work by only building id and should throw BuildingNotFoundException
+    public Building findByIds(Long id, Long kingdomId) throws Exception {
+        return buildingRepository.findByIdAndBuildingsKingdom_Id(id, kingdomId).orElseThrow(() -> new Exception());
     }
 
     public Integer getLevelOfTownHall(ApplicationUser applicationUser) {

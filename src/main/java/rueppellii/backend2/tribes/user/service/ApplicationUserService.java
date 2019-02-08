@@ -1,6 +1,5 @@
 package rueppellii.backend2.tribes.user.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
@@ -21,7 +21,6 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ public class ApplicationUserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + getUsernameByPrincipal(principal)));
     }
 
-    public void save(ApplicationUser applicationUser){
+    public void save(ApplicationUser applicationUser) {
         applicationUserRepository.save(applicationUser);
     }
 
@@ -80,7 +79,8 @@ public class ApplicationUserService {
     public UserContext createUserContext(String username) {
         ApplicationUser applicationUser = findByUserName(username);
 
-        if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
+        if (applicationUser.getRoles() == null)
+            throw new InsufficientAuthenticationException("User has no roles assigned");
         List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
                 .collect(Collectors.toList());
@@ -92,17 +92,17 @@ public class ApplicationUserService {
         return applicationUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-
-
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
 
+        System.out.println(applicationUserDTO.getUsername());
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
             final ApplicationUser applicationUser = new ApplicationUser();
             //TODO this is used only for development purpose
             List<ApplicationUserRole> userRoles = new ArrayList<>();
             userRoles.add(roleService.findById(1L));
+
             applicationUser.setUsername(applicationUserDTO.getUsername());
             applicationUser.setPassword(encoder.encode(applicationUserDTO.getPassword()));
             applicationUser.setKingdom(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO));
@@ -121,7 +121,5 @@ public class ApplicationUserService {
     private Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
     }
-
-
 
 }

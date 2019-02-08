@@ -1,19 +1,20 @@
-package rueppellii.backend2.tribes.timeService;
+package rueppellii.backend2.tribes.gameUtility.timeService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 
-
-import static rueppellii.backend2.tribes.timeService.TimeConstants.*;
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
 
 @Service
 public class TimeServiceImpl implements TimeService {
 
     private BuildingService buildingService;
 
-    public TimeServiceImpl(BuildingService buildingServic) {
-        this.buildingService = buildingServic;
+    @Autowired
+    public TimeServiceImpl(BuildingService buildingService) {
+        this.buildingService = buildingService;
     }
 
     @Override

@@ -12,15 +12,19 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "Building_Type")
 @Table(name = "buildings")
 public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long building_id;
+    private Long id;
 
+    @Transient
     @Enumerated(EnumType.STRING)
     private BuildingType type;
+
     private Integer level;
     private Integer HP;
     private Timestamp started_at;
@@ -28,7 +32,9 @@ public abstract class Building {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_building")
+    @JoinTable(name = "kingdom_buildings", joinColumns = {
+            @JoinColumn(name = "building_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom buildingsKingdom;
 
     public Building() {

@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ProgressionDTO {
 
-    private String objectToProgress;
+    private String type;
 }
