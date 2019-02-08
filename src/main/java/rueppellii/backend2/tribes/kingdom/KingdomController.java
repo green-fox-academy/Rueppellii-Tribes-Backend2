@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
+import rueppellii.backend2.tribes.security.model.UserContext;
 
 import java.security.Principal;
 
@@ -22,6 +24,7 @@ public class KingdomController {
 
     @GetMapping("/kingdom")
     public KingdomDTO showKingdom(Principal principal) throws KingdomNotValidException {
-        return kingdomService.getKingdomByUsername(principal);
+        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+        return kingdomService.mapKingdomDTO(kingdom);
     }
 }

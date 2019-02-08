@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/kingdom")
 public class TroopController {
 
-    private TroopService troopService;
+    private TroopServiceImp troopServiceImp;
 
     @Autowired
-    public TroopController(TroopService troopService) {
-        this.troopService = troopService;
+    public TroopController(TroopServiceImp troopServiceImp) {
+        this.troopServiceImp = troopServiceImp;
     }
 
     @PostMapping("/troop/create")
     @ResponseStatus(HttpStatus.OK)
-    public void createNewTroop(@RequestBody TroopDTO troopDTO){
-        troopService.saveTroop(troopDTO);
+    public void createNewTroop(@RequestBody Troop troop){
+        troopServiceImp.saveTroop(troop);
     }
+
 }

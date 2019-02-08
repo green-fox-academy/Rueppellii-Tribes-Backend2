@@ -1,10 +1,10 @@
 
 CREATE TABLE IF NOT EXISTS resource (
-  resource_id BIGINT NOT NULL auto_increment,
+  resource_id BIGINT auto_increment,
+  dtype VARCHAR(255),
   resource_type VARCHAR(255) UNIQUE,
   amount INT,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  kingdom_id BIGINT,
   PRIMARY KEY (resource_id)
 );
 

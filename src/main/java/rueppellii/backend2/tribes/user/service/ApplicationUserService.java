@@ -2,10 +2,11 @@ package rueppellii.backend2.tribes.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
+import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
@@ -16,6 +17,7 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +60,14 @@ public class ApplicationUserService {
         return applicationUserRepository.findByUsername(username);
     }
 
+    public ApplicationUser findUser(String username) {
+        if (applicationUserRepository.findByUsername(username).isPresent()) {
+            return applicationUserRepository.findByUsername(username).get();
+        } else {
+            return null;
+        }
+    }
+
     public Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
     }
@@ -71,7 +81,7 @@ public class ApplicationUserService {
 
             List<ApplicationUserRole> userRoles = new ArrayList<>();
             try {
-                userRoles.add(applicationUserRoleRepository.findById(2L).orElseThrow(Exception::new));
+                userRoles.add(applicationUserRoleRepository.findById(1L).orElseThrow(Exception::new));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,5 +110,9 @@ public class ApplicationUserService {
         return kingdom;
     }
 
-
+    public String getUsernameFromPrincipal(Principal principal) {
+        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
+        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
+        return userContext.getUsername();
+    }
 }

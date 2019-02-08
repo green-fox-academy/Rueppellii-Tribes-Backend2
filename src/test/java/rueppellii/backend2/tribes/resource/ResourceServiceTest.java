@@ -22,7 +22,7 @@ public class ResourceServiceTest {
 
     @BeforeEach
     void init() {
-        resource = new Resource();
+        //resource = new Resource();
         MockitoAnnotations.initMocks(this);
         resourceService = new ResourceService(resourceRepository);
     }
@@ -35,15 +35,8 @@ public class ResourceServiceTest {
 
     @Test
     void saveResourceWithValidType() {
-        resource.setResource_type(ResourceType.RESOURCE_FOOD);
+        resource.setType(ResourceType.FOOD);
         response = new ResponseEntity(HttpStatus.OK);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
-    }
-
-    @Test
-    void saveResourceWithWrongType() {
-        resource.setResource_type(ResourceType.RESOURCE_WOOD);
-        response = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
 }
