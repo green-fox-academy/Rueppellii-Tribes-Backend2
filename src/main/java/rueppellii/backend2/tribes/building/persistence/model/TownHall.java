@@ -11,6 +11,5 @@ public class TownHall extends Building {
     public TownHall() {
         setType(BuildingType.TOWNHALL);
         setHP(10);
-        setStarted_at(new Timestamp(System.currentTimeMillis()));
     }
 }

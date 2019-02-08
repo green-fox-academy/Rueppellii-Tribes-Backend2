@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 
 import java.security.Principal;
 
@@ -23,8 +23,8 @@ public class KingdomController {
     }
 
     @GetMapping("")
-    public KingdomDTO showKingdom(Principal principal) throws KingdomNotValidException {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+    public KingdomDTO showKingdom(Principal principal) throws KingdomNotFoundException {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
         return kingdomService.mapKingdomDTO(kingdom);
     }
 }

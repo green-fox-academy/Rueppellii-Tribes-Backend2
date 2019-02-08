@@ -15,6 +15,7 @@ import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
+import rueppellii.backend2.tribes.user.util.ApplicationUserFactory;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
@@ -33,13 +34,15 @@ public class ApplicationUserService {
     private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
     private RoleService roleService;
+    private ApplicationUserFactory applicationUserFactory;
 
     @Autowired
-    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService) {
+    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService, ApplicationUserFactory applicationUserFactory) {
         this.kingdomService = kingdomService;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.roleService = roleService;
+        this.applicationUserFactory = applicationUserFactory;
     }
 
     public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
@@ -98,7 +101,7 @@ public class ApplicationUserService {
         System.out.println(applicationUserDTO.getUsername());
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
-            final ApplicationUser applicationUser = new ApplicationUser();
+            final ApplicationUser applicationUser = applicationUserFactory.makeApplicationUser();
             //TODO this is used only for development purpose
             List<ApplicationUserRole> userRoles = new ArrayList<>();
             userRoles.add(roleService.findById(1L));

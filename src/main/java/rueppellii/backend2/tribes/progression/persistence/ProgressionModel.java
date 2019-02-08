@@ -22,7 +22,7 @@ public class ProgressionModel {
     @JoinTable(name = "kingdom_progress")
     private Kingdom progressKingdom;
 
-    private String objectToProgress;
+    private String type;
     private Long timeToCreate;
     private Long gameObjectId;
 }

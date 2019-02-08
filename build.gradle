@@ -40,6 +40,8 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compile('org.modelmapper:modelmapper:1.1.0')
     annotationProcessor("org.projectlombok:lombok")
+    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
+
 }
 
 test{

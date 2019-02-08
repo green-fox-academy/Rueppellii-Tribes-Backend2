@@ -27,8 +27,6 @@ public abstract class Building {
 
     private Integer level;
     private Integer HP;
-    private Timestamp started_at;
-    private Timestamp finished_at;
 
     @JsonBackReference
     @ManyToOne
@@ -39,7 +37,5 @@ public abstract class Building {
 
     public Building() {
         this.level = 1;
-        this.started_at = new Timestamp(System.currentTimeMillis());
-        this.finished_at = new Timestamp(getStarted_at().getTime() + 5L);
     }
 }
