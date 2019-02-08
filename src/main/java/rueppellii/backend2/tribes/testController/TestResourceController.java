@@ -2,16 +2,15 @@ package rueppellii.backend2.tribes.testController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import rueppellii.backend2.tribes.building.BuildingDTO;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
-import rueppellii.backend2.tribes.kingdom.KingdomService;
-import rueppellii.backend2.tribes.upgrade.IdDTO;
-import rueppellii.backend2.tribes.upgrade.PurchaseService;
+import rueppellii.backend2.tribes.building.utility.BuildingDTO;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/test")
 public class TestResourceController {
 
     private PurchaseService purchaseService;

@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import rueppellii.backend2.tribes.TribesApplication;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.security.model.token.AccessJwtToken;
 import rueppellii.backend2.tribes.security.model.token.JwtTokenFactory;
@@ -28,7 +28,6 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +39,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("Test")
 @SpringBootTest(classes = TribesApplication.class)
 public class LoginTest {
-
-    private MediaType conentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
 
     private MockMvc mockMvc;
     private AccessJwtToken token;
@@ -90,10 +85,14 @@ public class LoginTest {
     @Test
     @WithMockUser
     public void successfulLogin () throws Exception {
-        Mockito.when(applicationUserService.findUser("test"))
+        Mockito.when(applicationUserService.findByUserName("test"))
                 .thenReturn(applicationUser);
-        mockMvc.perform(get("/api/kingdom")
-                .contentType(conentType)
+        mockMvc.perform(get("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content("{\n"
+                        + " \"username\":\"test\",\n"
+                        + " \"password\":\"password\",\n"
+                        + "}")
                 .header("X-Requested-With", "XMLHttpRequest")
                 .header("Content-Type", "application/json"))
                 .andExpect(status().isOk());
