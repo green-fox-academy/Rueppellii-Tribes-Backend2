@@ -71,14 +71,13 @@ public class PurchaseService {
         Integer buildingPrice = 100;
          if (hasEnoughGold(kingdomId, buildingPrice)) {
             resourceService.minusGoldAmount(buildingPrice, kingdomId);
-            buildingService.createBuilding(buildingDTO, kingdom.getApplicationUser().getUsername());
             return;
         }
         throw new NoResourceException("You don't have enough gold!");
     }
 
     public void upgradeBuilding(Long kingdomId, Long buildingId) throws Exception {
-        Building building = buildingService.findByIds(buildingId, kingdomId);
+        Building building = buildingService.findById(buildingId);
         Integer desiredLevel = building.getLevel() + 1;
         Integer upgradePrice = 100 * desiredLevel;
         if (hasEnoughGold(kingdomId, upgradePrice)) {

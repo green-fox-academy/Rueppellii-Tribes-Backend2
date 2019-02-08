@@ -6,11 +6,9 @@ import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.building.persistence.repository.BuildingRepository;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import java.util.List;
 import java.util.stream.Collectors;

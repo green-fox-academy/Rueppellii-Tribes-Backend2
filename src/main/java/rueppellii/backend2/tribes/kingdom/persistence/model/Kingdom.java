@@ -2,11 +2,9 @@ package rueppellii.backend2.tribes.kingdom.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.hibernate.annotations.Immutable;
 import rueppellii.backend2.tribes.building.persistence.model.*;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
@@ -50,7 +48,7 @@ public class Kingdom {
     @JoinTable(name = "kingdom_resources", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "resource_id", referencedColumnName = "id")})
-    public ImmutableList<Resource> kingdomsResources;
+    public List<Resource> kingdomsResources;
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -71,7 +69,9 @@ public class Kingdom {
         Mine mine = new Mine();
         Gold gold = new Gold();
         Food food = new Food();
-        kingdomsResources = ImmutableList.of(food, gold);
+        kingdomsResources = new ArrayList<>();
+        kingdomsResources.add(gold);
+        kingdomsResources.add(food);
         kingdomsBuildings = new ArrayList<>();
         kingdomsBuildings.add(townHall);
         kingdomsBuildings.add(barracks);
