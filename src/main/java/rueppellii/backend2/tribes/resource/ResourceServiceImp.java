@@ -74,7 +74,7 @@ public class ResourceServiceImp {
         saveResource(gold);
     }
 
-    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, ResourceType resourceType, Long kingdomId) throws Exception {
+    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, Long kingdomId) throws Exception {
         Resource food = returnResource(ResourceType.GOLD, kingdomId);
         int numberOfTroops = kingdom.getTroops().size();
         int foodAmount = food.getAmount();

@@ -1,10 +1,15 @@
 package rueppellii.backend2.tribes.resource;
 
+import org.springframework.http.ResponseEntity;
 import rueppellii.backend2.tribes.kingdom.Kingdom;
 
 public interface ResourceService {
 
     Resource getResourceById(Long id);
+
+    ResponseEntity saveResource(Resource resource);
+
+    boolean validateType(Resource resource);
 
     Resource returnResource(ResourceType type, Long id);
 
@@ -12,7 +17,7 @@ public interface ResourceService {
 
     void plusGoldAmount(Integer gold, Long kingdomId);
 
-    int resourceAmountPerMinute(ResourceType resourceType, Resource resource);
+    void goldAmountUpdate(Long kingdomId, Resource resource);
 
     void setAmountOfGold(Kingdom kingdom, Integer goldAmount, Long kingdomId);
 
