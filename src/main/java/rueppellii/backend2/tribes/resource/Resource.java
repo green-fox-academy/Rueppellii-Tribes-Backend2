@@ -12,12 +12,12 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "resource")
+@Table(name = "resources")
 public abstract class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long resource_id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private ResourceType type;
@@ -26,8 +26,8 @@ public abstract class Resource {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_resource", joinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")}, inverseJoinColumns = {
+    @JoinTable(name = "kingdom_resources", joinColumns = {
+            @JoinColumn(name = "resource_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom resourcesKingdom;
 

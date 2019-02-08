@@ -12,13 +12,13 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
-public class ResourceController {
+public class TestResourceController {
 
     private PurchaseService purchaseService;
     private KingdomService kingdomService;
 
     @Autowired
-    public ResourceController(PurchaseService purchaseService, KingdomService kingdomService) {
+    public TestResourceController(PurchaseService purchaseService, KingdomService kingdomService) {
         this.purchaseService = purchaseService;
         this.kingdomService = kingdomService;
     }

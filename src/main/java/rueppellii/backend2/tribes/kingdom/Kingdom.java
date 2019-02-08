@@ -44,13 +44,16 @@ public class Kingdom {
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_resource", joinColumns = {
+    @JoinTable(name = "kingdom_resources", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")})
+            @JoinColumn(name = "resource_id", referencedColumnName = "id")})
     public List<Resource> kingdomsResources;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "buildingsKingdom", targetEntity = Building.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "kingdom_buildings", joinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "building_id", referencedColumnName = "id")})
     private List<Building> kingdomsBuildings;
 
     public Kingdom() {
@@ -60,10 +63,6 @@ public class Kingdom {
         Mine mine = new Mine();
         Gold gold = new Gold();
         Food food = new Food();
-        townHall.setBuildingsKingdom(this);
-        barracks.setBuildingsKingdom(this);
-        farm.setBuildingsKingdom(this);
-        mine.setBuildingsKingdom(this);
         kingdomsResources = new ArrayList<>();
         kingdomsResources.add(gold);
         kingdomsResources.add(food);

@@ -14,13 +14,13 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
-public class BuildingController {
+public class TestBuildingController {
 
     private BuildingService buildingService;
     private ApplicationUserService applicationUserService;
 
     @Autowired
-    public BuildingController(BuildingService buildingService, ApplicationUserService applicationUserService) {
+    public TestBuildingController(BuildingService buildingService, ApplicationUserService applicationUserService) {
         this.buildingService = buildingService;
         this.applicationUserService = applicationUserService;
     }

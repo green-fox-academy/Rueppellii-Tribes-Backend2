@@ -31,7 +31,9 @@ public abstract class Building {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_building")
+    @JoinTable(name = "kingdom_buildings", joinColumns = {
+            @JoinColumn(name = "building_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom buildingsKingdom;
 
     public Building() {
