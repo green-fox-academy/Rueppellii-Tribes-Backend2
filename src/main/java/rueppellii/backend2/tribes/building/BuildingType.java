@@ -1,5 +1,8 @@
 package rueppellii.backend2.tribes.building;
 
+import javax.persistence.Entity;
+
+
 public enum BuildingType {
 
     TOWNHALL {
