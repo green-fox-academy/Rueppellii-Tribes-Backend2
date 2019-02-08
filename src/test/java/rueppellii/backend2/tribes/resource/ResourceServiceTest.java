@@ -41,11 +41,4 @@ public class ResourceServiceTest {
         response = new ResponseEntity(HttpStatus.OK);
         assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
-
-    @Test
-    void saveResourceWithWrongType() {
-        resource.setType(ResourceType.RESOURCE_WOOD);
-        response = new ResponseEntity(HttpStatus.BAD_REQUEST);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
-    }
 }

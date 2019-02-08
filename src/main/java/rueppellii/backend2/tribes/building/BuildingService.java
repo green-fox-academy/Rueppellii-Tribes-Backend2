@@ -25,11 +25,8 @@ public class BuildingService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public Building createBuilding(BuildingDTO buildingDTO, Principal principal) throws Exception {
+    public Building createBuilding(BuildingDTO buildingDTO, String loggedInUser) throws Exception {
         Building building;
-        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
-        UserContext userContext = (UserContext) authenticationToken.getPrincipal();
-        String loggedInUser = userContext.getUsername();
         Kingdom userKingdom = kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a kingdom!"));
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(buildingDTO.getType().toUpperCase()).equals(t)) {
@@ -42,6 +39,14 @@ public class BuildingService {
             }
         }
         throw new IllegalArgumentException("No such building type!");
+    }
+
+    public void saveBuilding(Building building) {
+        buildingRepository.save(building);
+    }
+
+    public Building findByIds(Long id, Long kingdomId) throws Exception {
+        return buildingRepository.findByIdAndBuildingsKingdom_Id(id, kingdomId).orElseThrow(() -> new Exception());
     }
 
     public Iterable<Building> listBuildingsInKingdom() {

@@ -2,14 +2,18 @@ package rueppellii.backend2.tribes.resource;
 
 
 public enum ResourceType {
-    GOLD,
+    GOLD {
+        public Resource produceResource() {
+            return new Gold();
+        }
+    },
+    FOOD {
+        public Resource produceResource() {
+            return new Food();
+        }
+    };
 
-    FOOD,
-
-    //ONLY FOR TEST PURPOSES
-    RESOURCE_WOOD;
-
-    public Resource addResource() {
+    public Resource produceResource() {
         return null;
     }
 
