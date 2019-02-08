@@ -11,15 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.security.exceptions.InvalidJwtToken;
 import rueppellii.backend2.tribes.security.auth.jwt.extractor.TokenExtractor;
 import rueppellii.backend2.tribes.security.auth.jwt.verifier.TokenVerifier;
@@ -30,6 +29,7 @@ import rueppellii.backend2.tribes.security.model.token.RawAccessJwtToken;
 import rueppellii.backend2.tribes.security.model.token.RefreshToken;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
+import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import static rueppellii.backend2.tribes.security.SecurityConstants.AUTHENTICATION_HEADER_NAME;
 import static rueppellii.backend2.tribes.security.SecurityConstants.TOKEN_SIGNING_KEY;
@@ -53,7 +53,7 @@ public class RefreshTokenEndpoint {
 
     @RequestMapping(value = "/api/auth/token", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
-    JwtToken refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    JwtToken refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, UsernameNotFoundException {
         String tokenPayload = tokenExtractor.extract(request.getHeader(AUTHENTICATION_HEADER_NAME));
 
         RawAccessJwtToken rawToken = new RawAccessJwtToken(tokenPayload);
@@ -70,16 +70,15 @@ public class RefreshTokenEndpoint {
         }
 
         String subject = refreshToken.getSubject();
-        ApplicationUser applicationUser = applicationUserService.findByUserName(subject).orElseThrow(() -> new UsernameNotFoundException("User not found: " + subject));
-
-        if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
-        List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
-                .collect(Collectors.toList());
-
-        UserContext userContext = UserContext.create(applicationUser.getUsername(), authorities);
-
+        UserContext userContext = applicationUserService.createUserContext(subject);
         return tokenFactory.createAccessJwtToken(userContext);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse userNotFoundHandler(MethodArgumentNotValidException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 }
 

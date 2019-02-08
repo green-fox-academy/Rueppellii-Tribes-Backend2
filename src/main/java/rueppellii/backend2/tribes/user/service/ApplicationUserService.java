@@ -1,90 +1,111 @@
 package rueppellii.backend2.tribes.user.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+
+import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
+import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
-import rueppellii.backend2.tribes.kingdom.Kingdom;
+import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
-import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRoleRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationUserService {
 
+    private KingdomService kingdomService;
     private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
-    private ApplicationUserRoleRepository applicationUserRoleRepository;
+    private RoleService roleService;
 
     @Autowired
-    public ApplicationUserService(ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, ApplicationUserRoleRepository applicationUserRoleRepository) {
+    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService) {
+        this.kingdomService = kingdomService;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
-        this.applicationUserRoleRepository = applicationUserRoleRepository;
+        this.roleService = roleService;
     }
 
-    public List<ApplicationUserDTO> getAllUser(){
+    public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
+
+        return applicationUserRepository.findByUsername(getUsernameByPrincipal(principal))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + getUsernameByPrincipal(principal)));
+    }
+
+    public void save(ApplicationUser applicationUser) {
+        applicationUserRepository.save(applicationUser);
+    }
+
+    public String getUsernameByPrincipal(Principal principal) {
+        JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
+        UserContext user = (UserContext) token.getPrincipal();
+        return user.getUsername();
+    }
+
+    public List<ApplicationUserDTO> getAllUser() {
         List<ApplicationUser> allUser = applicationUserRepository.findAll();
         List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
 
         for (ApplicationUser user : allUser) {
             ApplicationUserDTO dto = new ApplicationUserDTO();
             dto.setUsername(user.getUsername());
-            dto.setKingdom(user.getKingdom().getName());
+            dto.setKingdomName(user.getKingdom().getName());
             List<Role> roles = new ArrayList<>();
             for (int i = 0; i < user.getRoles().size(); i++) {
                 roles.add(user.getRoles().get(i).getRoleEnum());
-
             }
             dto.setRoles(roles);
             allUserDTO.add(dto);
-
         }
         return allUserDTO;
     }
 
-    public Optional<ApplicationUser> findByUserName(String username) {
-        return applicationUserRepository.findByUsername(username);
+    public UserContext createUserContext(String username) {
+        ApplicationUser applicationUser = findByUserName(username);
+
+        if (applicationUser.getRoles() == null)
+            throw new InsufficientAuthenticationException("User has no roles assigned");
+        List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
+                .collect(Collectors.toList());
+
+        return UserContext.create(applicationUser.getUsername(), authorities);
     }
 
-    public ApplicationUser findUser(String username) {
-        if (applicationUserRepository.findByUsername(username).isPresent()) {
-            return applicationUserRepository.findByUsername(username).get();
-        } else {
-            return null;
-        }
+    public ApplicationUser findByUserName(String username) throws UsernameNotFoundException {
+        return applicationUserRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-    public Boolean existsByUsername(String username) {
-        return applicationUserRepository.existsByUsername(username);
-    }
+    public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
+            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
 
-    public RegisterResponse registerNewApplicationUser(ApplicationUserDTO applicationUserDTO)
-            throws MethodArgumentNotValidException, UserNameIsTakenException {
-
+        System.out.println(applicationUserDTO.getUsername());
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
             final ApplicationUser applicationUser = new ApplicationUser();
-
+            //TODO this is used only for development purpose
             List<ApplicationUserRole> userRoles = new ArrayList<>();
-            try {
-                userRoles.add(applicationUserRoleRepository.findById(2L).orElseThrow(Exception::new));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            userRoles.add(roleService.findById(1L));
+
             applicationUser.setUsername(applicationUserDTO.getUsername());
             applicationUser.setPassword(encoder.encode(applicationUserDTO.getPassword()));
-            applicationUser.setKingdom(createNewKingdomAndSetName(applicationUserDTO));
+            applicationUser.setKingdom(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
             applicationUser.setRoles(userRoles);
 
@@ -97,15 +118,8 @@ public class ApplicationUserService {
         throw new UserNameIsTakenException();
     }
 
-    private Kingdom createNewKingdomAndSetName(ApplicationUserDTO applicationUserDTO) {
-        Kingdom kingdom = new Kingdom();
-        if (applicationUserDTO.getKingdom().isEmpty()) {
-            kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
-        } else {
-            kingdom.setName(applicationUserDTO.getKingdom());
-        }
-        return kingdom;
+    private Boolean existsByUsername(String username) {
+        return applicationUserRepository.existsByUsername(username);
     }
-
 
 }

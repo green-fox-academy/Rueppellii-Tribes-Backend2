@@ -8,6 +8,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import rueppellii.backend2.tribes.resource.presistence.model.Resource;
+import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
+import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +26,7 @@ public class ResourceServiceTest {
 
     @BeforeEach
     void init() {
-        resource = new Resource();
+        //resource = new Resource();
         MockitoAnnotations.initMocks(this);
         resourceService = new ResourceService(resourceRepository);
     }
@@ -35,15 +39,8 @@ public class ResourceServiceTest {
 
     @Test
     void saveResourceWithValidType() {
-        resource.setResource_type(ResourceType.RESOURCE_FOOD);
+        resource.setType(ResourceType.FOOD);
         response = new ResponseEntity(HttpStatus.OK);
-        assertThat(resourceService.saveResource(resource)).isEqualTo(response);
-    }
-
-    @Test
-    void saveResourceWithWrongType() {
-        resource.setResource_type(ResourceType.RESOURCE_WOOD);
-        response = new ResponseEntity(HttpStatus.BAD_REQUEST);
         assertThat(resourceService.saveResource(resource)).isEqualTo(response);
     }
 }
