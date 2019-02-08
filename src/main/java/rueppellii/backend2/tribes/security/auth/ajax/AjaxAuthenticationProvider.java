@@ -35,25 +35,19 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.notNull(authentication, "No authentication data provided");
 
         String username = (String) authentication.getPrincipal();
         String password = (String) authentication.getCredentials();
 
-        ApplicationUser applicationUser = applicationUserService.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        ApplicationUser applicationUser = applicationUserService.findByUserName(username);
 
         if (!encoder.matches(password, applicationUser.getPassword())) {
             throw new BadCredentialsException("Wrong Password");
         }
 
-        if (applicationUser.getRoles() == null) throw new InsufficientAuthenticationException("User has no roles assigned");
-
-        List<GrantedAuthority> authorities = applicationUser.getRoles().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getRoleEnum().authority()))
-                .collect(Collectors.toList());
-
-        UserContext userContext = UserContext.create(applicationUser.getUsername(), authorities);
+        UserContext userContext = applicationUserService.createUserContext(username);
 
         return new UsernamePasswordAuthenticationToken(userContext, null, userContext.getAuthorities());
     }

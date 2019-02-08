@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import rueppellii.backend2.tribes.resource.presistence.model.Resource;
+import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
+import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
