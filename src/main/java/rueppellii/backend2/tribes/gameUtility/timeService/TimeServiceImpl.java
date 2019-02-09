@@ -46,13 +46,8 @@ public class TimeServiceImpl implements TimeService {
     }
 
     @Override
-    public void refreshProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
-        List<ProgressionModel> progressions = progressionService.findAllByKingdom(kingdom);
-        for (ProgressionModel p : progressions) {
-            if(p.getTimeToCreate() <= System.currentTimeMillis()){
-                progressionService.progress(p, kingdom);
-            }
-        }
+    public Boolean timeIsUp(ProgressionModel progressionModel) {
+        return progressionModel.getTimeToProgress() <= System.currentTimeMillis();
     }
 
 

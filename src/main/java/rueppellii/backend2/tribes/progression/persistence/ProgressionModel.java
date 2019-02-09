@@ -23,6 +23,6 @@ public class ProgressionModel {
     private Kingdom progressKingdom;
 
     private String type;
-    private Long timeToCreate;
+    private Long timeToProgress;
     private Long gameObjectId;
 }

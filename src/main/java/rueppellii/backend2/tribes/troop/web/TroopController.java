@@ -44,7 +44,7 @@ public class TroopController {
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType("TROOP");
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfTroopCreation(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(kingdom));
 
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
@@ -65,7 +65,7 @@ public class TroopController {
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setGameObjectId(id);
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfTroopUpgrade(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
 
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);

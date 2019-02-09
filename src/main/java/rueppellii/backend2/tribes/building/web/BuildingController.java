@@ -10,8 +10,8 @@ import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
-import rueppellii.backend2.tribes.progression.util.ProgressionFactory;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -25,11 +25,13 @@ public class BuildingController {
 
     private KingdomService kingdomService;
     private TimeServiceImpl timeService;
+    private ProgressionService progressionService;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, TimeServiceImpl timeService) {
+    public BuildingController(KingdomService kingdomService, TimeServiceImpl timeService, ProgressionService progressionService) {
         this.kingdomService = kingdomService;
         this.timeService = timeService;
+        this.progressionService = progressionService;
     }
 
     @PostMapping("")
@@ -38,7 +40,7 @@ public class BuildingController {
                                Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
 
-        timeService.refreshProgression(kingdom);
+        progressionService.refreshProgression(kingdom);
 
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
 
@@ -48,7 +50,7 @@ public class BuildingController {
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType(progressionDTO.getType());
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfBuildingCreation(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
 
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
@@ -59,7 +61,7 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: timeService method to check the progression and update/create if time is up
+        //TODO: progresionService will check if time is up with the help of timeservice and if 
 
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
 
@@ -69,7 +71,7 @@ public class BuildingController {
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setGameObjectId(id);
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfBuildingUpgrade(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingUpgrade(kingdom));
 
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
