@@ -15,7 +15,7 @@ public class ProgressionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long progression_id;
+    private Long id;
 
     @JsonBackReference
     @ManyToOne

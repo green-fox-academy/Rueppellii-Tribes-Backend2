@@ -34,12 +34,16 @@ public class ProgressionService {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
+                progressionModelRepository.deleteById(progressionModel.getId());
             }
             buildingService.createBuilding(progressionModel, kingdom);
+            progressionModelRepository.deleteById(progressionModel.getId());
         }
         if (progressionModel.getType().equals("TROOP")) {
             troopService.upgradeTroop(progressionModel, kingdom);
+            progressionModelRepository.deleteById(progressionModel.getId());
         }
         buildingService.upgradeBuilding(progressionModel, kingdom);
+        progressionModelRepository.deleteById(progressionModel.getId());
     }
 }

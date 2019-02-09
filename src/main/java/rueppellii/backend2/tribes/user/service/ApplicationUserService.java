@@ -17,9 +17,9 @@ import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.util.ApplicationUserFactory;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
-import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
+import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
 import java.security.Principal;
