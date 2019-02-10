@@ -38,9 +38,7 @@ public class TroopService {
     public void createTroop(Kingdom kingdom) {
         Troop troop = makeTroop();
         troop.setTroopsKingdom(kingdom);
-        kingdom.getKingdomsTroops().add(troop);
         troopRepository.save(troop);
-        kingdomService.save(kingdom);
     }
 
     public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {

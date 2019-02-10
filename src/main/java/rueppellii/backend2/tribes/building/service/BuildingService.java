@@ -35,9 +35,7 @@ public class BuildingService {
             if (BuildingType.valueOf(progressionModel.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
                 building.setBuildingsKingdom(kingdom);
-                kingdom.getKingdomsBuildings().add(building);
                 buildingRepository.save(building);
-                kingdomService.save(kingdom);
                 return;
             }
         }
