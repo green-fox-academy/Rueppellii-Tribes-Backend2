@@ -37,6 +37,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1'
+    testCompile 'io.rest-assured:rest-assured:3.0.2'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compile('org.modelmapper:modelmapper:1.1.0')
     annotationProcessor("org.projectlombok:lombok")

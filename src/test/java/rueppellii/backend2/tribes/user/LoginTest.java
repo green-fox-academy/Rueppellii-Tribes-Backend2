@@ -66,6 +66,8 @@ public class LoginTest {
 
     @BeforeEach
     public void setup() {
+
+
         kingdomTest = new Kingdom();
         kingdomTest.setName("KingdomTest");
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext) //something is not good
