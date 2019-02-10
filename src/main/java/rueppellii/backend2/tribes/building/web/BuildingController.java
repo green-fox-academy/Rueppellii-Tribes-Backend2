@@ -43,7 +43,7 @@ public class BuildingController {
         progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
@@ -54,7 +54,7 @@ public class BuildingController {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.upgradeBuilding(kingdom.getId(), id);
         progressionService.generateBuildingUpgradeModel(kingdom, id);
     }

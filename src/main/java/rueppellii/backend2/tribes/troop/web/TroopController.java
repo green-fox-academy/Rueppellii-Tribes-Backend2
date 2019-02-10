@@ -39,7 +39,7 @@ public class TroopController {
 
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
@@ -51,7 +51,7 @@ public class TroopController {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.upgradeTroop(kingdom.getId(), id);
         progressionService.generateTroopUpgradeModel(kingdom, id);
     }
