@@ -5,17 +5,14 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
-import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
-
-import static rueppellii.backend2.tribes.troop.utility.TroopFactory.makeTroop;
 
 @Service
 public class PurchaseService {

@@ -7,7 +7,7 @@ import rueppellii.backend2.tribes.building.persistence.repository.BuildingReposi
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import java.util.ArrayList;

@@ -4,12 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.progression.service.ProgressionService;
-import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
-
-import java.util.List;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
 
