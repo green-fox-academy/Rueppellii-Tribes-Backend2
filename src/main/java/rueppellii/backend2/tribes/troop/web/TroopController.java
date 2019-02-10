@@ -40,7 +40,9 @@ public class TroopController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+    public void createTroop(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws UsernameNotFoundException,
+            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+        //TODO: validate progression request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
@@ -57,7 +59,9 @@ public class TroopController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException,
+            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+        //TODO: validate progression request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
@@ -90,6 +94,20 @@ public class TroopController {
     @ExceptionHandler(TroopNotFoundException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     ErrorResponse troopNotFoundException(TroopNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(BuildingNotFoundException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NoResourceException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ErrorResponse NoResourceHandler(NoResourceException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }

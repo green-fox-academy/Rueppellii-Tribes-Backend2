@@ -59,6 +59,7 @@ public class BuildingController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+        //TODO: validate progression request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
@@ -84,14 +85,28 @@ public class BuildingController {
     @ResponseBody
     @ExceptionHandler(KingdomNotFoundException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    ErrorResponse kingdomNotFoundException(KingdomNotFoundException ex) {
+    ErrorResponse kingdomNotFoundHandler(KingdomNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(TroopNotFoundException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    ErrorResponse troopNotFoundException(TroopNotFoundException ex) {
+    ErrorResponse troopNotFoundHandler(TroopNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(BuildingNotFoundException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NoResourceException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ErrorResponse NoResourceHandler(NoResourceException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 

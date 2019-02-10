@@ -43,9 +43,9 @@ public class TestResourceController {
     }
 
     @PostMapping("/kingdom/building/build")
-    public Kingdom makeBuilding(Principal principal, @RequestBody BuildingDTO buildingDTO) throws Exception {
+    public Kingdom makeBuilding(Principal principal) throws Exception {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        purchaseService.buyBuilding(kingdom.getId(), buildingDTO);
+        purchaseService.buyBuilding(kingdom.getId());
         return kingdom;
     }
 
