@@ -73,6 +73,4 @@ public class BuildingService {
         }
         return starterBuildings;
     }
-
-
 }

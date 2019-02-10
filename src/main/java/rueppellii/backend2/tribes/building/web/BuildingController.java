@@ -47,23 +47,23 @@ public class BuildingController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO,
+    public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequest {
-        if (!(bindingResult.hasErrors() || Arrays.asList(BuildingType.values()).contains(BuildingType.valueOf(progressionDTO.getType())))) {
-            Kingdom kingdom = kingdomService.findByPrincipal(principal);
-            progressionService.refreshProgression(kingdom);
-            //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-            purchaseService.buyBuilding(kingdom.getId());
-            //TODO: generateProgressionModel should be implemented
-            ProgressionModel progressionModel = makeProgressionModel();
-            progressionModel.setType(progressionDTO.getType());
-            progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
-            progressionModel.setProgressKingdom(kingdom);
-            kingdom.getKingdomsProgresses().add(progressionModel);
-            kingdomService.save(kingdom);
-        }
-        throw new InvalidProgressionRequest("Wrong type!");
+        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.refreshProgression(kingdom);
+        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+        purchaseService.buyBuilding(kingdom.getId());
+        //TODO: generateProgressionModel should be implemented
+        ProgressionModel progressionModel = makeProgressionModel();
+        progressionModel.setType(progressionDTO.getType());
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
+        progressionModel.setProgressKingdom(kingdom);
+        kingdom.getKingdomsProgresses().add(progressionModel);
+        kingdomService.save(kingdom);
+
+
     }
 
     @PutMapping("{id}")
@@ -122,9 +122,15 @@ public class BuildingController {
 
     @ResponseBody
     @ExceptionHandler(InvalidProgressionRequest.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse InvalidProgressionHandler(InvalidProgressionRequest ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
+    @ResponseBody
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse InvalidProgressionEnumHandler(IllegalArgumentException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 }
