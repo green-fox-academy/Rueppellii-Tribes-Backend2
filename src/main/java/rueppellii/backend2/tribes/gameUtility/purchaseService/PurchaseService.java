@@ -17,14 +17,13 @@ import rueppellii.backend2.tribes.troop.service.TroopService;
 @Service
 public class PurchaseService {
 
-    private KingdomService kingdomService;
+
     private ResourceService resourceService;
     private TroopService troopService;
     private BuildingService buildingService;
 
     @Autowired
-    public PurchaseService(KingdomService kingdomService, ResourceService resourceService, TroopService troopService, BuildingService buildingService) {
-        this.kingdomService = kingdomService;
+    public PurchaseService(ResourceService resourceService, TroopService troopService, BuildingService buildingService) {
         this.resourceService = resourceService;
         this.troopService = troopService;
         this.buildingService = buildingService;
