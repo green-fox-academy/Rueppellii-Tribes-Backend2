@@ -10,7 +10,6 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
-import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
@@ -18,21 +17,17 @@ import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
 
-import static rueppellii.backend2.tribes.progression.util.ProgressionFactory.makeProgressionModel;
-
 @RestController
 @RequestMapping("/api/kingdom/troop")
 public class TroopController {
 
     private KingdomService kingdomService;
-    private TimeServiceImpl timeService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, TimeServiceImpl timeService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
         this.kingdomService = kingdomService;
-        this.timeService = timeService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
     }
@@ -42,23 +37,11 @@ public class TroopController {
     public void createTroop(Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
 
-        //TODO: validate progression request
-
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
-
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-
         purchaseService.buyTroop(kingdom.getId());
-
-        //TODO: generateProgressionModel should be implemented
-        ProgressionModel progressionModel = makeProgressionModel();
-        progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(kingdom));
-
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        progressionService.generateTroopCreationModel(kingdom);
     }
 
     @PutMapping("{id}")
@@ -70,15 +53,7 @@ public class TroopController {
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
         purchaseService.upgradeTroop(kingdom.getId(), id);
-        //TODO: generateProgressionModel should be implemented
-        ProgressionModel progressionModel = makeProgressionModel();
-        progressionModel.setGameObjectId(id);
-        progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
-
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        progressionService.generateTroopUpgradeModel(kingdom, id);
     }
 
     @ResponseBody
