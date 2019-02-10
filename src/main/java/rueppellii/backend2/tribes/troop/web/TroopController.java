@@ -64,21 +64,21 @@ public class TroopController {
 
     @ResponseBody
     @ExceptionHandler(KingdomNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse kingdomNotFoundException(KingdomNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    ErrorResponse troopNotFoundException(TroopNotFoundException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse troopNotFoundException(TroopNotFoundException ex)  {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(BuildingNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }

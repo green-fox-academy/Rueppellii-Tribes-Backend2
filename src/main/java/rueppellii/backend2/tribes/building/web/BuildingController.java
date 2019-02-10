@@ -68,21 +68,21 @@ public class BuildingController {
 
     @ResponseBody
     @ExceptionHandler(KingdomNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse kingdomNotFoundHandler(KingdomNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse troopNotFoundHandler(TroopNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(BuildingNotFoundException.class)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }

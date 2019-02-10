@@ -15,12 +15,10 @@ import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 public class TroopService {
 
     private TroopRepository troopRepository;
-    private KingdomService kingdomService;
 
     @Autowired
-    public TroopService(TroopRepository troopRepository, KingdomService kingdomService) {
+    public TroopService(TroopRepository troopRepository) {
         this.troopRepository = troopRepository;
-        this.kingdomService = kingdomService;
     }
 
     public void saveTroop(Troop troop) {
