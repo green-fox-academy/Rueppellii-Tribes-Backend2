@@ -18,8 +18,9 @@ public class TroopService {
     private KingdomService kingdomService;
 
     @Autowired
-    public TroopService(TroopRepository troopRepository) {
+    public TroopService(TroopRepository troopRepository, KingdomService kingdomService) {
         this.troopRepository = troopRepository;
+        this.kingdomService = kingdomService;
     }
 
     public void saveTroop(Troop troop) {
@@ -42,11 +43,10 @@ public class TroopService {
         kingdomService.save(kingdom);
     }
 
-    public void upgradeTroop(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException {
+    public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
         Troop troop = findById(progressionModel.getGameObjectId());
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
-        kingdomService.save(kingdom);
     }
 
 

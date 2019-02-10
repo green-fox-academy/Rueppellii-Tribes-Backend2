@@ -11,7 +11,7 @@ public class Gold extends Resource {
 
     public Gold() {
         setType(ResourceType.GOLD);
-        setAmount(100);
+        setAmount(1000);
         setResourcePerMinute(5);
         setUpdatedAt(System.currentTimeMillis());
     }

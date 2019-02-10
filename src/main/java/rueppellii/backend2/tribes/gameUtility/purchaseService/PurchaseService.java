@@ -42,14 +42,9 @@ public class PurchaseService {
     }
 
     public void buyTroop(Long kingdomId) throws NoResourceException, KingdomNotFoundException {
-        Kingdom kingdom = kingdomService.findById(kingdomId);
         Integer troopPrice = 10;
         if (hasEnoughGold(kingdomId, troopPrice)) {
             resourceService.minusGoldAmount(troopPrice, kingdomId);
-            Troop troop = makeTroop();
-            troopService.saveTroop(troop);
-            kingdom.getKingdomsTroops().add(troop);
-            kingdomService.save(kingdom);
             return;
         }
         throw new NoResourceException("You don't have enough gold!");
@@ -60,8 +55,6 @@ public class PurchaseService {
         Integer desiredLevel = troop.getLevel() + 1;
         Integer upgradePrice = 10 * desiredLevel;
         if (hasEnoughGold(kingdomId, upgradePrice)) {
-            troop.setLevel(desiredLevel);
-            troopService.saveTroop(troop);
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
             return;
         }
@@ -69,7 +62,7 @@ public class PurchaseService {
     }
 
     public void buyBuilding(Long kingdomId) throws NoResourceException {
-        Integer buildingPrice = 100;
+        Integer buildingPrice = 50;
          if (hasEnoughGold(kingdomId, buildingPrice)) {
             resourceService.minusGoldAmount(buildingPrice, kingdomId);
             return;
@@ -82,8 +75,6 @@ public class PurchaseService {
         Integer desiredLevel = building.getLevel() + 1;
         Integer upgradePrice = 10 * desiredLevel;
         if (hasEnoughGold(kingdomId, upgradePrice)) {
-            building.setLevel(desiredLevel);
-            buildingService.saveBuilding(building);
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
             return;
         }

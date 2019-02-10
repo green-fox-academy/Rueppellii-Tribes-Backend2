@@ -53,12 +53,12 @@ public class ProgressionService {
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }
-        if (progressionModel.getType().equals("TROOP")) {
-            troopService.upgradeTroop(progressionModel, kingdom);
+        if (progressionModel.getType() != null) {
+            troopService.upgradeTroop(progressionModel);
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }
-        buildingService.upgradeBuilding(progressionModel, kingdom);
+        buildingService.upgradeBuilding(progressionModel);
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 }

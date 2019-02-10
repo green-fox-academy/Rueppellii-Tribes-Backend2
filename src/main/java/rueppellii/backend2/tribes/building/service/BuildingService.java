@@ -42,6 +42,12 @@ public class BuildingService {
         throw new IllegalArgumentException("No such building type!");
     }
 
+    public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
+        Building building = findById(progressionModel.getGameObjectId());
+        building.setLevel(building.getLevel() + 1);
+        buildingRepository.save(building);
+    }
+
     public void saveBuilding(Building building) {
         buildingRepository.save(building);
     }
@@ -59,8 +65,5 @@ public class BuildingService {
         return townhall.get(0).getLevel();
     }
 
-    public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
-        Building building = findById(progressionModel.getGameObjectId());
-    }
 
 }

@@ -40,13 +40,18 @@ public class TroopController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws UsernameNotFoundException,
+    public void createTroop(Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+
         //TODO: validate progression request
+
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
+
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
+
         purchaseService.buyTroop(kingdom.getId());
+
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType("TROOP");
@@ -69,6 +74,7 @@ public class TroopController {
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setGameObjectId(id);
+        progressionModel.setType("TROOP");
         progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
 
         progressionModel.setProgressKingdom(kingdom);
