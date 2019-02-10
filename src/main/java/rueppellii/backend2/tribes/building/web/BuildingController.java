@@ -6,12 +6,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
-import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequest;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
@@ -39,7 +38,7 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
-            TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequest {
+            TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
@@ -96,9 +95,9 @@ public class BuildingController {
     }
 
     @ResponseBody
-    @ExceptionHandler(InvalidProgressionRequest.class)
+    @ExceptionHandler(InvalidProgressionRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse InvalidProgressionHandler(InvalidProgressionRequest ex) {
+    ErrorResponse InvalidProgressionHandler(InvalidProgressionRequestException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 

@@ -10,7 +10,7 @@ import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequest;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
@@ -72,11 +72,11 @@ public class ProgressionService {
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
-    public void validateProgressionRequest(BindingResult bindingResult, ProgressionDTO progressionDTO) throws InvalidProgressionRequest {
+    public void validateProgressionRequest(BindingResult bindingResult, ProgressionDTO progressionDTO) throws InvalidProgressionRequestException {
         if (bindingResult.hasErrors() || progressionDTO.getType() == null) {
-            throw new InvalidProgressionRequest("Missing parameter: type");
+            throw new InvalidProgressionRequestException("Missing parameter: type");
         } else if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
-            throw new InvalidProgressionRequest("Wrong type!");
+            throw new InvalidProgressionRequestException("Wrong type!");
         }
     }
 

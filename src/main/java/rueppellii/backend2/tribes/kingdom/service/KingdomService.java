@@ -33,11 +33,11 @@ public class KingdomService {
     }
 
     public Kingdom findByUsername(String loggedInUser) throws KingdomNotFoundException {
-        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("You don't have a troopsKingdom!"));
+        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by user: " + loggedInUser));
     }
 
     public Kingdom findById(Long id) throws KingdomNotFoundException {
-        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("You don't have a troopsKingdom!"));
+        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by id: " + id));
     }
 
     public void save(Kingdom kingdom) {
