@@ -10,6 +10,8 @@ import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +65,15 @@ public class BuildingService {
                 .filter(building -> building.getType().getName().matches("TOWNHALL"))
                 .collect(Collectors.toList());
         return townhall.get(0).getLevel();
+    }
+
+    public static List<Building> starterKit(){
+        List<BuildingType> starterBuildingTypes = Arrays.stream(BuildingType.values()).limit(4).collect(Collectors.toList());
+        List<Building> starterBuildings = new ArrayList<>();
+        for (BuildingType t : starterBuildingTypes) {
+            starterBuildings.add(makeBuilding(t));
+        }
+        return starterBuildings;
     }
 
 
