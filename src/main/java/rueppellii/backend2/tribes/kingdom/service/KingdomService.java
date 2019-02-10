@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.kingdom.utility.KingdomFactory.makeKingdom;
 
 
 @Service
@@ -57,8 +58,7 @@ public class KingdomService {
     }
 
     public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) {
-        //TODO: troopsKingdom should come from factory
-        Kingdom kingdom = new Kingdom();
+        Kingdom kingdom = makeKingdom();
         if (applicationUserDTO.getKingdomName().isEmpty()) {
             kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
         } else {
