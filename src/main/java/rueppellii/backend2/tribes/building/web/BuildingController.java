@@ -25,14 +25,12 @@ import java.security.Principal;
 public class BuildingController {
 
     private KingdomService kingdomService;
-    private TimeServiceImpl timeService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, TimeServiceImpl timeService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
         this.kingdomService = kingdomService;
-        this.timeService = timeService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
     }
@@ -53,7 +51,6 @@ public class BuildingController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
-        //TODO: validate progression request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
