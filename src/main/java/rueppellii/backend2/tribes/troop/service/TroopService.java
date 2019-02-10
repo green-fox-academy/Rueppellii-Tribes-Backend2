@@ -44,10 +44,5 @@ public class TroopService {
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
     }
-
-
-
-
-
 }
 

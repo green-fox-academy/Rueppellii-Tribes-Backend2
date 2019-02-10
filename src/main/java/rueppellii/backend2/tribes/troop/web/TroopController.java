@@ -48,6 +48,7 @@ public class TroopController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+        //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
