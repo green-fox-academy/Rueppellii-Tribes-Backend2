@@ -17,12 +17,10 @@ import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*
 public class TimeServiceImpl implements TimeService {
 
     private BuildingService buildingService;
-    private ProgressionService progressionService;
 
     @Autowired
-    public TimeServiceImpl(BuildingService buildingService, ProgressionService progressionService) {
+    public TimeServiceImpl(BuildingService buildingService) {
         this.buildingService = buildingService;
-        this.progressionService = progressionService;
     }
 
     @Override

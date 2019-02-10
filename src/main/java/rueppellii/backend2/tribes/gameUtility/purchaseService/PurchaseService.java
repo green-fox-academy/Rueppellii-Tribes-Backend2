@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.building.utility.BuildingDTO;
+import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
 
@@ -35,11 +37,11 @@ public class PurchaseService {
         return resourceService.returnResource(ResourceType.GOLD, kingdomId).getAmount();
     }
 
-    public boolean hasEnoughGold(Long kingdomId, Integer amount) throws Exception {
-        return getKingdomsGoldAmount(kingdomId) > amount;
+    public Boolean hasEnoughGold(Long kingdomId, Integer amount) throws NoResourceException {
+        return getKingdomsGoldAmount(kingdomId) >= amount;
     }
 
-    public void buyTroop(Long kingdomId) throws Exception {
+    public void buyTroop(Long kingdomId) throws NoResourceException, KingdomNotFoundException {
         Kingdom kingdom = kingdomService.findById(kingdomId);
         Integer troopPrice = 10;
         if (hasEnoughGold(kingdomId, troopPrice)) {
@@ -53,7 +55,7 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeTroop(Long kingdomId, Long troopId) throws Exception {
+    public void upgradeTroop(Long kingdomId, Long troopId) throws NoResourceException, TroopNotFoundException {
         Troop troop = troopService.findById(troopId);
         Integer desiredLevel = troop.getLevel() + 1;
         Integer upgradePrice = 10 * desiredLevel;
@@ -66,8 +68,7 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void buyBuilding(Long kingdomId, BuildingDTO buildingDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findById(kingdomId);
+    public void buyBuilding(Long kingdomId) throws NoResourceException {
         Integer buildingPrice = 100;
          if (hasEnoughGold(kingdomId, buildingPrice)) {
             resourceService.minusGoldAmount(buildingPrice, kingdomId);
@@ -76,10 +77,10 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeBuilding(Long kingdomId, Long buildingId) throws Exception {
+    public void upgradeBuilding(Long kingdomId, Long buildingId) throws NoResourceException, BuildingNotFoundException {
         Building building = buildingService.findById(buildingId);
         Integer desiredLevel = building.getLevel() + 1;
-        Integer upgradePrice = 100 * desiredLevel;
+        Integer upgradePrice = 10 * desiredLevel;
         if (hasEnoughGold(kingdomId, upgradePrice)) {
             building.setLevel(desiredLevel);
             buildingService.saveBuilding(building);

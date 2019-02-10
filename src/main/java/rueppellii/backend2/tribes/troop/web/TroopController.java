@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -23,24 +27,24 @@ public class TroopController {
 
     private KingdomService kingdomService;
     private TimeServiceImpl timeService;
+    private ProgressionService progressionService;
+    private PurchaseService purchaseService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, TimeServiceImpl timeService) {
+    public TroopController(KingdomService kingdomService, TimeServiceImpl timeService, ProgressionService progressionService, PurchaseService purchaseService) {
         this.kingdomService = kingdomService;
         this.timeService = timeService;
+        this.progressionService = progressionService;
+        this.purchaseService = purchaseService;
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException {
+    public void createTroop(@RequestBody ProgressionDTO progressionDTO, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: timeService method to check the progression and update/create if time is up
-
+        progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-
-        //TODO: PurchaseService will check if user have sufficient funds for the progression(progressionDTO.getType, applicationUser, actionCode)
-        //TODO: Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
-
+        purchaseService.buyTroop(kingdom.getId());
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType("TROOP");
@@ -53,15 +57,11 @@ public class TroopController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException {
+    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: timeService method to check the progression and update/create if time is up
-
+        progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-
-        //TODO: PurchaseService will check if user have sufficient funds for the progression(progressionDTO.getType, applicationUser, actionCode)
-        //TODO: Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
-
+        purchaseService.upgradeTroop(kingdom.getId(), id);
         //TODO: generateProgressionModel should be implemented
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setGameObjectId(id);
