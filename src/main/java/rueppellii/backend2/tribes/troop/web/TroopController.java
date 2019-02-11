@@ -12,6 +12,7 @@ import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceServiceImp;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -24,12 +25,14 @@ public class TroopController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private ResourceServiceImp resourceServiceImp;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceServiceImp resourceServiceImp) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceServiceImp = resourceServiceImp;
     }
 
     @PostMapping("")
@@ -41,6 +44,7 @@ public class TroopController {
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.buyTroop(kingdom.getId());
+        resourceServiceImp.refreshResources(kingdom);
         progressionService.generateTroopCreationModel(kingdom);
     }
 
@@ -53,6 +57,7 @@ public class TroopController {
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.upgradeTroop(kingdom.getId(), id);
+        resourceServiceImp.refreshResources(kingdom);
         progressionService.generateTroopUpgradeModel(kingdom, id);
     }
 
