@@ -1,14 +1,9 @@
 CREATE TABLE IF NOT EXISTS progression (
   id BIGINT auto_increment,
+  type VARCHAR(255),
   game_object_id BIGINT,
-  object_to_progress VARCHAR(255),
-  time_to_create BIGINT,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS kingdom_progresses (
+  time_to_progress BIGINT,
   kingdom_id BIGINT,
-  progress_id BIGINT,
-  CONSTRAINT fk_kingdoms_progresses FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id),
-  CONSTRAINT fk_progression FOREIGN KEY (progress_id) REFERENCES progression(id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id)
 );
