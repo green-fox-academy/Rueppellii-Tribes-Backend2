@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
@@ -90,7 +87,7 @@ public class ResourceServiceImp implements ResourceService {
         return null;
     }
 
-    public Timestamp timestampOfResource (Resource resource) {
+    public Timestamp timestampOfResource(Resource resource) {
         return currentTime();
     }
 
@@ -100,8 +97,8 @@ public class ResourceServiceImp implements ResourceService {
 
     public void goldAmountUpdate(Long kingdomId, Resource resource, Long id) throws NoResourceException {
         Resource gold = returnResource(ResourceType.GOLD, kingdomId);
-        Long basicGoldAmount = resource.getAmount();
-        Long updatedGoldAmount = basicGoldAmount + (timeDifferenceInMinutes(id) * gold.getResourcePerMinute());
+        Integer basicGoldAmount = resource.getAmount();
+        Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(id) * gold.getResourcePerMinute());
         gold.setAmount(updatedGoldAmount);
         gold.setUpdatedAt(currentTime().getTime());
         saveResource(gold);
@@ -109,13 +106,13 @@ public class ResourceServiceImp implements ResourceService {
 
     public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, Long kingdomId, Long id) throws NoResourceException {
         Resource food = returnResource(ResourceType.FOOD, kingdomId);
-        Long foodPerMinute = food.getResourcePerMinute();
+        Integer foodPerMinute = food.getResourcePerMinute();
         int numberOfTroops = kingdom.getKingdomsTroops().size();
-        Long basicFoodAmount = food.getAmount();
-        Long updatedFoodAmount = basicFoodAmount + (timeDifferenceInMinutes(id) * foodPerMinute);
+        Integer basicFoodAmount = food.getAmount();
+        Integer updatedFoodAmount = basicFoodAmount + ((int) timeDifferenceInMinutes(id) * foodPerMinute);
         food.setAmount(updatedFoodAmount);
         if (numberOfTroops == numberOfTroops + 1) {
-            foodPerMinute = - 1L;
+            foodPerMinute = - 1;
         }
     }
 

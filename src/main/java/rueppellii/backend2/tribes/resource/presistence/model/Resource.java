@@ -24,10 +24,10 @@ public abstract class Resource {
     @Enumerated(EnumType.STRING)
     //  @Column(insertable = false, updatable = false)
     private ResourceType type;
-    @Min(0L)
-    private Long amount;
+    @Min(0)
+    private Integer amount;
     private Long updatedAt;
-    private Long resourcePerMinute;
+    private Integer resourcePerMinute;
 
 
     @JsonBackReference

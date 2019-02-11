@@ -10,8 +10,8 @@ public class Food extends Resource {
 
     public Food() {
         setType(ResourceType.FOOD);
-        setAmount(0L);
-        setResourcePerMinute(5L);
+        setAmount(0);
+        setResourcePerMinute(5);
         setUpdatedAt(System.currentTimeMillis());
     }
 }
