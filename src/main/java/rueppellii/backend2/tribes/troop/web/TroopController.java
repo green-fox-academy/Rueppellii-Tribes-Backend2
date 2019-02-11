@@ -10,6 +10,7 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
@@ -35,7 +36,7 @@ public class TroopController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public void createTroop(Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
 
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
@@ -47,7 +48,7 @@ public class TroopController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);

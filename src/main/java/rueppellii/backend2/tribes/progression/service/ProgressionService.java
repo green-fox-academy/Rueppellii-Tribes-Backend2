@@ -43,7 +43,7 @@ public class ProgressionService {
         return progressionModelRepository.findAllByProgressKingdom(kingdom);
     }
 
-    public void refreshProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+    public void refreshProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException, InvalidProgressionRequestException {
         List<ProgressionModel> progressions = findAllByKingdom(kingdom);
         for (ProgressionModel p : progressions) {
             if (timeService.timeIsUp(p)) {
@@ -52,7 +52,7 @@ public class ProgressionService {
         }
     }
 
-    public void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+    public void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException, InvalidProgressionRequestException {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
