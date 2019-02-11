@@ -7,7 +7,7 @@ import rueppellii.backend2.tribes.building.persistence.repository.BuildingReposi
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.progression.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import java.util.ArrayList;
@@ -21,12 +21,10 @@ import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBu
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
-    private KingdomService kingdomService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository, KingdomService kingdomService) {
+    public BuildingService(BuildingRepository buildingRepository) {
         this.buildingRepository = buildingRepository;
-        this.kingdomService = kingdomService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -53,7 +51,7 @@ public class BuildingService {
     }
 
     public Building findById(Long id) throws BuildingNotFoundException {
-        return buildingRepository.findById(id).orElseThrow(() -> new BuildingNotFoundException("Building can not be found!"));
+        return buildingRepository.findById(id).orElseThrow(() -> new BuildingNotFoundException("Building not found by id: " + id));
     }
 
     public Integer getLevelOfTownHall(Kingdom kingdom) {
@@ -73,6 +71,4 @@ public class BuildingService {
         }
         return starterBuildings;
     }
-
-
 }
