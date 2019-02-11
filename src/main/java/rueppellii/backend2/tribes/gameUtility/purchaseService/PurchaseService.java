@@ -29,7 +29,7 @@ public class PurchaseService {
         this.buildingService = buildingService;
     }
 
-    public Long getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
+    public Integer getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
         return resourceService.returnResource(ResourceType.GOLD, kingdomId).getAmount();
     }
 
