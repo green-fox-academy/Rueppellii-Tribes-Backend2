@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
@@ -39,10 +40,27 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
-    public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
-        Troop troop = findById(progressionModel.getGameObjectId());
-        troop.setLevel(troop.getLevel() + 1);
-        troopRepository.save(troop);
+    public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException, InvalidProgressionRequestException {
+        if (upgradeableTroop(progressionModel)) {
+            Troop troop = findById(progressionModel.getGameObjectId());
+            troop.setLevel(troop.getLevel() + 1);
+            troopRepository.save(troop);
+        }
+        throw new InvalidProgressionRequestException("upgradeTroop method calls exception");
+    }
+
+    private Boolean upgradeableTroop(ProgressionModel progressionModel) throws TroopNotFoundException, InvalidProgressionRequestException {
+        if (levelOfTroop(progressionModel) == 3) {
+            throw new InvalidProgressionRequestException("Troop is on maximum level");
+        } else if (levelOfTroop(progressionModel) > 3) {
+            throw new InvalidProgressionRequestException("upgradeableTroop method error, troop cannot be over level 3");
+        }
+        return true;
+    }
+
+    private Integer levelOfTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
+        Troop upgradeThisTroop = findById(progressionModel.getGameObjectId());
+        return upgradeThisTroop.getLevel();
     }
 }
 
