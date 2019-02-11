@@ -17,12 +17,12 @@ public class ProgressionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
-    @ManyToOne
-    @JoinTable(name = "kingdom_progress")
-    private Kingdom progressKingdom;
-
     private String type;
     private Long timeToProgress;
     private Long gameObjectId;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinTable(name = "kingdom_progresses", joinColumns = {@JoinColumn(name = "progress_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    private Kingdom progressKingdom;
 }

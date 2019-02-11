@@ -12,6 +12,8 @@ import javax.validation.constraints.Min;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@DiscriminatorColumn(name = "type")
 @Table(name = "resources")
 public abstract class Resource {
 
@@ -20,6 +22,7 @@ public abstract class Resource {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    //  @Column(insertable = false, updatable = false)
     private ResourceType type;
     @Min(0L)
     private Long amount;
