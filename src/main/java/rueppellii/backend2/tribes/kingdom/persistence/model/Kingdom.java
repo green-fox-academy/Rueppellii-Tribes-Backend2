@@ -47,7 +47,7 @@ public class Kingdom {
     private List<Troop> kingdomsTroops;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "kingdom_resources", joinColumns = {
             @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "resource_id", referencedColumnName = "id")})

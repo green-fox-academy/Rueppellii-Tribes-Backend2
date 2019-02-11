@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.persistence.model.Building;
-import rueppellii.backend2.tribes.building.utility.BuildingType;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
@@ -14,18 +13,13 @@ import rueppellii.backend2.tribes.resource.utility.ResourceType;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
 @Service
 public class ResourceService {
     private ResourceRepository resourceRepository;
-    private KingdomService kingdomService;
-    private KingdomRepository kingdomRepository;
 
     @Autowired
     public ResourceService(ResourceRepository resourceRepository) {
@@ -36,8 +30,8 @@ public class ResourceService {
         return type.produceResource();
     }
 
-    public List<Resource> findAll() {
-        return resourceRepository.findAll();
+    public List<Resource> findAllResourcesInKingdom(Kingdom kingdom) {
+        return kingdom.getKingdomsResources();
     }
 
     public ResponseEntity saveResource(Resource resource) {
