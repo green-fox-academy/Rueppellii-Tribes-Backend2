@@ -20,7 +20,7 @@ public class ApplicationUserDTO {
     @NotBlank
     String password;
 
-    String kingdom;
+    String kingdomName;
     List<Role> roles;
 
 }
