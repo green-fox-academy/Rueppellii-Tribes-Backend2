@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.kingdom.utility.KingdomFactory.makeKingdom;
 
 
 @Service
@@ -33,11 +34,11 @@ public class KingdomService {
     }
 
     public Kingdom findByUsername(String loggedInUser) throws KingdomNotFoundException {
-        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("You don't have a troopsKingdom!"));
+        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by user: " + loggedInUser));
     }
 
     public Kingdom findById(Long id) throws KingdomNotFoundException {
-        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("You don't have a troopsKingdom!"));
+        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by id: " + id));
     }
 
     public void save(Kingdom kingdom) {
@@ -57,8 +58,7 @@ public class KingdomService {
     }
 
     public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) {
-        //TODO: troopsKingdom should come from factory
-        Kingdom kingdom = new Kingdom();
+        Kingdom kingdom = makeKingdom();
         if (applicationUserDTO.getKingdomName().isEmpty()) {
             kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
         } else {
