@@ -14,6 +14,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceServiceImp;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -26,12 +27,14 @@ public class BuildingController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private ResourceServiceImp resourceServiceImp;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceServiceImp resourceServiceImp) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceServiceImp = resourceServiceImp;
     }
 
     @PostMapping("")
@@ -42,6 +45,7 @@ public class BuildingController {
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.buyBuilding(kingdom.getId());
+        resourceServiceImp.refreshResources(kingdom);
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
 
@@ -53,6 +57,7 @@ public class BuildingController {
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
         purchaseService.upgradeBuilding(kingdom.getId(), id);
+        resourceServiceImp.refreshResources(kingdom);
         progressionService.generateBuildingUpgradeModel(kingdom, id);
     }
 

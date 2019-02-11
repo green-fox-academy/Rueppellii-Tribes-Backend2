@@ -87,30 +87,33 @@ public class ResourceServiceImp implements ResourceService {
         return null;
     }
 
-    public Timestamp timestampOfResource(Resource resource) {
+    public Timestamp timestampOfResource(Optional<Resource> resource) {
         return currentTime();
     }
 
-    public long timeDifferenceInMinutes(Long id) {
-        return timeServiceImpl.timeDifference(currentTime(), timestampOfResource(findResourceById(id)));
+    public long timeDifferenceInMinutes(Kingdom kingdom) {
+        return timeServiceImpl.timeDifference(currentTime(), timestampOfResource(resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.GOLD, kingdom.getId())));
     }
 
-    public void goldAmountUpdate(Long kingdomId, Resource resource, Long id) throws NoResourceException {
-        Resource gold = returnResource(ResourceType.GOLD, kingdomId);
-        Integer basicGoldAmount = resource.getAmount();
-        Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(id) * gold.getResourcePerMinute());
-        gold.setAmount(updatedGoldAmount);
-        gold.setUpdatedAt(currentTime().getTime());
-        saveResource(gold);
+    public void refreshResources(Kingdom kingdom) throws NoResourceException {
+        goldAmountUpdate(kingdom);
     }
 
-    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, Long kingdomId, Long id) throws NoResourceException {
-        Resource food = returnResource(ResourceType.FOOD, kingdomId);
-        Integer foodPerMinute = food.getResourcePerMinute();
+    public void goldAmountUpdate(Kingdom kingdom) throws NoResourceException {
+        Optional<Resource> gold = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.GOLD, kingdom.getId());
+        Integer basicGoldAmount = gold.get().getAmount();
+        Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(kingdom) * gold.get().getResourcePerMinute());
+        gold.get().setAmount(updatedGoldAmount);
+        gold.get().setUpdatedAt(currentTime().getTime());
+    }
+
+    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, Long id) throws NoResourceException {
+        Optional<Resource> foodAvailable = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.FOOD, kingdom.getId());
         int numberOfTroops = kingdom.getKingdomsTroops().size();
-        Integer basicFoodAmount = food.getAmount();
+        Integer basicFoodAmount = foodAvailable.get().getAmount();
+        Integer foodPerMinute = foodAvailable.get().getResourcePerMinute();
         Integer updatedFoodAmount = basicFoodAmount + ((int) timeDifferenceInMinutes(id) * foodPerMinute);
-        food.setAmount(updatedFoodAmount);
+        foodAvailable.get().setAmount(updatedFoodAmount);
         if (numberOfTroops == numberOfTroops + 1) {
             foodPerMinute = - 1;
         }
