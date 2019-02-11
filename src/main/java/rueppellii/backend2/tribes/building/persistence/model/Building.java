@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 @Table(name = "buildings")
 public abstract class Building {
 
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
