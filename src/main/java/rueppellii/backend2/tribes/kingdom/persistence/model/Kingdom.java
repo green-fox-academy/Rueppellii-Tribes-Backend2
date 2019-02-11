@@ -13,6 +13,7 @@ import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.resource.presistence.model.Food;
 import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
+import rueppellii.backend2.tribes.resource.service.ResourceServiceImp;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 
@@ -67,6 +68,6 @@ public class Kingdom {
 
     public Kingdom() {
         kingdomsBuildings = BuildingService.starterKit();
-        kingdomsResources = ResourceService.starterKit();
+        kingdomsResources = ResourceServiceImp.starterKit();
     }
 }
