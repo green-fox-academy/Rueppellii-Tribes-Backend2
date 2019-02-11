@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS progression (
   id BIGINT auto_increment,
+  type VARCHAR(255),
   game_object_id BIGINT,
-  object_to_progress VARCHAR(255),
-  time_to_create BIGINT,
+  time_to_progress BIGINT,
   PRIMARY KEY (id)
 );
 
