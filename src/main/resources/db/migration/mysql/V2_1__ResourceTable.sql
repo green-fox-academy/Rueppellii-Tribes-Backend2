@@ -1,18 +1,18 @@
-
-CREATE TABLE IF NOT EXISTS resource (
-  resource_id BIGINT auto_increment,
+CREATE TABLE IF NOT EXISTS resources (
+  id BIGINT auto_increment,
+  type VARCHAR(255),
   dtype VARCHAR(255),
-  resource_type VARCHAR(255) UNIQUE,
   amount INT,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (resource_id)
+  updated_at BIGINT,
+  resource_per_minute INT,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS kingdom_resource (
+CREATE TABLE IF NOT EXISTS kingdom_resources (
   kingdom_id BIGINT,
   resource_id BIGINT,
-  CONSTRAINT fk_kingdoms_resource FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id),
-  CONSTRAINT fk_resource FOREIGN KEY (resource_id) REFERENCES resource(resource_id)
+  CONSTRAINT fk_resources_kingdom FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id),
+  CONSTRAINT fk_resources FOREIGN KEY (resource_id) REFERENCES resources(id)
 );
 
 

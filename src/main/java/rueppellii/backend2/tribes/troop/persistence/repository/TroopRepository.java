@@ -7,5 +7,4 @@ import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 
 @Repository
 public interface TroopRepository extends JpaRepository<Troop, Long> {
-
 }

@@ -7,13 +7,12 @@ import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "Building_Type")
+@DiscriminatorColumn(name = "type")
 @Table(name = "buildings")
 public abstract class Building {
 

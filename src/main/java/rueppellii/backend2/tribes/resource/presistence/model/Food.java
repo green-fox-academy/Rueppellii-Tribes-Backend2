@@ -13,6 +13,5 @@ public class Food extends Resource {
         setAmount(0);
         setResourcePerMinute(5);
         setUpdatedAt(System.currentTimeMillis());
-
     }
 }
