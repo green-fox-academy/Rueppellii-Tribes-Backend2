@@ -4,7 +4,7 @@ import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 
 public class ResourceFactory {
 
-    public static Resource produceResource(ResourceType resourceType) {
+    public static Resource makeResource(ResourceType resourceType) {
         return resourceType.produceResource();
     }
 }

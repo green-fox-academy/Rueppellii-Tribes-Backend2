@@ -3,15 +3,24 @@ package rueppellii.backend2.tribes.kingdom.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.kingdom.exception.KingdomNotValidException;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
+import rueppellii.backend2.tribes.building.utility.BuildingType;
+import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.kingdom.utility.KingdomFactory.makeKingdom;
 
 
 @Service
@@ -24,15 +33,15 @@ public class KingdomService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public Kingdom getKingdomByUsername(String loggedInUser) throws KingdomNotValidException {
-        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotValidException("You don't have a troopsKingdom!"));
+    public Kingdom findByUsername(String loggedInUser) throws KingdomNotFoundException {
+        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by user: " + loggedInUser));
     }
 
-    public Kingdom getKingdomById(Long id) throws KingdomNotValidException {
-        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotValidException("You don't have a troopsKingdom!"));
+    public Kingdom findById(Long id) throws KingdomNotFoundException {
+        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by id: " + id));
     }
 
-    public void saveKingdom(Kingdom kingdom) {
+    public void save(Kingdom kingdom) {
         kingdomRepository.save(kingdom);
     }
 
@@ -41,15 +50,15 @@ public class KingdomService {
         return mapper.map(kingdom, KingdomDTO.class);
     }
 
-    public Kingdom findKingdomByPrincipal(Principal principal) throws KingdomNotValidException {
+    public Kingdom findByPrincipal(Principal principal) throws KingdomNotFoundException {
         JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) principal;
         UserContext userContext = (UserContext) authenticationToken.getPrincipal();
         String loggedInUser = userContext.getUsername();
-        return getKingdomByUsername(loggedInUser);
+        return findByUsername(loggedInUser);
     }
 
     public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) {
-        Kingdom kingdom = new Kingdom();
+        Kingdom kingdom = makeKingdom();
         if (applicationUserDTO.getKingdomName().isEmpty()) {
             kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
         } else {
@@ -57,4 +66,5 @@ public class KingdomService {
         }
         return kingdom;
     }
+
 }

@@ -2,9 +2,9 @@ package rueppellii.backend2.tribes.kingdom.exception;
 
 import javax.naming.AuthenticationException;
 
-public class KingdomNotValidException extends AuthenticationException {
+public class KingdomNotFoundException extends AuthenticationException {
 
-    public KingdomNotValidException(String message) {
+    public KingdomNotFoundException(String message) {
         super(message);
     }
 }

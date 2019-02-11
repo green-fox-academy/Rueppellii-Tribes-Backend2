@@ -10,10 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 import javax.validation.Valid;
@@ -33,9 +32,10 @@ public class ApplicationUserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid ApplicationUserDTO applicationUserDTO)
+    @ResponseStatus(HttpStatus.OK)
+    public RegisterResponse registerUser(@RequestBody @Valid ApplicationUserDTO applicationUserDTO)
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
-        return ResponseEntity.ok(applicationUserService.registerApplicationUser(applicationUserDTO));
+        return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
 
     @GetMapping("")

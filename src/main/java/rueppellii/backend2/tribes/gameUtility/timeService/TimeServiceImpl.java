@@ -3,7 +3,8 @@ package rueppellii.backend2.tribes.gameUtility.timeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
 
@@ -18,23 +19,28 @@ public class TimeServiceImpl implements TimeService {
     }
 
     @Override
-    public Long calculateTimeOfBuildingCreation(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (BUILDING_CREATION_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfBuildingCreation(Kingdom kingdom) {
+        return System.currentTimeMillis() + (BUILDING_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfBuildingUpgrade(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfBuildingUpgrade(Kingdom kingdom) {
+        return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfTroopCreation(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (TROOP_CREATION_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfTroopCreation(Kingdom kingdom) {
+        return System.currentTimeMillis() + (TROOP_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfTroopUpgrade(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (TROOP_UPGRADE_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfTroopUpgrade(Kingdom kingdom) {
+        return System.currentTimeMillis() + (TROOP_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom));
+    }
+
+    @Override
+    public Boolean timeIsUp(ProgressionModel progressionModel) {
+        return progressionModel.getTimeToProgress() <= System.currentTimeMillis();
     }
 
 

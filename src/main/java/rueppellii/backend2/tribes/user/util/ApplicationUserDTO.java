@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.user.persistence.model;
+package rueppellii.backend2.tribes.user.util;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

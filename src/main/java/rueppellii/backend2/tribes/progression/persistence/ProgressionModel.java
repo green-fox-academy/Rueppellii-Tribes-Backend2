@@ -17,8 +17,8 @@ public class ProgressionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String objectToProgress;
-    private Long timeToCreate;
+    private String type;
+    private Long timeToProgress;
     private Long gameObjectId;
 
     @JsonBackReference

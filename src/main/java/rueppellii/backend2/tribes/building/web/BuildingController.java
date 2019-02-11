@@ -3,12 +3,18 @@ package rueppellii.backend2.tribes.building.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
-import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
+import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
+import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
-import rueppellii.backend2.tribes.user.service.ApplicationUserService;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
@@ -17,54 +23,39 @@ import java.security.Principal;
 @RequestMapping("/api/kingdom/building")
 public class BuildingController {
 
-    private ApplicationUserService applicationUserService;
-    private TimeService timeService;
+    private KingdomService kingdomService;
+    private ProgressionService progressionService;
+    private PurchaseService purchaseService;
 
     @Autowired
-    public BuildingController(ApplicationUserService applicationUserService, TimeService timeService) {
-        this.applicationUserService = applicationUserService;
-        this.timeService = timeService;
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+        this.kingdomService = kingdomService;
+        this.progressionService = progressionService;
+        this.purchaseService = purchaseService;
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
-                               Principal principal) throws UsernameNotFoundException {
-        ApplicationUser applicationUser = applicationUserService.findByPrincipal(principal);
-        //TODO: timeService method to check the progression and update/create if time is up
-
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-
-        //TODO: PurchaseService will check if user have sufficient funds for the progression(progressionDTO.getType, applicationUser, actionCode)
-        //TODO: Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
-
-        ProgressionModel progressionModel = new ProgressionModel();
-        progressionModel.setObjectToProgress(progressionDTO.getType());
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfBuildingCreation(applicationUser));
-
-        progressionModel.setProgressKingdom(applicationUser.getKingdom());
-        applicationUser.getKingdom().getKingdomsProgresses().add(progressionModel);
-        applicationUserService.save(applicationUser);
+                               Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
+            TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
+        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.refreshProgression(kingdom);
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        purchaseService.buyBuilding(kingdom.getId());
+        progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeBuilding(@PathVariable Long id, Principal principal) throws UsernameNotFoundException {
-        ApplicationUser applicationUser = applicationUserService.findByPrincipal(principal);
-        //TODO: timeService method to check the progression and update/create if time is up
-
-        //TODO: ResourceService will call timeService and refresh the actual resources(applicationUser)
-
-        //TODO: PurchaseService will check if user have sufficient funds for the progression(progressionDTO.getType, applicationUser, actionCode)
-        //TODO: Will return Boolean and deduct the amount(the amount is gonna be based on the type of the gameObject, whether if its create or upgrade and the level)
-
-        ProgressionModel progressionModel = new ProgressionModel();
-        progressionModel.setGameObjectId(id);
-        progressionModel.setTimeToCreate(timeService.calculateTimeOfBuildingUpgrade(applicationUser));
-
-        progressionModel.setProgressKingdom(applicationUser.getKingdom());
-        applicationUser.getKingdom().getKingdomsProgresses().add(progressionModel);
-        applicationUserService.save(applicationUser);
+    public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+        //TODO: validate if troop really belongs to the user who makes the request
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.refreshProgression(kingdom);
+        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        purchaseService.upgradeBuilding(kingdom.getId(), id);
+        progressionService.generateBuildingUpgradeModel(kingdom, id);
     }
 
 
@@ -75,5 +66,45 @@ public class BuildingController {
         return new ErrorResponse(ex.getMessage());
     }
 
+    @ResponseBody
+    @ExceptionHandler(KingdomNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse kingdomNotFoundHandler(KingdomNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 
+    @ResponseBody
+    @ExceptionHandler(TroopNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse troopNotFoundHandler(TroopNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(BuildingNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(NoResourceException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    ErrorResponse NoResourceHandler(NoResourceException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidProgressionRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse InvalidProgressionHandler(InvalidProgressionRequestException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse InvalidProgressionEnumHandler(IllegalArgumentException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 }

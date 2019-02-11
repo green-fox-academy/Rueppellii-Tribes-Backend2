@@ -6,10 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import rueppellii.backend2.tribes.building.persistence.model.*;
+import rueppellii.backend2.tribes.building.service.BuildingService;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.resource.presistence.model.Food;
 import rueppellii.backend2.tribes.resource.presistence.model.Gold;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 
@@ -65,21 +68,7 @@ public class Kingdom {
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
-        //TODO: this should be set by the KindomService/starterKit method
-        TownHall townHall = new TownHall();
-        Barracks barracks = new Barracks();
-        Farm farm = new Farm();
-        Mine mine = new Mine();
-        Gold gold = new Gold();
-        Food food = new Food();
-        kingdomsResources = new ArrayList<>();
-        kingdomsResources.add(gold);
-        kingdomsResources.add(food);
-        kingdomsBuildings = new ArrayList<>();
-        kingdomsBuildings.add(townHall);
-        kingdomsBuildings.add(barracks);
-        kingdomsBuildings.add(farm);
-        kingdomsBuildings.add(mine);
-
+        kingdomsBuildings = BuildingService.starterKit();
+        kingdomsResources = ResourceService.starterKit();
     }
 }

@@ -24,34 +24,34 @@ public class TestResourceController {
 
     @GetMapping("/kingdom/gold")
     public Integer showResource(Principal principal) throws Exception {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
         return purchaseService.getKingdomsGoldAmount(kingdom.getId());
     }
 
     @PostMapping("/kingdom/troop/build")
     public Kingdom makeTroop(Principal principal) throws Exception {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
         purchaseService.buyTroop(kingdom.getId());
         return kingdom;
     }
 
     @PostMapping("/kingdom/troop/upgrade")
     public Kingdom upgradeTroop(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
         purchaseService.upgradeTroop(kingdom.getId(), idDTO.getId());
         return kingdom;
     }
 
     @PostMapping("/kingdom/building/build")
-    public Kingdom makeBuilding(Principal principal, @RequestBody BuildingDTO buildingDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
-        purchaseService.buyBuilding(kingdom.getId(), buildingDTO);
+    public Kingdom makeBuilding(Principal principal) throws Exception {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        purchaseService.buyBuilding(kingdom.getId());
         return kingdom;
     }
 
     @PostMapping("/kingdom/building/upgrade")
     public Kingdom upgradeBuilding(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findKingdomByPrincipal(principal);
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
         purchaseService.upgradeBuilding(kingdom.getId(), idDTO.getId());
         return kingdom;
     }

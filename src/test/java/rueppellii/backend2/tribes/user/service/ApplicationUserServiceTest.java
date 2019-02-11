@@ -11,9 +11,10 @@ import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
-import rueppellii.backend2.tribes.user.persistence.dao.ApplicationUserRepository;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
+import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
+import rueppellii.backend2.tribes.user.util.ApplicationUserFactory;
 import rueppellii.backend2.tribes.user.util.Role;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,10 +37,12 @@ class ApplicationUserServiceTest {
     private PasswordEncoder encoder;
     @Mock
     private RoleService roleService;
+    @Mock
+    private ApplicationUserFactory applicationUserFactory;
 
     @BeforeEach
     void setUp() {
-        //TODO: this can be done with @Mock and @InjectMock on the class what we want to erite the test for
+        //TODO: this can be done with @Mock and @InjectMock on the class what we want to write the test for
 //        applicationUserRepository = Mockito.mock(ApplicationUserRepository.class);
 //        encoder = Mockito.mock(PasswordEncoder.class);
 //        applicationUserRoleRepository = Mockito.mock(ApplicationUserRoleRepository.class);
@@ -64,7 +67,8 @@ class ApplicationUserServiceTest {
         assertEquals(kingdom.getName(), applicationUserDTO.getUsername() + "'s Kingdom");
 
         verify(applicationUserRepository, times(1)).existsByUsername(applicationUserDTO.getUsername());
-       // verify(applicationUserRepository, times(1)).save(); //TODO: new ApplicationUser should come from ApplicationUSerFactory.class reason: that way we can test it and loose the coupling
+        verify(applicationUserRepository, times(1)).save(applicationUserFactory.makeApplicationUser());
+        // TODO: new ApplicationUser should come from ApplicationUSerFactory.class reason: that way we can test it and loose the coupling
         verify(roleService, times(1)).findById(1L);
     }
 
