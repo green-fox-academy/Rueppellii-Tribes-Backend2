@@ -5,8 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
