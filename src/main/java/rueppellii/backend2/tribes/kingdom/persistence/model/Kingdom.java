@@ -61,10 +61,10 @@ public class Kingdom {
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_progresses", joinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "progress_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "progressKingdom", targetEntity = ProgressionModel.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinTable(name = "kingdom_progresses", joinColumns = {
+//            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
+//            @JoinColumn(name = "progress_id", referencedColumnName = "id")})
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {

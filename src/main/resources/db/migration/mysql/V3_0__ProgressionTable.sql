@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS progression (
 );
 
 CREATE TABLE IF NOT EXISTS kingdom_progresses (
-  kingdom_id BIGINT,
-  progress_id BIGINT,
-  CONSTRAINT fk_kingdoms_progresses FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id),
-  CONSTRAINT fk_progression FOREIGN KEY (progress_id) REFERENCES progression(id)
+  progress_kingdom_id BIGINT,
+  id BIGINT,
+  CONSTRAINT fk_kingdoms_progresses FOREIGN KEY (progress_kingdom_id) REFERENCES kingdoms(id),
+  CONSTRAINT fk_progression FOREIGN KEY (id) REFERENCES progression(id)
 );

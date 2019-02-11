@@ -67,4 +67,9 @@ public class KingdomService {
         return kingdom;
     }
 
+    public KingdomDTO findOtherKingdom(Long id) throws KingdomNotFoundException {
+        Kingdom kingdom = findById(id);
+        return mapKingdomDTO(kingdom);
+    }
+
 }

@@ -23,8 +23,9 @@ public class ProgressionModel {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_progresses", joinColumns = {
-            @JoinColumn(name = "progress_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    @JoinTable(name = "kingdom_progresses")
+//            , joinColumns = {
+//            @JoinColumn(name = "progress_id", referencedColumnName = "id")}, inverseJoinColumns = {
+//            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
     private Kingdom progressKingdom;
 }
