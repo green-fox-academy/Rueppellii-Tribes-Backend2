@@ -15,14 +15,14 @@ public class ProgressionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long progression_id;
+    private Long id;
 
     @JsonBackReference
     @ManyToOne
     @JoinTable(name = "kingdom_progress")
     private Kingdom progressKingdom;
 
-    private String objectToProgress;
-    private Long timeToCreate;
+    private String type;
+    private Long timeToProgress;
     private Long gameObjectId;
 }

@@ -11,6 +11,5 @@ public class Barracks extends Building {
     public Barracks() {
         setType(BuildingType.BARRACKS);
         setHP(100);
-        setStarted_at(new Timestamp(System.currentTimeMillis()));
     }
 }

@@ -8,7 +8,6 @@ import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -24,8 +23,9 @@ public abstract class Resource {
     private ResourceType type;
     @Min(0L)
     private Long amount;
-    private Long resourcePerMinute;
     private Long updatedAt;
+    private Long resourcePerMinute;
+
 
     @JsonBackReference
     @ManyToOne

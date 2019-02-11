@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.user.persistence.dao;
+package rueppellii.backend2.tribes.user.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

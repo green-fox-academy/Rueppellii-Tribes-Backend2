@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.resource.presistence.model.Food;
 import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.service.ResourceServiceImp;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
+
+import java.sql.Timestamp;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
 
@@ -19,45 +21,39 @@ public class TimeServiceImpl implements TimeService {
 
 
     @Autowired
-    public TimeServiceImpl(BuildingService buildingService, ResourceServiceImp resourceServiceImp) {
+    public TimeServiceImpl(BuildingService buildingService,ResourceServiceImp resourceServiceImp) {
         this.buildingService = buildingService;
         this.resourceServiceImp = resourceServiceImp;
     }
 
     @Override
-    public Long calculateTimeOfBuildingCreation(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (BUILDING_CREATION_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfBuildingCreation(Kingdom kingdom) {
+        return System.currentTimeMillis() + (BUILDING_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfBuildingUpgrade(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfBuildingUpgrade(Kingdom kingdom) {
+        return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfTroopCreation(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (TROOP_CREATION_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfTroopCreation(Kingdom kingdom) {
+        return System.currentTimeMillis() + (TROOP_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long calculateTimeOfTroopUpgrade(ApplicationUser applicationUser) {
-        return System.currentTimeMillis() + (TROOP_UPGRADE_TIME / buildingService.getLevelOfTownHall(applicationUser));
+    public Long calculateTimeOfTroopUpgrade(Kingdom kingdom) {
+        return System.currentTimeMillis() + (TROOP_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom));
     }
 
     @Override
-    public Long refreshGold(Kingdom kingdom) {
-        Gold gold = new Gold();
-        Long currentTime = System.currentTimeMillis();
-        Long elapsedTime = currentTime - gold.getUpdatedAt();
-        Long elapsedMinutes = elapsedTime / 60000L;
-        return elapsedMinutes;
+    public Boolean timeIsUp(ProgressionModel progressionModel) {
+        return progressionModel.getTimeToProgress() <= System.currentTimeMillis();
     }
 
     @Override
-    public Long refreshFood(Kingdom kingdom) {
-        Food food = new Food();
-        Long currentTime = System.currentTimeMillis();
-        Long elapsedTime = currentTime - food.getUpdatedAt();
+    public Long timeDifference(Timestamp currentTime, Timestamp updatedAtTime) {
+        Long elapsedTime = currentTime.getTime() - updatedAtTime.getTime();
         Long elapsedMinutes = elapsedTime / 60000L;
         return elapsedMinutes;
     }
@@ -65,7 +61,7 @@ public class TimeServiceImpl implements TimeService {
 
     //TODO: Might need Later
 //    public Long getBuildingIdToProgress(ApplicationUser applicationUser, Integer actionCode, String gameObjectToProgress) {
-//        List<Building> buildingsToProgress = applicationUser.getKingdom().getKingdomsBuildings()
+//        List<Building> buildingsToProgress = applicationUser.getTroopsKingdom().getKingdomsBuildings()
 //                .stream()
 //                .filter(building -> building.getType().getName().matches(gameObjectToProgress.toUpperCase()))
 //                .filter(building -> Objects.equals(building.getLevel(), actionCode))
@@ -74,7 +70,7 @@ public class TimeServiceImpl implements TimeService {
 //    }
 //
 //    public Long getTroopIdToProgress(ApplicationUser applicationUser, Integer actionCode, String gameObjectToProgress) {
-//        List<Troop> troopsToProgress = applicationUser.getKingdom().getTroops()
+//        List<Troop> troopsToProgress = applicationUser.getTroopsKingdom().getTroops()
 //                .stream()
 //                .filter(troop -> Objects.equals(troop.getLevel(), actionCode))
 //                .collect(Collectors.toList());

@@ -11,6 +11,5 @@ public class Mine extends Building {
     public Mine() {
         setType(BuildingType.MINE);
         setHP(5);
-        setStarted_at(new Timestamp(System.currentTimeMillis()));
     }
 }
