@@ -43,12 +43,13 @@ public class BuildingService {
     }
 
     public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException, InvalidProgressionRequestException {
-        Building building = findById(progressionModel.getGameObjectId());
         if (upgradeableBuilding(progressionModel)) {
+            Building building = findById(progressionModel.getGameObjectId());
             building.setLevel(building.getLevel() + 1);
             buildingRepository.save(building);
+            return;
         }
-         
+        throw new BuildingNotFoundException("Something went wrong in upgradeBuilding method");
     }
 
     public void saveBuilding(Building building) {
