@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
@@ -68,11 +69,12 @@ public class ResourceService {
         saveResource(resource);
     }
 
-    public static List<Resource> starterKit(){
+    public static List<Resource> starterKit(Kingdom kingdom){
         List<Resource> starterResources = new ArrayList<>();
         for (ResourceType t : ResourceType.values()) {
             starterResources.add(makeResource(t));
         }
+        starterResources.forEach(starters -> starters.setResourcesKingdom(kingdom));
         return starterResources;
     }
 }

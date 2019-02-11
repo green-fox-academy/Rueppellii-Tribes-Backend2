@@ -69,12 +69,13 @@ public class BuildingService {
         return townhall.get(0).getLevel();
     }
 
-    public static List<Building> starterKit(){
+    public static List<Building> starterKit(Kingdom kingdom){
         List<BuildingType> starterBuildingTypes = Arrays.stream(BuildingType.values()).limit(4).collect(Collectors.toList());
         List<Building> starterBuildings = new ArrayList<>();
         for (BuildingType t : starterBuildingTypes) {
             starterBuildings.add(makeBuilding(t));
         }
+        starterBuildings.forEach(starters -> starters.setBuildingsKingdom(kingdom));
         return starterBuildings;
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.hibernate.annotations.Parent;
 import rueppellii.backend2.tribes.building.persistence.model.*;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -40,23 +41,23 @@ public class Kingdom {
     private ApplicationUser applicationUser;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "troopsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Troop> kingdomsTroops;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resourcesKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Resource> kingdomsResources;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buildingsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "progressKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
-        kingdomsBuildings = BuildingService.starterKit();
-        kingdomsResources = ResourceService.starterKit();
+        kingdomsBuildings = BuildingService.starterKit(this);
+        kingdomsResources = ResourceService.starterKit(this);
     }
 }
