@@ -2,6 +2,9 @@ package rueppellii.backend2.tribes.building.utility;
 
 import rueppellii.backend2.tribes.building.persistence.model.*;
 
+import javax.persistence.Entity;
+
+
 public enum BuildingType {
 
     TOWNHALL {
