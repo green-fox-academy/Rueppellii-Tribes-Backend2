@@ -97,26 +97,25 @@ public class ResourceServiceImp implements ResourceService {
 
     public void refreshResources(Kingdom kingdom) throws NoResourceException {
         goldAmountUpdate(kingdom);
+        foodAmountUpdate(kingdom);
     }
 
     public void goldAmountUpdate(Kingdom kingdom) throws NoResourceException {
         Optional<Resource> gold = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.GOLD, kingdom.getId());
         Integer basicGoldAmount = gold.get().getAmount();
-        Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(kingdom) * gold.get().getResourcePerMinute());
+        Integer goldPerMinute = gold.get().getResourcePerMinute();
+        Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(kingdom) * goldPerMinute);
         gold.get().setAmount(updatedGoldAmount);
         gold.get().setUpdatedAt(currentTime().getTime());
     }
 
-    public void updateFoodPerMinuteBasedOnTroop(Kingdom kingdom, Long id) throws NoResourceException {
-        Optional<Resource> foodAvailable = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.FOOD, kingdom.getId());
+    public void foodAmountUpdate(Kingdom kingdom) throws NoResourceException {
+        Optional<Resource> food = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.FOOD, kingdom.getId());
         int numberOfTroops = kingdom.getKingdomsTroops().size();
-        Integer basicFoodAmount = foodAvailable.get().getAmount();
-        Integer foodPerMinute = foodAvailable.get().getResourcePerMinute();
-        Integer updatedFoodAmount = basicFoodAmount + ((int) timeDifferenceInMinutes(id) * foodPerMinute);
-        foodAvailable.get().setAmount(updatedFoodAmount);
-        if (numberOfTroops == numberOfTroops + 1) {
-            foodPerMinute = - 1;
-        }
+        Integer basicFoodAmount = food.get().getAmount();
+        Integer foodPerMinute = food.get().getResourcePerMinute() - 1;
+        Integer updatedFoodAmount = basicFoodAmount + ((int) timeDifferenceInMinutes(kingdom) * foodPerMinute);
+        food.get().setAmount(updatedFoodAmount);
     }
 
 
