@@ -8,11 +8,13 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
@@ -40,10 +42,13 @@ public class BuildingService {
         throw new IllegalArgumentException("No such building type!");
     }
 
-    public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
+    public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException, InvalidProgressionRequestException {
         Building building = findById(progressionModel.getGameObjectId());
-        building.setLevel(building.getLevel() + 1);
-        buildingRepository.save(building);
+        if (upgradeableBuilding(progressionModel)) {
+            building.setLevel(building.getLevel() + 1);
+            buildingRepository.save(building);
+        }
+         
     }
 
     public void saveBuilding(Building building) {
@@ -70,5 +75,23 @@ public class BuildingService {
             starterBuildings.add(makeBuilding(t));
         }
         return starterBuildings;
+    }
+
+    private Boolean upgradeableBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException, InvalidProgressionRequestException {
+        Integer levelOfBuilding = levelOfUpgradingBuilding(progressionModel);
+        Integer levelOfTownhall = getLevelOfTownHall(progressionModel.getProgressKingdom());
+        if (levelOfBuilding == 10) {
+            throw new InvalidProgressionRequestException("This building is on maximum level");
+        } else if (levelOfBuilding < 10 && levelOfBuilding.equals(levelOfTownhall)) {
+            throw new InvalidProgressionRequestException("You need to upgrade Townhall first");
+        } else if (levelOfBuilding > 10) {
+            throw new InvalidProgressionRequestException("Unexpected upgrade occured");
+        }
+        return true;
+    }
+
+    private Integer levelOfUpgradingBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
+        Building upgradeThisBuilding = findById(progressionModel.getGameObjectId());
+        return  upgradeThisBuilding.getLevel();
     }
 }
