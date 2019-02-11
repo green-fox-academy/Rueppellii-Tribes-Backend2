@@ -86,7 +86,7 @@ public class BuildingService {
         } else if (levelOfBuilding < 10 && levelOfBuilding.equals(levelOfTownhall)) {
             throw new InvalidProgressionRequestException("You need to upgrade Townhall first");
         } else if (levelOfBuilding > 10) {
-            throw new InvalidProgressionRequestException("Unexpected upgrade occured");
+            throw new InvalidProgressionRequestException("Unexpected upgrade occurred");
         }
         return true;
     }
