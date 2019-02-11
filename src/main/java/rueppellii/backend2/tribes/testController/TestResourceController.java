@@ -23,7 +23,7 @@ public class TestResourceController {
     }
 
     @GetMapping("/kingdom/gold")
-    public Long showResource(Principal principal) throws Exception {
+    public Integer showResource(Principal principal) throws Exception {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         return purchaseService.getKingdomsGoldAmount(kingdom.getId());
     }
