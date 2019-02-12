@@ -3,16 +3,16 @@ package rueppellii.backend2.tribes.building.service;
 import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.persistence.model.Farm;
-import rueppellii.backend2.tribes.building.persistence.model.Mine;
 import rueppellii.backend2.tribes.building.persistence.model.TownHall;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.building.persistence.repository.BuildingRepository;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.resource.presistence.model.Food;
+import rueppellii.backend2.tribes.resource.presistence.model.Gold;
+import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import java.util.ArrayList;
@@ -20,7 +20,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.*;
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
+import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
 
 @Service
 public class BuildingService {
@@ -76,9 +79,22 @@ public class BuildingService {
         return starterBuildings;
     }
 
-    public Integer getTotalResourceMultiplier(List<Building> kingdomsBuildings, ResourceType type) {
-        return kingdomsBuildings.stream()
-                .filter(building -> building.getType().getName().matches(type.getName()))
-                .mapToInt(Building::getLevel).sum();
+    public Integer getTotalBuildingLevelMultiplier(List<Building> kingdomsBuildings, Resource resource) {
+        String buildingName = null;
+        if (resource instanceof Gold) {
+            buildingName = "MINE";
+        }
+        if (resource instanceof Food) {
+            buildingName = "FARM";
+        }
+        String finalBuildingName = buildingName;
+        Integer numberOfBuildings = (int) kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
+        Integer levelOneBuildingMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
+        Integer totalLevelOfBuildings = kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(finalBuildingName)).mapToInt(Building::getLevel).sum();
+        if (!numberOfBuildings.equals(totalLevelOfBuildings)) {
+            Integer totalBuildingLevelMultiplier = RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
+            return levelOneBuildingMultiplier + totalBuildingLevelMultiplier;
+        }
+        return levelOneBuildingMultiplier;
     }
 }

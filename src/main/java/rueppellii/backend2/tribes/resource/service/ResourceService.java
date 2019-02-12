@@ -61,15 +61,15 @@ public class ResourceService {
         List<Resource> resources = kingdom.getKingdomsResources();
         for (Resource r : resources) {
             Integer baseResourcePerMinute = r.getResourcePerMinute();
-            Integer totalResourceMultiplier = buildingService.getTotalResourceMultiplier(kingdom.getKingdomsBuildings(), r.getType());
+            Integer totalBuildingLevelMultiplier = buildingService.getTotalBuildingLevelMultiplier(kingdom.getKingdomsBuildings(), r);
             Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
             Long remainderSeconds = timeService.calculateRemainder(r.getUpdatedAt());
-            if (r instanceof Gold && calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+            if (r instanceof Gold && calculateGold(baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
             }
-            if (r instanceof Food && calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+            if (r instanceof Food && calculateFood(kingdom, baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
             }
         }
