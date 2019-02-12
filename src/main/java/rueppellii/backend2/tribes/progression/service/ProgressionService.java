@@ -84,7 +84,6 @@ public class ProgressionService {
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType(progressionDTO.getType());
         progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
-        progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
@@ -93,8 +92,6 @@ public class ProgressionService {
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setGameObjectId(id);
         progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingUpgrade(kingdom));
-
-        progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
@@ -103,8 +100,6 @@ public class ProgressionService {
         ProgressionModel progressionModel = makeProgressionModel();
         progressionModel.setType("TROOP");
         progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(kingdom));
-
-        progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
@@ -114,8 +109,6 @@ public class ProgressionService {
         progressionModel.setGameObjectId(id);
         progressionModel.setType("TROOP");
         progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
-
-        progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
