@@ -15,7 +15,6 @@ import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
-import rueppellii.backend2.tribes.user.util.ApplicationUserFactory;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
@@ -34,15 +33,13 @@ public class ApplicationUserService {
     private ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder encoder;
     private RoleService roleService;
-    private ApplicationUserFactory applicationUserFactory;
 
     @Autowired
-    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService, ApplicationUserFactory applicationUserFactory) {
+    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService) {
         this.kingdomService = kingdomService;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.roleService = roleService;
-        this.applicationUserFactory = applicationUserFactory;
     }
 
     public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
@@ -101,7 +98,7 @@ public class ApplicationUserService {
         System.out.println(applicationUserDTO.getUsername());
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
-            final ApplicationUser applicationUser = applicationUserFactory.makeApplicationUser();
+            final ApplicationUser applicationUser = new ApplicationUser();
             //TODO this is used only for development purpose
             ApplicationUserRole applicationUserRole = new ApplicationUserRole(1L, Role.USER);
             roleService.saveRole(applicationUserRole);
@@ -126,5 +123,4 @@ public class ApplicationUserService {
     private Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
     }
-
 }
