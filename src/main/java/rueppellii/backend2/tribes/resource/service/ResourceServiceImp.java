@@ -88,7 +88,7 @@ public class ResourceServiceImp implements ResourceService {
     }
 
     public long timeDifferenceInMinutes(Kingdom kingdom) {
-        return timeServiceImpl.timeDifference(currentTime(), timestampOfResource(resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.GOLD, kingdom.getId())));
+        return timeServiceImpl.timeDifference(currentTime(), timestampOfResource(resourceRepository.findByTypeAndResourcesKingdom_Id((ResourceType) kingdom.getKingdomsResources(), kingdom.getId())));
     }
 
     public void refreshResources(Kingdom kingdom) throws NoResourceException {
