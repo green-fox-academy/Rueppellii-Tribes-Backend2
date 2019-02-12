@@ -28,9 +28,8 @@ public class Troop {
 
     public Troop() {
         this.level = 1;
-        this.HP =   100;
-        this.attack = 20;
-        this.defense = 10;
+        this.HP =   10;
+        this.attack = 5;
+        this.defense = 5;
     }
-
 }
