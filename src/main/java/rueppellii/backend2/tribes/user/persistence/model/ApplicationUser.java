@@ -29,7 +29,7 @@ public class ApplicationUser {
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "app_user_user_role",
+            name = "app_user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
