@@ -4,6 +4,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
@@ -50,7 +51,6 @@ public class ProgressionService {
                 progress(p, kingdom);
             }
         }
-
     }
 
     public void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException,
@@ -80,6 +80,19 @@ public class ProgressionService {
             throw new InvalidProgressionRequestException("Missing parameter: type");
         } else if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
+        } else if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
+            throw new InvalidProgressionRequestException("Only one town hall to a kingdom");
+        }
+    }
+
+    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom) throws InvalidProgressionRequestException {
+        for (ProgressionModel type : progressionModelRepository.findAllByProgressKingdom(kingdom)) {
+            if (type.getType().toUpperCase().equals("TOWNHALL") ||
+                    type.getType().toUpperCase().equals("FARM") ||
+                    type.getType().toUpperCase().equals("MINE") ||
+                    type.getType().toUpperCase().equals("BARRACKS")) {
+                throw new InvalidProgressionRequestException("Building is already in progress");
+            }
         }
     }
 
@@ -92,9 +105,11 @@ public class ProgressionService {
         kingdomService.save(kingdom);
     }
 
-    public void generateBuildingUpgradeModel(Kingdom kingdom, Long id) {
+    public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException {
         ProgressionModel progressionModel = new ProgressionModel();
-        progressionModel.setGameObjectId(id);
+        Building building = buildingService.findBuildingInKingdom(kingdom, buildingId);
+        progressionModel.setGameObjectId(buildingId);
+        progressionModel.setType(building.getType().getName());
         progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingUpgrade(kingdom));
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
