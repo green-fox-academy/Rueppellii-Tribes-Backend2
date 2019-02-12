@@ -16,6 +16,7 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
 @Service
@@ -58,31 +59,35 @@ public class ResourceService {
     public void updateResources(Kingdom kingdom) {
         List<Resource> resources = kingdom.getKingdomsResources();
         for (Resource r : resources) {
+            System.out.println(r.getType().getName());
             Integer baseResourcePerMinute = r.getResourcePerMinute();
             Integer totalResourceMultiplier = buildingService.getTotalResourceMultiplier(kingdom.getKingdomsBuildings(), r.getType());
-            Integer elapsedTimeInMinutes = timeService.calculateElapsedMinutes(r.getUpdatedAt());
+            Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
+            Long remainderSeconds = timeService.calculateRemainder(r.getUpdatedAt());
+            r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
             if (r instanceof Gold) {
-                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedTimeInMinutes));
+                System.out.println("Current amount " + r.getAmount());
+                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+                System.out.println("calculategold: " + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds).toString());
             }
             if (r instanceof Food) {
-                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedTimeInMinutes));
+                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
             }
         }
-        kingdom.setKingdomsResources(resources);
         kingdomService.save(kingdom);
     }
 
     private Integer calculateFood(Kingdom kingdom, Integer baseResourcePerMinute,
-                                  Integer totalResourceMultiplier, Integer elapsedTimeInMinutes) {
+                                  Integer totalResourceMultiplier, Integer elapsedSeconds) {
         if (kingdom.getKingdomsTroops() != null) {
-            return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier - kingdom.getKingdomsTroops().size());
+            return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier - kingdom.getKingdomsTroops().size()) / ONE_MINUTE_IN_SECONDS;
         }
-        return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier);
+        return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS;
     }
 
 
-    private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedTimeInMinutes) {
-        return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier);
+    private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
+        return (int)((double) elapsedSeconds * ((double)(baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
     }
 
 }

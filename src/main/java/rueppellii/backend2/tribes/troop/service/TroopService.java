@@ -43,7 +43,7 @@ public class TroopService {
     }
 
     public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
-        Troop troop = findById(progressionModel.getGameObjectId());
+        Troop troop = findById(progressionModel.getId());
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
     }
