@@ -1,10 +1,13 @@
 package rueppellii.backend2.tribes.resource.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.service.BuildingService;
+import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.resource.presistence.model.Food;
+import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
@@ -18,30 +21,20 @@ import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeRe
 @Service
 public class ResourceService {
     private ResourceRepository resourceRepository;
+    private TimeService timeService;
+    private BuildingService buildingService;
+    private KingdomService kingdomService;
 
     @Autowired
-    public ResourceService(ResourceRepository resourceRepository) {
+    public ResourceService(ResourceRepository resourceRepository, TimeService timeService, BuildingService buildingService, KingdomService kingdomService) {
         this.resourceRepository = resourceRepository;
+        this.timeService = timeService;
+        this.buildingService = buildingService;
+        this.kingdomService = kingdomService;
     }
 
-    public Resource provideResource(ResourceType type) {
-        return type.produceResource();
-    }
-
-    public List<Resource> findAllResourcesInKingdom(Kingdom kingdom) {
-        return kingdom.getKingdomsResources();
-    }
-
-    public ResponseEntity saveResource(Resource resource) {
-        if ((resource.getType() != null) && validateType(resource)) {
-            resourceRepository.save(resource);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    public boolean validateType(Resource resource) {
-        return resource.getType() == ResourceType.FOOD || resource.getType() == ResourceType.GOLD;
+    public void saveResource(Resource resource) {
+        resourceRepository.save(resource);
     }
 
     public Resource returnResource(ResourceType type, Long id) throws NoResourceException {
@@ -54,17 +47,42 @@ public class ResourceService {
         saveResource(resource);
     }
 
-    public void plusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException {
-        Resource resource = returnResource(ResourceType.GOLD, kingdomId);
-        resource.setAmount(resource.getAmount() + gold);
-        saveResource(resource);
-    }
-
-    public static List<Resource> starterKit(){
+    public static List<Resource> starterKit() {
         List<Resource> starterResources = new ArrayList<>();
         for (ResourceType t : ResourceType.values()) {
             starterResources.add(makeResource(t));
         }
         return starterResources;
     }
+
+    public void updateResources(Kingdom kingdom) {
+        List<Resource> resources = kingdom.getKingdomsResources();
+        for (Resource r : resources) {
+            Integer baseResourcePerMinute = r.getResourcePerMinute();
+            Integer totalResourceMultiplier = buildingService.getTotalResourceMultiplier(kingdom.getKingdomsBuildings(), r.getType());
+            Integer elapsedTimeInMinutes = timeService.calculateElapsedMinutes(r.getUpdatedAt());
+            if (r instanceof Gold) {
+                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedTimeInMinutes));
+            }
+            if (r instanceof Food) {
+                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedTimeInMinutes));
+            }
+        }
+        kingdom.setKingdomsResources(resources);
+        kingdomService.save(kingdom);
+    }
+
+    private Integer calculateFood(Kingdom kingdom, Integer baseResourcePerMinute,
+                                  Integer totalResourceMultiplier, Integer elapsedTimeInMinutes) {
+        if (kingdom.getKingdomsTroops() != null) {
+            return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier - kingdom.getKingdomsTroops().size());
+        }
+        return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier);
+    }
+
+
+    private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedTimeInMinutes) {
+        return elapsedTimeInMinutes * (baseResourcePerMinute + totalResourceMultiplier);
+    }
+
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
+import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -27,11 +27,13 @@ public class ProgressionService {
     private ProgressionModelRepository progressionModelRepository;
     private BuildingService buildingService;
     private TroopService troopService;
-    private TimeServiceImpl timeService;
+    private TimeService timeService;
     private KingdomService kingdomService;
 
     @Autowired
-    public ProgressionService(ProgressionModelRepository progressionModelRepository, BuildingService buildingService, TroopService troopService, TimeServiceImpl timeService, KingdomService kingdomService) {
+    public ProgressionService(ProgressionModelRepository progressionModelRepository,
+                              BuildingService buildingService,
+                              TroopService troopService, TimeService timeService, KingdomService kingdomService) {
         this.progressionModelRepository = progressionModelRepository;
         this.buildingService = buildingService;
         this.troopService = troopService;
@@ -43,7 +45,7 @@ public class ProgressionService {
         return progressionModelRepository.findAllByProgressKingdom(kingdom);
     }
 
-    public void refreshProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+    public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
         List<ProgressionModel> progressions = findAllByKingdom(kingdom);
         for (ProgressionModel p : progressions) {
             if (timeService.timeIsUp(p)) {

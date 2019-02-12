@@ -28,7 +28,7 @@ public class ResourceServiceTest {
     void init() {
         //resource = new Resource();
         MockitoAnnotations.initMocks(this);
-        resourceService = new ResourceService(resourceRepository);
+        resourceService = new ResourceService(resourceRepository, timeService, buildingService, troopService);
     }
 
     @Test

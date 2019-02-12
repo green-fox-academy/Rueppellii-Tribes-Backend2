@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -24,22 +24,23 @@ public class TroopController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private ResourceService resourceService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceService = resourceService;
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public void createTroop(Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
-
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
@@ -50,8 +51,8 @@ public class TroopController {
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         purchaseService.upgradeTroop(kingdom.getId(), id);
         progressionService.generateTroopUpgradeModel(kingdom, id);
     }

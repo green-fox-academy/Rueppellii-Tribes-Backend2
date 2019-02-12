@@ -11,6 +11,7 @@ import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
+import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
@@ -67,7 +68,7 @@ class ApplicationUserServiceTest {
         assertEquals(kingdom.getName(), applicationUserDTO.getUsername() + "'s Kingdom");
 
         verify(applicationUserRepository, times(1)).existsByUsername(applicationUserDTO.getUsername());
-        verify(applicationUserRepository, times(1)).save(applicationUserFactory.makeApplicationUser());
+        verify(applicationUserRepository, times(1)).save(any(ApplicationUser.class));
         // TODO: new ApplicationUser should come from ApplicationUSerFactory.class reason: that way we can test it and loose the coupling
         verify(roleService, times(1)).findById(1L);
     }
