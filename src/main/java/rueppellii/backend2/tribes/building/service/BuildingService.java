@@ -75,7 +75,7 @@ public class BuildingService {
         for (BuildingType t : starterBuildingTypes) {
             starterBuildings.add(makeBuilding(t));
         }
-        starterBuildings.forEach(starters -> starters.setBuildingsKingdom(kingdom));
+        starterBuildings.forEach(b -> b.setBuildingsKingdom(kingdom));
         return starterBuildings;
     }
 
@@ -86,8 +86,6 @@ public class BuildingService {
             throw new InvalidProgressionRequestException("This building is on maximum level");
         } else if (levelOfBuilding < 10 && levelOfBuilding.equals(levelOfTownhall)) {
             throw new InvalidProgressionRequestException("You need to upgrade Townhall first");
-        } else if (levelOfBuilding > 10) {
-            throw new InvalidProgressionRequestException("Unexpected upgrade occurred");
         }
         return true;
     }
