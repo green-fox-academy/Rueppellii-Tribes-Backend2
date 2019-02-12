@@ -14,6 +14,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
@@ -26,12 +27,14 @@ public class BuildingController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private ResourceService resourceService;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceService = resourceService;
     }
 
     @PostMapping("")
@@ -41,8 +44,8 @@ public class BuildingController {
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
@@ -52,8 +55,8 @@ public class BuildingController {
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         purchaseService.upgradeBuilding(kingdom.getId(), id);
         progressionService.generateBuildingUpgradeModel(kingdom, id);
     }

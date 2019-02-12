@@ -1,10 +1,13 @@
 package rueppellii.backend2.tribes.resource.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.service.BuildingService;
+import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.resource.presistence.model.Food;
+import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.presistence.repository.ResourceRepository;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
@@ -13,35 +16,26 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
 @Service
 public class ResourceService {
     private ResourceRepository resourceRepository;
+    private TimeService timeService;
+    private BuildingService buildingService;
+    private KingdomService kingdomService;
 
     @Autowired
-    public ResourceService(ResourceRepository resourceRepository) {
+    public ResourceService(ResourceRepository resourceRepository, TimeService timeService, BuildingService buildingService, KingdomService kingdomService) {
         this.resourceRepository = resourceRepository;
+        this.timeService = timeService;
+        this.buildingService = buildingService;
+        this.kingdomService = kingdomService;
     }
 
-    public Resource provideResource(ResourceType type) {
-        return type.produceResource();
-    }
-
-    public List<Resource> findAllResourcesInKingdom(Kingdom kingdom) {
-        return kingdom.getKingdomsResources();
-    }
-
-    public ResponseEntity saveResource(Resource resource) {
-        if ((resource.getType() != null) && validateType(resource)) {
-            resourceRepository.save(resource);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    public boolean validateType(Resource resource) {
-        return resource.getType() == ResourceType.FOOD || resource.getType() == ResourceType.GOLD;
+    public void saveResource(Resource resource) {
+        resourceRepository.save(resource);
     }
 
     public Resource returnResource(ResourceType type, Long id) throws NoResourceException {
@@ -60,7 +54,7 @@ public class ResourceService {
         saveResource(resource);
     }
 
-    public static List<Resource> starterKit(Kingdom kingdom){
+    public static List<Resource> starterKit(Kingdom kingdom) {
         List<Resource> starterResources = new ArrayList<>();
         for (ResourceType t : ResourceType.values()) {
             starterResources.add(makeResource(t));
@@ -68,4 +62,37 @@ public class ResourceService {
         starterResources.forEach(r -> r.setResourcesKingdom(kingdom));
         return starterResources;
     }
+
+    public void updateResources(Kingdom kingdom) {
+        List<Resource> resources = kingdom.getKingdomsResources();
+        for (Resource r : resources) {
+            Integer baseResourcePerMinute = r.getResourcePerMinute();
+            Integer totalResourceMultiplier = buildingService.getTotalResourceMultiplier(kingdom.getKingdomsBuildings(), r.getType());
+            Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
+            Long remainderSeconds = timeService.calculateRemainder(r.getUpdatedAt());
+            if (r instanceof Gold && calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
+            }
+            if (r instanceof Food && calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
+            }
+        }
+        kingdomService.save(kingdom);
+    }
+
+    private Integer calculateFood(Kingdom kingdom, Integer baseResourcePerMinute,
+                                  Integer totalResourceMultiplier, Integer elapsedSeconds) {
+        if (kingdom.getKingdomsTroops() != null) {
+            return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier - kingdom.getKingdomsTroops().size()) / ONE_MINUTE_IN_SECONDS;
+        }
+        return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS;
+    }
+
+
+    private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
+        return (int) ((double) elapsedSeconds * ((double) (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
+    }
+
 }

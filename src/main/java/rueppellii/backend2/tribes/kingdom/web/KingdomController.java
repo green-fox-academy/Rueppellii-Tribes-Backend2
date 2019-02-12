@@ -11,6 +11,7 @@ import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomNameDTO;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
 import java.security.Principal;
@@ -21,17 +22,20 @@ public class KingdomController {
 
     private KingdomService kingdomService;
     private ProgressionService progressionService;
-    
+    private ResourceService resourceService;
+
     @Autowired
-    public KingdomController(KingdomService kingdomService, ProgressionService progressionService) {
+    public KingdomController(KingdomService kingdomService, ProgressionService progressionService, ResourceService resourceService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
+        this.resourceService = resourceService;
     }
 
     @GetMapping("")
     public KingdomDTO showKingdom(Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         return kingdomService.mapKingdomDTO(kingdom);
     }
 

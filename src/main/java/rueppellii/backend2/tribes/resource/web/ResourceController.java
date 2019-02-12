@@ -32,6 +32,6 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.OK)
     public List<Resource> listKingdomsResources(Principal principal) throws KingdomNotFoundException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        return resourceService.findAllResourcesInKingdom(kingdom);
+        return kingdom.getKingdomsResources();
     }
 }

@@ -20,4 +20,8 @@ public enum ResourceType {
     };
 
     public abstract Resource produceResource();
+
+    public String getName(){
+        return this.name();
+    }
 }

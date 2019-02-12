@@ -12,6 +12,7 @@ import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.service.TroopService;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
@@ -25,24 +26,27 @@ public class TroopController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private ResourceService resourceService;
     private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, TroopService troopService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceService = resourceService;
         this.troopService = troopService;
+
     }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(Principal principal) throws UsernameNotFoundException,
+    public void createTroop(Principal principal)
+            throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
-
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
