@@ -11,8 +11,6 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.resource.service.ResourceService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,24 +53,29 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    public void isBuildingUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
-        if (building.getLevel() < getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
-            return;
+    public boolean isItTheTownhall(Building building) {
+        return building.getType().getName().toUpperCase().equals("TOWNHALL");
         }
-        throw new UpgradeFailedException("Upgrade Townhall first");
+
+    public void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
+        if (!isItTheTownhall(building)) {
+            if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
+                throw new UpgradeFailedException("Upgrade Townhall first");
+            }
+        }
     }
 
-    public boolean isBuildingUnderMaxLevel(Building building) {
-        return building.getLevel() < BUILDING_MAX_LEVEL;
+    public void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
+        if (building.getLevel().equals(BUILDING_MAX_LEVEL)) {
+            throw new UpgradeFailedException("Building has reached MAX level");
+        }
     }
 
-    public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException, NoResourceException, UpgradeFailedException {
+    public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException, UpgradeFailedException {
         Building building = findBuildingInKingdom(kingdom, buildingId);
-        isBuildingUnderTownhallLevel(kingdom, building);
-        if (isBuildingUnderMaxLevel(building)) {
-            return building;
-        }
-        throw new UpgradeFailedException("Unable to upgrade building");
+        checkIfBuildingIsUnderMaxLevel(building);
+        checkIfBuildingIsUnderTownhallLevel(kingdom, building);
+        return building;
     }
 
     public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
