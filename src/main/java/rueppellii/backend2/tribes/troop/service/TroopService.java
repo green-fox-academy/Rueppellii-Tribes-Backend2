@@ -40,9 +40,9 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
-    public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException, InvalidProgressionRequestException {
-        if (isUpgradeableTroop(progressionModel)) {
-            Troop troop = findById(progressionModel.getGameObjectId());
+    public void upgradeTroop(Long troopId) throws TroopNotFoundException, InvalidProgressionRequestException {
+        if (isUpgradeableTroop(troopId)) {
+            Troop troop = findById(troopId);
             troop.setLevel(troop.getLevel() + 1);
             troop.setAttack(troop.getLevel() * 5);
             troop.setDefense(troop.getLevel() * 5);
@@ -52,17 +52,17 @@ public class TroopService {
         throw new InvalidProgressionRequestException("Error Archie, fix it");
     }
 
-    private Boolean isUpgradeableTroop(ProgressionModel progressionModel) throws TroopNotFoundException, InvalidProgressionRequestException {
-        if (levelOfTroop(progressionModel) == 3) {
+    private Boolean isUpgradeableTroop(Long troopId) throws TroopNotFoundException, InvalidProgressionRequestException {
+        if (levelOfTroop(troopId) == 3) {
             throw new InvalidProgressionRequestException("Troop is on maximum level");
-        } else if (levelOfTroop(progressionModel) > 3) {
+        } else if (levelOfTroop(troopId) > 3) {
             throw new InvalidProgressionRequestException("upgradeableTroop method error, troop cannot be over level 3");
         }
         return true;
     }
 
-    private Integer levelOfTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
-        Troop upgradeThisTroop = findById(progressionModel.getGameObjectId());
+    private Integer levelOfTroop(Long troopId) throws TroopNotFoundException {
+        Troop upgradeThisTroop = findById(troopId);
         return upgradeThisTroop.getLevel();
     }
 }

@@ -7,6 +7,7 @@ import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
@@ -46,15 +47,15 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeTroop(Long kingdomId, Long troopId) throws NoResourceException, TroopNotFoundException {
-        Troop troop = troopService.findById(troopId);
-        Integer desiredLevel = troop.getLevel() + 1;
-        Integer upgradePrice = 10 * desiredLevel;
-        if (hasEnoughGold(kingdomId, upgradePrice)) {
-            resourceService.minusGoldAmount(upgradePrice, kingdomId);
-            return;
-        }
-        throw new NoResourceException("You don't have enough gold!");
+    public void upgradeTroop(Long kingdomId, Long troopId) throws NoResourceException, TroopNotFoundException, InvalidProgressionRequestException {
+        troopService.upgradeTroop(troopId);
+//        Integer desiredLevel = troop.getLevel() + 1;
+//        Integer upgradePrice = 10 * desiredLevel;
+//        if (hasEnoughGold(kingdomId, upgradePrice)) {
+//            resourceService.minusGoldAmount(upgradePrice, kingdomId);
+//            return;
+//        }
+//        throw new NoResourceException("You don't have enough gold!");
     }
 
     public void buyBuilding(Long kingdomId) throws NoResourceException {

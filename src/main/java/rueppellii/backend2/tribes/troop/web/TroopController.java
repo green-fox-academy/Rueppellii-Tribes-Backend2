@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
-import rueppellii.backend2.tribes.gameUtility.timeService.TimeServiceImpl;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -14,6 +13,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
@@ -25,12 +25,14 @@ public class TroopController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
+    private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, TroopService troopService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.troopService = troopService;
     }
 
     @PostMapping("")
@@ -47,14 +49,14 @@ public class TroopController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException,
+    public void upgradeTroop(@PathVariable Long troopId, Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.refreshProgression(kingdom);
         //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
-        purchaseService.upgradeTroop(kingdom.getId(), id);
-        progressionService.generateTroopUpgradeModel(kingdom, id);
+        purchaseService.upgradeTroop(kingdom.getId(), troopId);
+        progressionService.generateTroopUpgradeModel(kingdom, troopId);
     }
 
     @ResponseBody
