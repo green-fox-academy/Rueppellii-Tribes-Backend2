@@ -45,8 +45,9 @@ public class BuildingController {
     public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
-        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        //TODO: check if there is already progression going on
+        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.buyBuilding(kingdom.getId());
@@ -56,9 +57,9 @@ public class BuildingController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException {
-        //TODO: validate if building really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
+        //TODO: check if there is already progression going on
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.payForBuildingUpgrade(kingdom.getId(), building);
