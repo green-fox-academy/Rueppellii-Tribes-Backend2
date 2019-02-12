@@ -13,7 +13,6 @@ import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
-import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,12 +27,10 @@ import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeCons
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
-    private ResourceService resourceService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository, ResourceService resourceService) {
+    public BuildingService(BuildingRepository buildingRepository) {
         this.buildingRepository = buildingRepository;
-        this.resourceService = resourceService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -58,8 +55,11 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    public boolean isBuildingUnderTownhallLevel(Kingdom kingdom, Building building) {
-        return building.getLevel() < getLevelOfTownHall(kingdom.getKingdomsBuildings());
+    public void isBuildingUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
+        if (building.getLevel() < getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
+            return;
+        }
+        throw new UpgradeFailedException("Upgrade Townhall first");
     }
 
     public boolean isBuildingUnderMaxLevel(Building building) {
@@ -68,9 +68,8 @@ public class BuildingService {
 
     public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException, NoResourceException, UpgradeFailedException {
         Building building = findBuildingInKingdom(kingdom, buildingId);
-        Integer price = BUILDING_PRICE * (building.getLevel() + 1);
-        if (isBuildingUnderTownhallLevel(kingdom, building) && isBuildingUnderMaxLevel(building)
-                && resourceService.hasEnoughGold(kingdom.getId(), price)) {
+        isBuildingUnderTownhallLevel(kingdom, building);
+        if (isBuildingUnderMaxLevel(building)) {
             return building;
         }
         throw new UpgradeFailedException("Unable to upgrade building");
@@ -105,11 +104,5 @@ public class BuildingService {
         }
         starterBuildings.forEach(building -> building.setBuildingsKingdom(kingdom));
         return starterBuildings;
-    }
-
-    public Integer getTotalResourceMultiplier(List<Building> kingdomsBuildings, ResourceType type) {
-        return kingdomsBuildings.stream()
-                .filter(building -> building.getType().getName().matches(type.getName()))
-                .mapToInt(Building::getLevel).sum();
     }
 }

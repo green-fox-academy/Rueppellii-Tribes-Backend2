@@ -116,4 +116,11 @@ public class BuildingController {
     ErrorResponse InvalidProgressionEnumHandler(IllegalArgumentException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
+    @ResponseBody
+    @ExceptionHandler(UpgradeFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse InvalidUpgradeEnumHandler(UpgradeFailedException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 }

@@ -20,7 +20,6 @@ import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeCons
 @Service
 public class PurchaseService {
 
-
     private ResourceService resourceService;
     private TroopService troopService;
 
@@ -58,7 +57,11 @@ public class PurchaseService {
     }
 
     public void payForBuildingUpgrade(Long kingdomId, Building building) throws NoResourceException {
-        Integer upgradePrice = BUILDING_PRICE * (building.getLevel() + 1);
-        resourceService.minusGoldAmount(upgradePrice, kingdomId);
+        if (resourceService.hasEnoughGold(kingdomId, BUILDING_PRICE)) {
+            Integer upgradePrice = BUILDING_PRICE * (building.getLevel() + 1);
+            resourceService.minusGoldAmount(upgradePrice, kingdomId);
+            return;
+        }
+        throw new NoResourceException("You don't have enough gold!");
     }
 }
