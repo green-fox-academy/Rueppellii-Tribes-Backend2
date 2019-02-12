@@ -59,19 +59,17 @@ public class ResourceService {
     public void updateResources(Kingdom kingdom) {
         List<Resource> resources = kingdom.getKingdomsResources();
         for (Resource r : resources) {
-            System.out.println(r.getType().getName());
             Integer baseResourcePerMinute = r.getResourcePerMinute();
             Integer totalResourceMultiplier = buildingService.getTotalResourceMultiplier(kingdom.getKingdomsBuildings(), r.getType());
             Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
             Long remainderSeconds = timeService.calculateRemainder(r.getUpdatedAt());
-            r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
-            if (r instanceof Gold) {
-                System.out.println("Current amount " + r.getAmount());
+            if (r instanceof Gold && calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
                 r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
-                System.out.println("calculategold: " + calculateGold(baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds).toString());
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
             }
-            if (r instanceof Food) {
+            if (r instanceof Food && calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds) != 0) {
                 r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalResourceMultiplier, elapsedSeconds));
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
             }
         }
         kingdomService.save(kingdom);
@@ -87,7 +85,7 @@ public class ResourceService {
 
 
     private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
-        return (int)((double) elapsedSeconds * ((double)(baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
+        return (int) ((double) elapsedSeconds * ((double) (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
     }
 
 }
