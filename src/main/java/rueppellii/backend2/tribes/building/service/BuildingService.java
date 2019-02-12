@@ -78,23 +78,4 @@ public class BuildingService {
         starterBuildings.forEach(building -> building.setBuildingsKingdom(kingdom));
         return starterBuildings;
     }
-
-    public Integer getTotalBuildingLevelMultiplier(List<Building> kingdomsBuildings, Resource resource) {
-        String buildingName = null;
-        if (resource instanceof Gold) {
-            buildingName = "MINE";
-        }
-        if (resource instanceof Food) {
-            buildingName = "FARM";
-        }
-        String finalBuildingName = buildingName;
-        Integer numberOfBuildings = (int) kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
-        Integer levelOneBuildingMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
-        Integer totalLevelOfBuildings = kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(finalBuildingName)).mapToInt(Building::getLevel).sum();
-        if (!numberOfBuildings.equals(totalLevelOfBuildings)) {
-            Integer totalBuildingLevelMultiplier = RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
-            return levelOneBuildingMultiplier + totalBuildingLevelMultiplier;
-        }
-        return levelOneBuildingMultiplier;
-    }
 }
