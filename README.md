@@ -11,25 +11,28 @@ Group memebers: Lili, Andras, Archi, Gabor
 
 **Database connection**
 
-First create database "tribes" in mySQL
+First create database "tribes" in mySQL (tribes2 if you want to run it in Development environment)
 
 | Key | Value |
 | --- | ----- | 
-|JDBC_DATABASE_URL | jdbc:mysql://localhost/tribes |
-|JDBC_DATABASE_NAME | *your local mysql username* |
-|JDBC_DATABASE_PASSWORD | *your local mysql password* |
+|DATASOURCE_URL | jdbc:mysql://localhost/tribes |
+|DATASOURCE_USERNAME | *your local mysql username* |
+|DATASOURCE_PASSWORD | *your local mysql password* |
 |HIBERNATE_DIALECT | org.hibernate.dialect.MySQL57Dialect |
+|DEVDATABASE | jdbc:mysql://localhost/tribes2 |
+|SIGNING_KEY | secret |
 
 **Spring profiles**
 
 | Key | Value |
 | --- | ----- | 
-|PROFILE | Production or Test or Heroku |
+|PROFILE | Production or Test or Heroku or Development |
 
-There are 3 Spring profiles available: 
+There are 4 Spring profiles available: 
 
 | Profile | Purpose |
 | ------- | ------- |
 |Production | with Flyway set up, mySQL database |
 |Test | with H2 database |
 |Heroku | Flyway is disabled, PostgreSQL database |
+|Development | Flyway is disabled, mySQL database |
