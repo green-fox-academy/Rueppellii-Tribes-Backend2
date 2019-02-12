@@ -67,7 +67,8 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeBuilding(Long kingdomId, Long buildingId) throws NoResourceException, BuildingNotFoundException {
+    public void upgradeBuilding(Long kingdomId, Long buildingId) throws NoResourceException, BuildingNotFoundException, InvalidProgressionRequestException {
+        buildingService.upgradeBuilding(buildingId);
         Building building = buildingService.findById(buildingId);
         Integer desiredLevel = building.getLevel() + 1;
         Integer upgradePrice = 10 * desiredLevel;

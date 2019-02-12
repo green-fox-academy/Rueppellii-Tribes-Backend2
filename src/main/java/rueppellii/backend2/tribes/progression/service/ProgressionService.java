@@ -64,7 +64,7 @@ public class ProgressionService {
             return;
         }
         if (progressionModel.getType() != null) {
-            troopService.upgradeTroop(progressionModel);
+            troopService.upgradeTroop(progressionModel.getGameObjectId());
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }

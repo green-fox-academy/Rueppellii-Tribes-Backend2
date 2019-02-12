@@ -42,9 +42,9 @@ public class BuildingService {
         throw new IllegalArgumentException("No such building type!");
     }
 
-    public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException, InvalidProgressionRequestException {
-        if (upgradeableBuilding(progressionModel)) {
-            Building building = findById(progressionModel.getGameObjectId());
+    public void upgradeBuilding(Long buildingId) throws BuildingNotFoundException, InvalidProgressionRequestException {
+        if (upgradeableBuilding(buildingId)) {
+            Building building = findById(buildingId);
             building.setLevel(building.getLevel() + 1);
             buildingRepository.save(building);
             return;
@@ -79,9 +79,9 @@ public class BuildingService {
         return starterBuildings;
     }
 
-    private Boolean upgradeableBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException, InvalidProgressionRequestException {
-        Integer levelOfBuilding = levelOfUpgradingBuilding(progressionModel);
-        Integer levelOfTownhall = getLevelOfTownHall(progressionModel.getProgressKingdom());
+    private Boolean upgradeableBuilding(Long buildingId) throws BuildingNotFoundException, InvalidProgressionRequestException {
+        Integer levelOfBuilding = levelOfUpgradingBuilding(buildingId);
+        Integer levelOfTownhall = getLevelOfTownHall(findById(buildingId).getBuildingsKingdom());
         if (levelOfBuilding == 10) {
             throw new InvalidProgressionRequestException("This building is on maximum level");
         } else if (levelOfBuilding < 10 && levelOfBuilding.equals(levelOfTownhall)) {
@@ -92,8 +92,7 @@ public class BuildingService {
         return true;
     }
 
-    private Integer levelOfUpgradingBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
-        Building upgradeThisBuilding = findById(progressionModel.getGameObjectId());
-        return  upgradeThisBuilding.getLevel();
+    private Integer levelOfUpgradingBuilding(Long buildingId) throws BuildingNotFoundException {
+        return findById(buildingId).getLevel();
     }
 }
