@@ -103,6 +103,8 @@ public class ApplicationUserService {
 
             final ApplicationUser applicationUser = applicationUserFactory.makeApplicationUser();
             //TODO this is used only for development purpose
+            ApplicationUserRole applicationUserRole = new ApplicationUserRole(1L, Role.USER);
+            roleService.saveRole(applicationUserRole);
             List<ApplicationUserRole> userRoles = new ArrayList<>();
             userRoles.add(roleService.findById(1L));
 

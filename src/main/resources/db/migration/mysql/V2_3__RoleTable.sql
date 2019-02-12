@@ -4,9 +4,6 @@ CREATE TABLE IF NOT EXISTS user_role (
   PRIMARY KEY (role_id)
 );
 
-INSERT INTO user_role VALUES (1, 'USER');
-INSERT INTO user_role VALUES (2, 'ADMIN');
-
 CREATE TABLE IF NOT EXISTS app_user_user_role (
   user_id BIGINT,
   role_id BIGINT,
