@@ -42,6 +42,14 @@ public class ResourceService {
         return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new NoResourceException("No resource found!"));
     }
 
+    public Integer getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
+        return returnResource(ResourceType.GOLD, kingdomId).getAmount();
+    }
+
+    public Boolean hasEnoughGold(Long kingdomId, Integer amount) throws NoResourceException {
+        return getKingdomsGoldAmount(kingdomId) >= amount;
+    }
+
     public void minusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException {
         Resource resource = returnResource(ResourceType.GOLD, kingdomId);
         resource.setAmount(resource.getAmount() - gold);

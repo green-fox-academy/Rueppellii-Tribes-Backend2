@@ -3,16 +3,16 @@ package rueppellii.backend2.tribes.building.service;
 import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.persistence.model.Farm;
-import rueppellii.backend2.tribes.building.persistence.model.Mine;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.TownHall;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.building.persistence.repository.BuildingRepository;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import java.util.ArrayList;
@@ -21,15 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
+import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_PRICE;
 
 @Service
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
+    private ResourceService resourceService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository) {
+    public BuildingService(BuildingRepository buildingRepository, ResourceService resourceService) {
         this.buildingRepository = buildingRepository;
+        this.resourceService = resourceService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -43,6 +47,33 @@ public class BuildingService {
             }
         }
         throw new IllegalArgumentException("No such building type!");
+    }
+
+    public Building findBuildingInKingdom(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException {
+        for (Building kingdomsBuilding : kingdom.getKingdomsBuildings()) {
+            if (kingdomsBuilding.getId().equals(buildingId)) {
+                return kingdomsBuilding;
+            }
+        }
+        throw new BuildingNotFoundException("Building not found");
+    }
+
+    public boolean isBuildingUnderTownhallLevel(Kingdom kingdom, Building building) {
+        return building.getLevel() < getLevelOfTownHall(kingdom.getKingdomsBuildings());
+    }
+
+    public boolean isBuildingUnderMaxLevel(Building building) {
+        return building.getLevel() < BUILDING_MAX_LEVEL;
+    }
+
+    public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException, NoResourceException, UpgradeFailedException {
+        Building building = findBuildingInKingdom(kingdom, buildingId);
+        Integer price = BUILDING_PRICE * (building.getLevel() + 1);
+        if (isBuildingUnderTownhallLevel(kingdom, building) && isBuildingUnderMaxLevel(building)
+                && resourceService.hasEnoughGold(kingdom.getId(), price)) {
+            return building;
+        }
+        throw new UpgradeFailedException("Unable to upgrade building");
     }
 
     public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
