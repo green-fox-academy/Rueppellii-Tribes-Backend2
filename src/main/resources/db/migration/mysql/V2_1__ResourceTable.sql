@@ -5,16 +5,18 @@ CREATE TABLE IF NOT EXISTS resources (
   amount INT,
   updated_at BIGINT,
   resource_per_minute INT,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS kingdom_resources (
   kingdom_id BIGINT,
-  resource_id BIGINT,
-  CONSTRAINT fk_resources_kingdom FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id),
-  CONSTRAINT fk_resources FOREIGN KEY (resource_id) REFERENCES resources(id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id)
 );
 
+INSERT INTO resources(id, type, dtype, amount, updated_at, resource_per_minute, kingdom_id)
+  VALUES (1, 'GOLD', 'Gold', 100, 1549895956111, 5, 1);
+INSERT INTO resources(id, type, dtype, amount, updated_at, resource_per_minute, kingdom_id)
+  VALUES (2, 'FOOD', 'Food', 50, 1549895956111, 5, 1);
 
-
+INSERT INTO resources(id, type, dtype, amount, updated_at, resource_per_minute, kingdom_id)
+  VALUES (3, 'GOLD', 'Gold', 100, 1549895956111, 5, 2);
+INSERT INTO resources(id, type, dtype, amount, updated_at, resource_per_minute, kingdom_id)
+  VALUES (4, 'FOOD', 'Food', 50, 1549895956111, 5, 2);
 

@@ -23,9 +23,7 @@ public class Troop {
 
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "kingdom_troops", joinColumns = {
-            @JoinColumn(name = "troop_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    @JoinColumn(name = "kingdom_id")
     private Kingdom troopsKingdom;
 
     public Troop() {

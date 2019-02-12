@@ -7,13 +7,11 @@ import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-//@DiscriminatorColumn(name = "type")
 @Table(name = "resources")
 public abstract class Resource {
 
@@ -22,7 +20,6 @@ public abstract class Resource {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-  //  @Column(insertable = false, updatable = false)
     private ResourceType type;
     private Integer amount;
     private Long updatedAt;
@@ -30,9 +27,7 @@ public abstract class Resource {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_resources", joinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    @JoinColumn(name = "kingdom_id")
     private Kingdom resourcesKingdom;
 
 }
