@@ -56,7 +56,6 @@ public class BuildingController {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException {
-        //TODO: validate if building really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
         progressionService.updateProgression(kingdom);
