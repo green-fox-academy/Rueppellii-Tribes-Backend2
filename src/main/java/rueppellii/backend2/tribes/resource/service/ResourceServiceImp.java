@@ -30,10 +30,6 @@ public class ResourceServiceImp implements ResourceService {
         this.timeServiceImpl = timeServiceImpl;
     }
 
-    public Resource provideResource(ResourceType type) {
-        return type.produceResource();
-    }
-
     public List<Resource> findAll() {
         return resourceRepository.findAll();
     }
@@ -101,21 +97,27 @@ public class ResourceServiceImp implements ResourceService {
     }
 
     public void goldAmountUpdate(Kingdom kingdom) throws NoResourceException {
+        Resource resource = makeResource(ResourceType.GOLD);
         Optional<Resource> gold = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.GOLD, kingdom.getId());
         Integer basicGoldAmount = gold.get().getAmount();
         Integer goldPerMinute = gold.get().getResourcePerMinute();
         Integer updatedGoldAmount = basicGoldAmount + ((int) timeDifferenceInMinutes(kingdom) * goldPerMinute);
         gold.get().setAmount(updatedGoldAmount);
         gold.get().setUpdatedAt(currentTime().getTime());
+        resource.setResourcesKingdom(kingdom);
+        resourceRepository.save(resource);
     }
 
     public void foodAmountUpdate(Kingdom kingdom) throws NoResourceException {
+        Resource resource = makeResource(ResourceType.FOOD);
         Optional<Resource> food = resourceRepository.findByTypeAndResourcesKingdom_Id(ResourceType.FOOD, kingdom.getId());
         int numberOfTroops = kingdom.getKingdomsTroops().size();
         Integer basicFoodAmount = food.get().getAmount();
-        Integer foodPerMinute = food.get().getResourcePerMinute() - 1;
+        Integer foodPerMinute = (food.get().getResourcePerMinute()) - numberOfTroops;
         Integer updatedFoodAmount = basicFoodAmount + ((int) timeDifferenceInMinutes(kingdom) * foodPerMinute);
         food.get().setAmount(updatedFoodAmount);
+        resource.setResourcesKingdom(kingdom);
+        resourceRepository.save(resource);
     }
 
 

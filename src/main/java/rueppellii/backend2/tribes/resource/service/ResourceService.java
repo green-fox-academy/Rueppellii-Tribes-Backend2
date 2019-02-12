@@ -11,9 +11,13 @@ import java.util.Optional;
 
 public interface ResourceService {
     ResponseEntity saveResource(Resource resource);
+
     boolean validateType(Resource resource);
+
     Resource returnResource(ResourceType type, Long id) throws NoResourceException;
+
     void minusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException;
+
     Timestamp currentTime();
 
     Timestamp timestampOfResource(Optional<Resource> resource);
