@@ -45,7 +45,7 @@ public class KingdomController {
         kingdom.setName(kingdomNameDTO.getName());
         kingdomService.save(kingdom);
     }
-  
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public KingdomDTO showOtherKingdom(@PathVariable Long id) throws KingdomNotFoundException {

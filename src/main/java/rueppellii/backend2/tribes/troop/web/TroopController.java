@@ -13,9 +13,11 @@ import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom/troop")
@@ -32,6 +34,13 @@ public class TroopController {
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
         this.resourceService = resourceService;
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Troop> listKingdomsTroops(Principal principal) throws KingdomNotFoundException {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        return kingdom.getKingdomsTroops();
     }
 
     @PostMapping("")

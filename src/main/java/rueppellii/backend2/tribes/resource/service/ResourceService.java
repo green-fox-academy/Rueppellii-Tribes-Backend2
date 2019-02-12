@@ -87,9 +87,14 @@ public class ResourceService {
             buildingName = "FARM";
         }
         String finalBuildingName = buildingName;
-        Integer numberOfBuildings = (int) kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
+        Integer numberOfBuildings = (int) kingdomsBuildings
+                .stream()
+                .filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
         Integer levelOneBuildingMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
-        Integer totalLevelOfBuildings = kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(finalBuildingName)).mapToInt(Building::getLevel).sum();
+        Integer totalLevelOfBuildings = kingdomsBuildings
+                .stream()
+                .filter(building -> building.getType().getName().matches(finalBuildingName))
+                .mapToInt(Building::getLevel).sum();
         if (!numberOfBuildings.equals(totalLevelOfBuildings)) {
             Integer totalBuildingLevelMultiplier = RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
             return levelOneBuildingMultiplier + totalBuildingLevelMultiplier;
@@ -104,7 +109,6 @@ public class ResourceService {
         }
         return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS;
     }
-
 
     private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
         return (int) ((double) elapsedSeconds * ((double) (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
