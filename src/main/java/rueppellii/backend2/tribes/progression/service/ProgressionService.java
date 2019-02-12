@@ -50,7 +50,6 @@ public class ProgressionService {
                 progress(p, kingdom);
             }
         }
-
     }
 
     public void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException,
@@ -80,6 +79,17 @@ public class ProgressionService {
             throw new InvalidProgressionRequestException("Missing parameter: type");
         } else if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
+        }
+    }
+
+    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom) throws InvalidProgressionRequestException {
+        for (ProgressionModel type : progressionModelRepository.findAllByProgressKingdom(kingdom)) {
+            if (type.getType().toUpperCase().equals("TOWNHALL") ||
+                    type.getType().toUpperCase().equals("FARM") ||
+                    type.getType().toUpperCase().equals("MINE") ||
+                    type.getType().toUpperCase().equals("BARRACKS")) {
+                throw new InvalidProgressionRequestException("Building is already in progress");
+            }
         }
     }
 
