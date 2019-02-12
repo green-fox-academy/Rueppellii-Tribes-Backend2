@@ -46,7 +46,6 @@ public class BuildingController {
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: check if there is already progression going on
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
         progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         progressionService.updateProgression(kingdom);
@@ -60,7 +59,6 @@ public class BuildingController {
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
-        //TODO: check if there is already progression going on
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);

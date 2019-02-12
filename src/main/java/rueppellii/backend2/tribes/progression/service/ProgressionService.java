@@ -79,6 +79,8 @@ public class ProgressionService {
             throw new InvalidProgressionRequestException("Missing parameter: type");
         } else if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
+        } else if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
+            throw new InvalidProgressionRequestException("Only one town hall to a kingdom");
         }
     }
 
