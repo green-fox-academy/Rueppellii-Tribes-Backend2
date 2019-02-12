@@ -7,7 +7,6 @@ import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -28,9 +27,7 @@ public abstract class Resource {
 
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "kingdom_resources", joinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")})
+    @JoinColumn(name = "kingdom_id")
     private Kingdom resourcesKingdom;
 
 }

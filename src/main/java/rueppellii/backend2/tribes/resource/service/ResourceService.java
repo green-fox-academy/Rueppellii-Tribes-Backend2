@@ -48,11 +48,12 @@ public class ResourceService {
         saveResource(resource);
     }
 
-    public static List<Resource> starterKit() {
+    public static List<Resource> starterKit(Kingdom kingdom) {
         List<Resource> starterResources = new ArrayList<>();
         for (ResourceType t : ResourceType.values()) {
             starterResources.add(makeResource(t));
         }
+        starterResources.forEach(resource -> resource.setResourcesKingdom(kingdom));
         return starterResources;
     }
 

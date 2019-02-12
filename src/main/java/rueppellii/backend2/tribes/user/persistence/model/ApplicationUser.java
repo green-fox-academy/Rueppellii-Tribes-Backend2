@@ -19,7 +19,6 @@ public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
     @NotBlank
     @NotNull
@@ -28,7 +27,7 @@ public class ApplicationUser {
     @NotNull
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "app_user_user_role",
             joinColumns = @JoinColumn(name = "user_id"),

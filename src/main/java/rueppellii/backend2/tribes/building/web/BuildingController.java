@@ -30,10 +30,11 @@ public class BuildingController {
     private ResourceService resourceService;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService) {
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
+        this.resourceService = resourceService;
     }
 
     @PostMapping("")

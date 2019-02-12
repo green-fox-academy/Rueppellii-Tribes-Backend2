@@ -40,35 +40,23 @@ public class Kingdom {
     private ApplicationUser applicationUser;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_troops", joinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "troop_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "troopsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Troop> kingdomsTroops;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_resources", joinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "resource_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "resourcesKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public List<Resource> kingdomsResources;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_buildings", joinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "building_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "buildingsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "kingdom_progresses", joinColumns = {
-            @JoinColumn(name = "kingdom_id", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "progress_id", referencedColumnName = "id")})
+    @OneToMany(mappedBy = "progressKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
-        kingdomsBuildings = BuildingService.starterKit();
-        kingdomsResources = ResourceService.starterKit();
+        kingdomsBuildings = BuildingService.starterKit(this);
+        kingdomsResources = ResourceService.starterKit(this);
     }
 }
