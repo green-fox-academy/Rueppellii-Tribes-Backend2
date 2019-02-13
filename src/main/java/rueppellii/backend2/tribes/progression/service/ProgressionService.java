@@ -16,6 +16,7 @@ import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.List;
@@ -128,13 +129,16 @@ public class ProgressionService {
         kingdomService.save(kingdom);
     }
 
-    public void generateTroopUpgradeModel(Kingdom kingdom, Long id) {
+    public void generateTroopUpgradeModel(Kingdom kingdom, List<Troop> troopForUpgrade) {
         ProgressionModel progressionModel = new ProgressionModel();
-        progressionModel.setGameObjectId(id);
-        progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        for (Troop troop : troopForUpgrade) {
+            progressionModel.setGameObjectId(troop.getId());
+            progressionModel.setType("TROOP"); //need a number of amount
+            progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
+            progressionModel.setProgressKingdom(kingdom);
+            kingdom.getKingdomsProgresses().add(progressionModel);
+            kingdomService.save(kingdom);
+        }
+
     }
 }

@@ -36,7 +36,10 @@ public class TroopController {
         this.purchaseService = purchaseService;
         this.resourceService = resourceService;
         this.troopService = troopService;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c87061ae1c9c440921c76c73afd92237919bd44b
     }
 
     @PostMapping("")
@@ -51,16 +54,17 @@ public class TroopController {
         progressionService.generateTroopCreationModel(kingdom);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{level}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Long troopId, Principal principal) throws UsernameNotFoundException,
+    public void upgradeTroop(@PathVariable Integer level, Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
-        //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.refreshProgression(kingdom);
-        //TODO: ResourceService will call timeService and refresh the actual resources(kingdom)
-        purchaseService.upgradeTroop(kingdom.getId(), troopId);
-        progressionService.generateTroopUpgradeModel(kingdom, troopId);
+        //TODO: validate if troop really belongs to the user who makes the request
+        troopService.validateTroopsLevel(level, kingdom);
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
+        purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom), level, kingdom);
+        progressionService.generateTroopUpgradeModel(kingdom, troopService.getTroopsWithTheGivenLevel(level, kingdom));
     }
 
     @ResponseBody

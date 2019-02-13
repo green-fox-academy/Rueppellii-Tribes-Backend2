@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
@@ -14,6 +15,8 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
+
+import java.util.List;
 
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_PRICE;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.TROOP_PRICE;
@@ -38,12 +41,12 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeTroop(Long kingdomId, Long troopId) throws NoResourceException, TroopNotFoundException {
-        Troop troop = troopService.findById(troopId);
-        Integer desiredLevel = troop.getLevel() + 1;
-        Integer upgradePrice = 10 * desiredLevel;
-        if (resourceService.hasEnoughGold(kingdomId, upgradePrice)) {
-            resourceService.minusGoldAmount(upgradePrice, kingdomId);
+    public void upgradeTroops(List<Troop> troopsForUpgrade, Integer level, Kingdom kingdom) throws NoResourceException, TroopNotFoundException {
+        int amountOfTroopToUpgrade = troopsForUpgrade.size();
+        Integer desiredLevel = level + 1;
+        Integer upgradePrice = TROOP_PRICE * (level + 1) * amountOfTroopToUpgrade;
+        if (resourceService.hasEnoughGold(kingdom.getId(), upgradePrice)) {
+            resourceService.minusGoldAmount(upgradePrice, kingdom.getId());
             return;
         }
         throw new NoResourceException("You don't have enough gold!");
