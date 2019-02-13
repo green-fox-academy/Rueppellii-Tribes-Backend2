@@ -65,7 +65,7 @@ public class ProgressionService {
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }
-        if (progressionModel.getType() != null) {
+        if (progressionModel.getType().equals("TROOP")) {
             troopService.upgradeTroop(progressionModel);
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
