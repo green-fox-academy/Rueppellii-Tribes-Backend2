@@ -26,7 +26,12 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt:0.9.0'
     compile 'org.apache.commons:commons-lang3:3.7'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+<<<<<<< .merge_file_a06892
     implementation 'org.springframework.boot:spring-boot-starter-security'
+=======
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+>>>>>>> .merge_file_a09764
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
