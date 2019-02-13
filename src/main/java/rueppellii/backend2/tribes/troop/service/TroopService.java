@@ -1,9 +1,9 @@
 package rueppellii.backend2.tribes.troop.service;
 
+import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
@@ -11,8 +11,8 @@ import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 
@@ -62,8 +62,9 @@ public class TroopService {
         return true;
     }
 
-    private List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
-        return troopRepository.findAllByLevelAndAndTroopsKingdom(troopLevel, kingdom);
+    public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
+//        return troopRepository.findAllByLevelAndAndTroopsKingdom(troopLevel, kingdom);
+        return getKingfomTroops(kingdom).stream().filter(t -> t.getLevel().equals(troopLevel)).collect(Collectors.toList());
     }
 
     public void enhanceValidTroopsLevel(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException {
@@ -73,6 +74,5 @@ public class TroopService {
             enhanceTroopsLevel.forEach(troop -> troop.setDefense(5 ^ troop.getLevel()));
         }
     }
-
 }
 

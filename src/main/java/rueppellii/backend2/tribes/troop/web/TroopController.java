@@ -58,8 +58,8 @@ public class TroopController {
         troopService.enhanceValidTroopsLevel(level, kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
-//        purchaseService.upgradeTroop(kingdom.getId(), id);
-//        progressionService.generateTroopUpgradeModel(kingdom, id);
+        purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom), level, kingdom);
+        progressionService.generateTroopUpgradeModel(kingdom, troopService.getTroopsWithTheGivenLevel(level, kingdom));
     }
 
     @ResponseBody
