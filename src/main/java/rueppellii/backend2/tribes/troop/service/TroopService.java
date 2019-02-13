@@ -11,7 +11,6 @@ import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
@@ -45,7 +44,9 @@ public class TroopService {
     }
 
     public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
-        Troop troop = findById(progressionModel.getId());
+        Troop troop = findById(progressionModel.getGameObjectId());
+        troop.setAttack((int) Math.pow(5, troop.getLevel()));
+        troop.setDefense((int) Math.pow(5, troop.getLevel()));
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
     }
@@ -57,7 +58,7 @@ public class TroopService {
 
     private Boolean validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
         if (troopLevel >= 3) {
-            throw new InvalidProgressionRequestException("Troops cannot be upgraded over level 3");
+            throw new InvalidProgressionRequestException("Troops cannot be upgraded to level " + (troopLevel + 1));
         }
         return true;
     }
@@ -67,11 +68,10 @@ public class TroopService {
         return getKingfomTroops(kingdom).stream().filter(t -> t.getLevel().equals(troopLevel)).collect(Collectors.toList());
     }
 
-    public void enhanceValidTroopsLevel(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException {
+    public void validateTroopsLevel(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException {
         if (validateLevel(troopLevel)) {
             List<Troop> enhanceTroopsLevel = getTroopsWithTheGivenLevel(troopLevel, kingdom);
-            enhanceTroopsLevel.forEach(troop -> troop.setAttack(5 ^ troop.getLevel()));
-            enhanceTroopsLevel.forEach(troop -> troop.setDefense(5 ^ troop.getLevel()));
+
         }
     }
 }

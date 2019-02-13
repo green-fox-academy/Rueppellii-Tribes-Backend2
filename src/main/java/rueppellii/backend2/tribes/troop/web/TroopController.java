@@ -55,7 +55,7 @@ public class TroopController {
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         //TODO: validate if troop really belongs to the user who makes the request
-        troopService.enhanceValidTroopsLevel(level, kingdom);
+        troopService.validateTroopsLevel(level, kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom), level, kingdom);
