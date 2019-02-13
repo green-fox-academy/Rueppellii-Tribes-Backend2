@@ -29,12 +29,12 @@ public class TestResourceController {
         return kingdom;
     }
 
-    @PostMapping("/kingdom/troop/upgrade")
-    public Kingdom upgradeTroop(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        purchaseService.upgradeTroop(kingdom.getId(), idDTO.getId());
-        return kingdom;
-    }
+//    @PostMapping("/kingdom/troop/upgrade")
+//    public Kingdom upgradeTroop(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
+//        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+//        purchaseService.upgradeTroop(kingdom.getId(), idDTO.getId());
+//        return kingdom;
+//    }
 
     @PostMapping("/kingdom/building/build")
     public Kingdom makeBuilding(Principal principal) throws Exception {

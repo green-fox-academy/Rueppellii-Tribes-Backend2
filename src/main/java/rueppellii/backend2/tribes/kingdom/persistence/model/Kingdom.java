@@ -7,18 +7,14 @@ import lombok.Setter;
 
 import rueppellii.backend2.tribes.building.persistence.model.*;
 import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.resource.presistence.model.Food;
-import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

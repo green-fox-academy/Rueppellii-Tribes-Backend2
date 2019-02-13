@@ -27,7 +27,7 @@ public class TimeService {
     }
 
     public Long calculateTimeOfTroopCreationAndUpgrade(Kingdom kingdom) {
-        return System.currentTimeMillis() + (long) (TROOP_CREATION_AND_UPGRADE_TIME - buildingService.getTroopUgradeTimeDividend(kingdom));
+        return System.currentTimeMillis() + (long) (TROOP_CREATION_AND_UPGRADE_TIME * buildingService.getTroopUpgradeTimeMultiplier(kingdom));
     }
 
     public Boolean timeIsUp(ProgressionModel progressionModel) {
