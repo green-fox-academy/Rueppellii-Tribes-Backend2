@@ -42,12 +42,6 @@ public class ApplicationUserService {
         this.roleService = roleService;
     }
 
-    public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
-
-        return applicationUserRepository.findByUsername(getUsernameByPrincipal(principal))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + getUsernameByPrincipal(principal)));
-    }
-
     public void save(ApplicationUser applicationUser) {
         applicationUserRepository.save(applicationUser);
     }
@@ -94,8 +88,7 @@ public class ApplicationUserService {
 
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
-
-        System.out.println(applicationUserDTO.getUsername());
+        
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
             final ApplicationUser applicationUser = new ApplicationUser();
