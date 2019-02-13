@@ -19,4 +19,8 @@ public class RoleService {
     public ApplicationUserRole findById(Long id) throws UserRoleNotFoundException {
         return roleRepository.findById(id).orElseThrow(() -> new UserRoleNotFoundException("User role found by this id: " + id));
     }
+
+    public void saveRole(ApplicationUserRole applicationUserRole) {
+        roleRepository.save(applicationUserRole);
+    }
 }
