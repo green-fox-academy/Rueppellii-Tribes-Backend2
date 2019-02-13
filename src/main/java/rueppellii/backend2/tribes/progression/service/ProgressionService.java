@@ -119,7 +119,7 @@ public class ProgressionService {
     public void generateTroopCreationModel(Kingdom kingdom) {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreationAndUpgrade(kingdom));
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
@@ -129,7 +129,7 @@ public class ProgressionService {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setGameObjectId(id);
         progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreationAndUpgrade(kingdom));
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);

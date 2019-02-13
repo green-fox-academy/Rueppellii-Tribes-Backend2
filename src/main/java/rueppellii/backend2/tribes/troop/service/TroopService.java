@@ -2,6 +2,7 @@ package rueppellii.backend2.tribes.troop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
@@ -12,6 +13,7 @@ import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_CREATION_AND_UPGRADE_TIME;
 import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 
 @Service

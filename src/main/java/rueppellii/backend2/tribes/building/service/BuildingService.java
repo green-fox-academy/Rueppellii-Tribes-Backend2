@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_PRICE;
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_CREATION_AND_UPGRADE_TIME;
 
 @Service
 public class BuildingService {
@@ -97,6 +98,22 @@ public class BuildingService {
                 .stream()
                 .filter(building -> building instanceof TownHall)
                 .collect(Collectors.toList()))).getLevel();
+    }
+
+    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
+        Integer numberOfLevelOneBarracks = 0;
+        for (Building barracks : kingdom.getKingdomsBuildings()) {
+            if (barracks.getType().getName().toUpperCase().equals("BARRACKS")) {
+                if (barracks.getLevel().equals(1L)) {
+                    numberOfLevelOneBarracks++;
+                }
+            }
+        }
+        return kingdom.getKingdomsBuildings().size() - numberOfLevelOneBarracks;
+    }
+
+    public Double getTroopUgradeTimeDividend(Kingdom kingdom) {
+        return TROOP_CREATION_AND_UPGRADE_TIME.intValue() * (sumOfLevelsOfUpgradedBarracks(kingdom) * 0.05);
     }
 
     public static List<Building> starterKit(Kingdom kingdom) {
