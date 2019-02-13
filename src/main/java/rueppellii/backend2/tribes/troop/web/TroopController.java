@@ -9,10 +9,12 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
@@ -25,13 +27,15 @@ public class TroopController {
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
     private ResourceService resourceService;
+    private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
         this.resourceService = resourceService;
+        this.troopService = troopService;
     }
 
     @PostMapping("")
@@ -45,16 +49,17 @@ public class TroopController {
         progressionService.generateTroopCreationModel(kingdom);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{level}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Long id, Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
-        //TODO: validate if troop really belongs to the user who makes the request
+    public void upgradeTroop(@PathVariable Integer level, Principal principal) throws UsernameNotFoundException,
+            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        //TODO: validate if troop really belongs to the user who makes the request
+        troopService.enhanceValidTroopsLevel(level, kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
-        purchaseService.upgradeTroop(kingdom.getId(), id);
-        progressionService.generateTroopUpgradeModel(kingdom, id);
+//        purchaseService.upgradeTroop(kingdom.getId(), id);
+//        progressionService.generateTroopUpgradeModel(kingdom, id);
     }
 
     @ResponseBody
