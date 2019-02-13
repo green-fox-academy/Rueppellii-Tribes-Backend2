@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
+import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
@@ -37,9 +38,12 @@ public class BuildingController {
     }
 
     @GetMapping("")
-    public List<Building> showBuildings(Principal principal) throws KingdomNotFoundException {
+    @ResponseStatus(HttpStatus.OK)
+    public ListKingdomsBuildingsDTO showBuildings(Principal principal) throws KingdomNotFoundException {
+        ListKingdomsBuildingsDTO dto = new ListKingdomsBuildingsDTO();
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        return kingdom.getKingdomsBuildings();
+        dto.setBuildings(kingdom.getKingdomsBuildings());
+        return dto;
     }
 
     @PostMapping("")
