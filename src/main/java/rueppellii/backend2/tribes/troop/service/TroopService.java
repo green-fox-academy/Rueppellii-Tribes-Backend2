@@ -1,6 +1,5 @@
 package rueppellii.backend2.tribes.troop.service;
 
-import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
