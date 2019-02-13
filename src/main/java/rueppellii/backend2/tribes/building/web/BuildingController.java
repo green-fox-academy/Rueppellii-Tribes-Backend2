@@ -2,9 +2,11 @@ package rueppellii.backend2.tribes.building.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
+import rueppellii.backend2.tribes.building.persistence.model.Building;
+import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
@@ -16,7 +18,6 @@ import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
 
@@ -28,13 +29,15 @@ public class BuildingController {
     private ProgressionService progressionService;
     private PurchaseService purchaseService;
     private ResourceService resourceService;
+    private BuildingService buildingService;
 
     @Autowired
-    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService) {
+    public BuildingController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService, BuildingService buildingService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
         this.resourceService = resourceService;
+        this.buildingService = buildingService;
     }
 
     @PostMapping("")
@@ -42,8 +45,9 @@ public class BuildingController {
     public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
-        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
+        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.buyBuilding(kingdom.getId());
@@ -52,62 +56,16 @@ public class BuildingController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         //TODO: validate if troop really belongs to the user who makes the request
+    public void upgradeBuilding(@PathVariable Long id, Principal principal)
+            throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException,
+            UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        Building building = buildingService.validateBuildingUpgrade(kingdom, id);
+        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
-        purchaseService.upgradeBuilding(kingdom.getId(), id);
+        purchaseService.payForBuildingUpgrade(kingdom.getId(), building);
         progressionService.generateBuildingUpgradeModel(kingdom, id);
-    }
-
-
-    @ResponseBody
-    @ExceptionHandler(UsernameNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse userNotFoundHandler(UsernameNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(KingdomNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse kingdomNotFoundHandler(KingdomNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse troopNotFoundHandler(TroopNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(BuildingNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(NoResourceException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    ErrorResponse NoResourceHandler(NoResourceException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(InvalidProgressionRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse InvalidProgressionHandler(InvalidProgressionRequestException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse InvalidProgressionEnumHandler(IllegalArgumentException ex) {
-        return new ErrorResponse(ex.getMessage());
     }
 }

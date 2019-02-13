@@ -32,7 +32,7 @@ public class Kingdom {
 
     @JsonBackReference
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "application_user_user_id")
+    @JoinColumn(name = "application_user_id")
     private ApplicationUser applicationUser;
 
     @JsonManagedReference
