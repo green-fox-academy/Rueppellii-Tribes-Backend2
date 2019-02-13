@@ -48,7 +48,7 @@ public class TroopController {
     public void createTroop(Principal principal) throws UsernameNotFoundException,
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
+        progressionService.updateProgressions(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
@@ -60,7 +60,7 @@ public class TroopController {
             KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
+        progressionService.updateProgressions(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.upgradeTroop(kingdom.getId(), id);
         progressionService.generateTroopUpgradeModel(kingdom, id);

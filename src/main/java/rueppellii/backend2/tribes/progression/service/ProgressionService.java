@@ -39,18 +39,13 @@ public class ProgressionService {
         this.kingdomService = kingdomService;
     }
 
-    public List<ProgressionModel> findAllByKingdom(Kingdom kingdom) {
-        return progressionModelRepository.findAllByProgressKingdom(kingdom);
-    }
-
-    public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
-        List<ProgressionModel> progressions = findAllByKingdom(kingdom);
+    public void updateProgressions(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+        List<ProgressionModel> progressions = kingdom.getKingdomsProgresses();
         for (ProgressionModel p : progressions) {
             if (timeService.timeIsUp(p)) {
                 progress(p, kingdom);
             }
         }
-
     }
 
     public void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException,
@@ -87,27 +82,21 @@ public class ProgressionService {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType(progressionDTO.getType());
         progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        saveProgressionIntoKingdom(kingdom, progressionModel);
     }
 
     public void generateBuildingUpgradeModel(Kingdom kingdom, Long id) {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setGameObjectId(id);
         progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingUpgrade(kingdom));
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        saveProgressionIntoKingdom(kingdom, progressionModel);
     }
 
     public void generateTroopCreationModel(Kingdom kingdom) {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType("TROOP");
         progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(kingdom));
-        progressionModel.setProgressKingdom(kingdom);
-        kingdom.getKingdomsProgresses().add(progressionModel);
-        kingdomService.save(kingdom);
+        saveProgressionIntoKingdom(kingdom, progressionModel);
     }
 
     public void generateTroopUpgradeModel(Kingdom kingdom, Long id) {
@@ -115,6 +104,10 @@ public class ProgressionService {
         progressionModel.setGameObjectId(id);
         progressionModel.setType("TROOP");
         progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopUpgrade(kingdom));
+        saveProgressionIntoKingdom(kingdom, progressionModel);
+    }
+
+    private void saveProgressionIntoKingdom(Kingdom kingdom, ProgressionModel progressionModel) {
         progressionModel.setProgressKingdom(kingdom);
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);

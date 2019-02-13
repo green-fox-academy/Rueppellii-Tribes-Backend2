@@ -3,7 +3,6 @@ package rueppellii.backend2.tribes.resource.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
-import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
-import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
+import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.UPGRADE_BUILDING_MULTIPLIER;
 import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
@@ -90,16 +89,16 @@ public class ResourceService {
         Integer numberOfBuildings = (int) kingdomsBuildings
                 .stream()
                 .filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
-        Integer levelOneBuildingMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
+        Integer buildingLevelOneMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
         Integer totalLevelOfBuildings = kingdomsBuildings
                 .stream()
                 .filter(building -> building.getType().getName().matches(finalBuildingName))
                 .mapToInt(Building::getLevel).sum();
         if (!numberOfBuildings.equals(totalLevelOfBuildings)) {
-            Integer totalBuildingLevelMultiplier = RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
-            return levelOneBuildingMultiplier + totalBuildingLevelMultiplier;
+            Integer totalBuildingLevelMultiplier = UPGRADE_BUILDING_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
+            return buildingLevelOneMultiplier + totalBuildingLevelMultiplier;
         }
-        return levelOneBuildingMultiplier;
+        return buildingLevelOneMultiplier;
     }
 
     private Integer calculateFood(Kingdom kingdom, Integer baseResourcePerMinute,

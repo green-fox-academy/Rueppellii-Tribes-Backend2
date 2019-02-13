@@ -10,20 +10,13 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.resource.presistence.model.Food;
-import rueppellii.backend2.tribes.resource.presistence.model.Gold;
-import rueppellii.backend2.tribes.resource.presistence.model.Resource;
-import rueppellii.backend2.tribes.resource.utility.ResourceType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.*;
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
-import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
-import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
 
 @Service
 public class BuildingService {

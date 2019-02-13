@@ -53,7 +53,7 @@ public class BuildingController {
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
+        progressionService.updateProgressions(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
@@ -64,7 +64,7 @@ public class BuildingController {
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
         //TODO: validate if troop really belongs to the user who makes the request
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
+        progressionService.updateProgressions(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.upgradeBuilding(kingdom.getId(), id);
         progressionService.generateBuildingUpgradeModel(kingdom, id);
