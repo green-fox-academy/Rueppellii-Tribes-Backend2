@@ -136,6 +136,5 @@ public class ProgressionService {
             kingdom.getKingdomsProgresses().add(progressionModel);
             kingdomService.save(kingdom);
         }
-
     }
 }
