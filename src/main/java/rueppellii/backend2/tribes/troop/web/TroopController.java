@@ -30,7 +30,8 @@ public class TroopController {
     private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService,
+                           PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
@@ -40,25 +41,30 @@ public class TroopController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+    public void createTroop(Principal principal)
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
+
         resourceService.updateResources(kingdom);
+        progressionService.updateProgression(kingdom);
+
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
 
     @PutMapping("{level}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Integer level, Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
+    public void upgradeTroop(@PathVariable Integer level, Principal principal)
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: validate if troop really belongs to the user who makes the request
-        troopService.validateTroopsLevel(level, kingdom);
-        progressionService.updateProgression(kingdom);
+
         resourceService.updateResources(kingdom);
-        purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom), level, kingdom);
+        progressionService.updateProgression(kingdom);
+
+        troopService.validateTroopsLevel(level);
+        purchaseService.upgradeTroops(level, kingdom);
         progressionService.generateTroopUpgradeModel(kingdom, troopService.getTroopsWithTheGivenLevel(level, kingdom));
     }
 

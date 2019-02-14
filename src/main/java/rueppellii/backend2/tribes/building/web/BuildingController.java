@@ -57,10 +57,12 @@ public class BuildingController {
                                Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
-        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
+
+        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
+        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
+
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
@@ -69,11 +71,13 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        resourceService.updateResources(kingdom);
+        progressionService.updateProgression(kingdom);
+
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
-        progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
         purchaseService.payForBuildingUpgrade(kingdom.getId(), building);
+
         progressionService.generateBuildingUpgradeModel(kingdom, id);
     }
 }
