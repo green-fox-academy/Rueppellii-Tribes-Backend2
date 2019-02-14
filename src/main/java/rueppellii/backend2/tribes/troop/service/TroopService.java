@@ -9,6 +9,9 @@ import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 
 @Service
@@ -40,9 +43,10 @@ public class TroopService {
     }
 
     public void upgradeTroop(ProgressionModel progressionModel) throws TroopNotFoundException {
-        Troop troop = findById(progressionModel.getGameObjectId());
+        Troop troop = findById(progressionModel.getId());
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
     }
+
 }
 

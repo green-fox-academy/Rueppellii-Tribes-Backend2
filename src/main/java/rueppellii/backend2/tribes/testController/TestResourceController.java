@@ -22,12 +22,6 @@ public class TestResourceController {
         this.kingdomService = kingdomService;
     }
 
-    @GetMapping("/kingdom/gold")
-    public Integer showResource(Principal principal) throws Exception {
-        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        return purchaseService.getKingdomsGoldAmount(kingdom.getId());
-    }
-
     @PostMapping("/kingdom/troop/build")
     public Kingdom makeTroop(Principal principal) throws Exception {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
@@ -49,10 +43,10 @@ public class TestResourceController {
         return kingdom;
     }
 
-    @PostMapping("/kingdom/building/upgrade")
-    public Kingdom upgradeBuilding(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
-        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        purchaseService.upgradeBuilding(kingdom.getId(), idDTO.getId());
-        return kingdom;
-    }
+//    @PostMapping("/kingdom/building/upgrade")
+//    public Kingdom upgradeBuilding(Principal principal, @RequestBody IdDTO idDTO) throws Exception {
+//        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+//        purchaseService.upgradeBuilding(kingdom.getId(), idDTO.getId());
+//        return kingdom;
+//    }
 }

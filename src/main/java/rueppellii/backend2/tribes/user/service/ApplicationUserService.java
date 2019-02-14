@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 
-import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
@@ -42,27 +41,11 @@ public class ApplicationUserService {
         this.roleService = roleService;
     }
 
-    public ApplicationUser findByPrincipal(Principal principal) throws UsernameNotFoundException {
-
-        return applicationUserRepository.findByUsername(getUsernameByPrincipal(principal))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + getUsernameByPrincipal(principal)));
-    }
-
-    public void save(ApplicationUser applicationUser) {
-        applicationUserRepository.save(applicationUser);
-    }
-
-    public String getUsernameByPrincipal(Principal principal) {
-        JwtAuthenticationToken token = (JwtAuthenticationToken) principal;
-        UserContext user = (UserContext) token.getPrincipal();
-        return user.getUsername();
-    }
-
-    public List<ApplicationUserDTO> getAllUser() {
-        List<ApplicationUser> allUser = applicationUserRepository.findAll();
+    public List<ApplicationUserDTO> getAllUsers() {
+        List<ApplicationUser> allUsers = applicationUserRepository.findAll();
         List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
 
-        for (ApplicationUser user : allUser) {
+        for (ApplicationUser user : allUsers) {
             ApplicationUserDTO dto = new ApplicationUserDTO();
             dto.setUsername(user.getUsername());
             dto.setKingdomName(user.getKingdom().getName());
@@ -95,7 +78,6 @@ public class ApplicationUserService {
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
 
-        System.out.println(applicationUserDTO.getUsername());
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
             final ApplicationUser applicationUser = new ApplicationUser();

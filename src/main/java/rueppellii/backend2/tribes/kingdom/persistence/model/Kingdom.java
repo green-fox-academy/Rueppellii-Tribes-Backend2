@@ -36,7 +36,7 @@ public class Kingdom {
 
     @JsonBackReference
     @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "application_user_user_id")
+    @JoinColumn(name = "application_user_id")
     private ApplicationUser applicationUser;
 
     @JsonManagedReference
@@ -56,7 +56,7 @@ public class Kingdom {
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {
-        kingdomsBuildings = BuildingService.starterKit();
-        kingdomsResources = ResourceService.starterKit();
+        kingdomsBuildings = BuildingService.starterKit(this);
+        kingdomsResources = ResourceService.starterKit(this);
     }
 }

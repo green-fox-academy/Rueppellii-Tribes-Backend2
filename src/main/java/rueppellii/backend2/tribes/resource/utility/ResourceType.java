@@ -20,4 +20,8 @@ public enum ResourceType {
     public Resource produceResource() {
         return null;
     }
+
+    public String getName(){
+        return this.name();
+    }
 }
