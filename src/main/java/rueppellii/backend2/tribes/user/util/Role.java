@@ -1,7 +1,10 @@
 package rueppellii.backend2.tribes.user.util;
 
-import lombok.Getter;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "roles")
 public enum Role {
     ADMIN, USER;
 
