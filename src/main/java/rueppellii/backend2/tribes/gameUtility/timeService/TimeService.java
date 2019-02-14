@@ -26,12 +26,8 @@ public class TimeService {
         return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings()));
     }
 
-    public Long calculateTimeOfTroopCreation(Kingdom kingdom) {
-        return System.currentTimeMillis() + (TROOP_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings()));
-    }
-
-    public Long calculateTimeOfTroopUpgrade(Kingdom kingdom) {
-        return System.currentTimeMillis() + (TROOP_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings()));
+    public Long calculateTimeOfTroopCreationAndUpgrade(Kingdom kingdom) {
+        return System.currentTimeMillis() + (long) (TROOP_CREATION_AND_UPGRADE_TIME * buildingService.getTroopUpgradeTimeMultiplier(kingdom));
     }
 
     public Boolean timeIsUp(ProgressionModel progressionModel) {

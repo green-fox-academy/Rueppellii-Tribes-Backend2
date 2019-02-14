@@ -113,7 +113,6 @@ public class ResourceService {
         return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS;
     }
 
-
     private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
         return (int) ((double) elapsedSeconds * ((double) (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
     }
