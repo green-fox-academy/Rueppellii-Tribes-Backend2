@@ -54,7 +54,7 @@ public class TroopService {
         return kingdom.getKingdomsTroops();
     }
 
-    private void validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
+    public void validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
         if (troopLevel >= 3) {
             throw new InvalidProgressionRequestException("Troops cannot be upgraded to level " + (troopLevel + 1));
         }
