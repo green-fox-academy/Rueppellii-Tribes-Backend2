@@ -41,24 +41,6 @@ public class ApplicationUserService {
         this.roleService = roleService;
     }
 
-    public List<ApplicationUserDTO> getAllUsers() {
-        List<ApplicationUser> allUsers = applicationUserRepository.findAll();
-        List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
-
-        for (ApplicationUser user : allUsers) {
-            ApplicationUserDTO dto = new ApplicationUserDTO();
-            dto.setUsername(user.getUsername());
-            dto.setKingdomName(user.getKingdom().getName());
-            List<Role> roles = new ArrayList<>();
-            for (int i = 0; i < user.getRoles().size(); i++) {
-                roles.add(user.getRoles().get(i).getRoleEnum());
-            }
-            dto.setRoles(roles);
-            allUserDTO.add(dto);
-        }
-        return allUserDTO;
-    }
-
     public UserContext createUserContext(String username) {
         ApplicationUser applicationUser = findByUserName(username);
 

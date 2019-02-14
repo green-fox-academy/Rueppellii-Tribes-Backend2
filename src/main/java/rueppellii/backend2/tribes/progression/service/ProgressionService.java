@@ -71,7 +71,7 @@ public class ProgressionService {
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }
-        buildingService.upgradeBuilding(progressionModel);
+        buildingService.upgradeBuilding(progressionModel, kingdom);
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 

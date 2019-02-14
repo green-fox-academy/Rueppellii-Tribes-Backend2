@@ -70,8 +70,8 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        resourceService.updateResources(kingdom);
         progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
 
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);

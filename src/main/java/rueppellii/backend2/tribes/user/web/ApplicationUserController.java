@@ -3,7 +3,6 @@ package rueppellii.backend2.tribes.user.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +35,6 @@ public class ApplicationUserController {
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
         return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
-
-    @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<ApplicationUserDTO> getUsers() {
-        return applicationUserService.getAllUsers();
-    }
-
 
     @ResponseBody
     @ExceptionHandler(UserNameIsTakenException.class)

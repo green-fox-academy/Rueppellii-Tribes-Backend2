@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
@@ -18,10 +19,12 @@ import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 public class TroopService {
 
     private TroopRepository troopRepository;
+    private ResourceService resourceService;
 
     @Autowired
-    public TroopService(TroopRepository troopRepository) {
+    public TroopService(TroopRepository troopRepository, ResourceService resourceService) {
         this.troopRepository = troopRepository;
+        this.resourceService = resourceService;
     }
 
     public Troop findById(Long id) throws TroopNotFoundException {
@@ -41,7 +44,6 @@ public class TroopService {
         troop.setLevel(troop.getLevel() + 1);
         troopRepository.save(troop);
     }
-
 
     private List<Troop> getKingdomTroops(Kingdom kingdom) {
         return kingdom.getKingdomsTroops();

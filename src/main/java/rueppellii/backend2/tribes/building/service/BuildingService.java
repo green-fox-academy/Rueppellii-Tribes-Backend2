@@ -11,6 +11,7 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,16 +20,17 @@ import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
-import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_CREATION_AND_UPGRADE_TIME;
 
 @Service
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
+    private ResourceService resourceService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository) {
+    public BuildingService(BuildingRepository buildingRepository, ResourceService resourceService) {
         this.buildingRepository = buildingRepository;
+        this.resourceService = resourceService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -36,6 +38,7 @@ public class BuildingService {
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(progressionModel.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
+                resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
                 building.setBuildingsKingdom(kingdom);
                 buildingRepository.save(building);
                 return;
@@ -78,14 +81,11 @@ public class BuildingService {
         return building;
     }
 
-    public void upgradeBuilding(ProgressionModel progressionModel) throws BuildingNotFoundException {
-        Building building = findById(progressionModel.getGameObjectId());
-        building.setLevel(building.getLevel() + 1);
-        buildingRepository.save(building);
-    }
-
-    public void saveBuilding(Building building) {
-        buildingRepository.save(building);
+    public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
+        Building buildingById = findById(progressionModel.getId());
+        buildingById.setLevel(buildingById.getLevel() + 1);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
+        buildingRepository.save(buildingById);
     }
 
     public Building findById(Long id) throws BuildingNotFoundException {

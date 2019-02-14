@@ -1,9 +1,8 @@
 package rueppellii.backend2.tribes.resource.service;
 
+import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.persistence.model.Building;
-import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -16,11 +15,11 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
 import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
-import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
 @Service
@@ -66,55 +65,58 @@ public class ResourceService {
         starterResources.forEach(resource -> resource.setResourcesKingdom(kingdom));
         return starterResources;
     }
-    //TODO: Archie: Fix resource service to update resourcePerMinute in GOLD and FOOD entities
+
     public void updateResources(Kingdom kingdom) {
         List<Resource> resources = kingdom.getKingdomsResources();
         for (Resource r : resources) {
-            Integer baseResourcePerMinute = r.getResourcePerMinute();
-            Integer totalBuildingLevelMultiplier = getTotalBuildingLevelMultiplier(kingdom.getKingdomsBuildings(), r);
+            Integer resourcePerMinute = r.getResourcePerMinute();
             Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
-            Long remainderSeconds = timeService.calculateRemainder(r.getUpdatedAt());
-            if (r instanceof Gold && calculateGold(baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateGold(baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds));
-                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
+            Long remainderSecondsInMillis = timeService.calculateRemainder(r.getUpdatedAt());
+            if (r instanceof Gold && calculateGoldPerSecond(resourcePerMinute, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateGoldPerSecond(resourcePerMinute, elapsedSeconds));
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
             }
-            if (r instanceof Food && calculateFood(kingdom, baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateFood(kingdom, baseResourcePerMinute, totalBuildingLevelMultiplier, elapsedSeconds));
-                r.setUpdatedAt(System.currentTimeMillis() + remainderSeconds);
+            if (r instanceof Food && calculateFoodPerSecond(kingdom, resourcePerMinute, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateFoodPerSecond(kingdom, resourcePerMinute, elapsedSeconds));
+                r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
             }
         }
         kingdomService.save(kingdom);
     }
 
-    public Integer getTotalBuildingLevelMultiplier(List<Building> kingdomsBuildings, Resource resource) {
-        String buildingName = null;
-        if (resource instanceof Gold) {
-            buildingName = "MINE";
-        }
-        if (resource instanceof Food) {
-            buildingName = "FARM";
-        }
-        String finalBuildingName = buildingName;
-        Integer numberOfBuildings = (int) kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(requireNonNull(finalBuildingName))).count();
-        Integer levelOneBuildingMultiplier = numberOfBuildings * RESOURCE_PER_MINUTE_BUILDING_LEVEL_ONE;
-        Integer totalLevelOfBuildings = kingdomsBuildings.stream().filter(building -> building.getType().getName().matches(finalBuildingName)).mapToInt(Building::getLevel).sum();
-        if (!numberOfBuildings.equals(totalLevelOfBuildings)) {
-            Integer totalBuildingLevelMultiplier = RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER * (totalLevelOfBuildings - numberOfBuildings);
-            return levelOneBuildingMultiplier + totalBuildingLevelMultiplier;
-        }
-        return levelOneBuildingMultiplier;
+    private Integer calculateGoldPerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
+        return (int) ((double) elapsedSeconds * ((double) resourcePerMinute / ONE_MINUTE_IN_SECONDS));
     }
 
-    private Integer calculateFood(Kingdom kingdom, Integer baseResourcePerMinute,
-                                  Integer totalResourceMultiplier, Integer elapsedSeconds) {
+    private Integer calculateFoodPerSecond(Kingdom kingdom, Integer resourcePerMinute, Integer elapsedSeconds) {
         if (kingdom.getKingdomsTroops() != null) {
-            return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier - kingdom.getKingdomsTroops().size()) / ONE_MINUTE_IN_SECONDS;
+            return elapsedSeconds * (resourcePerMinute - kingdom.getKingdomsTroops().size()) / ONE_MINUTE_IN_SECONDS;
         }
-        return elapsedSeconds * (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS;
+        return elapsedSeconds * (resourcePerMinute / ONE_MINUTE_IN_SECONDS);
     }
 
-    private Integer calculateGold(Integer baseResourcePerMinute, Integer totalResourceMultiplier, Integer elapsedSeconds) {
-        return (int) ((double) elapsedSeconds * ((double) (baseResourcePerMinute + totalResourceMultiplier) / ONE_MINUTE_IN_SECONDS));
+    public void setResourcePerMinute(String type, List<Resource> kingdomsResources) {
+        if(type.equals("MINE")) {
+            Gold gold = getGold(kingdomsResources);
+            gold.setResourcePerMinute(gold.getResourcePerMinute() + RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER);
+            resourceRepository.save(gold);
+        }
+        if(type.equals("FARM")) {
+            Food food = getFood(kingdomsResources);
+            food.setResourcePerMinute(food.getResourcePerMinute() + RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER);
+            resourceRepository.save(food);
+        }
     }
 
+    private Gold getGold(List<Resource> kingdomsResources) {
+        return (Gold) Iterables.getOnlyElement(kingdomsResources.stream()
+                .filter(r -> r instanceof Gold)
+                .collect(Collectors.toList()));
+    }
+
+    private Food getFood(List<Resource> kingdomsResources) {
+        return (Food) Iterables.getOnlyElement(kingdomsResources.stream()
+                .filter(r -> r instanceof Food)
+                .collect(Collectors.toList()));
+    }
 }
