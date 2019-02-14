@@ -50,28 +50,23 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
-    public List<Troop> getKingfomTroops(Kingdom kingdom) {
-        List<Troop> troopsOfKingdom = kingdom.getKingdomsTroops();
-        return troopsOfKingdom;
+    public List<Troop> getKingdomTroops(Kingdom kingdom) {
+        return kingdom.getKingdomsTroops();
     }
 
-    private Boolean validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
+    private void validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
         if (troopLevel >= 3) {
             throw new InvalidProgressionRequestException("Troops cannot be upgraded to level " + (troopLevel + 1));
         }
-        return true;
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
 //        return troopRepository.findAllByLevelAndAndTroopsKingdom(troopLevel, kingdom);
-        return getKingfomTroops(kingdom).stream().filter(t -> t.getLevel().equals(troopLevel)).collect(Collectors.toList());
-    }
-
-    public void validateTroopsLevel(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException {
-        if (validateLevel(troopLevel)) {
-            List<Troop> enhanceTroopsLevel = getTroopsWithTheGivenLevel(troopLevel, kingdom);
-
-        }
+        List<Troop> troopsOfKingdomWithTheGivenLevel = getKingdomTroops(kingdom).stream()
+                                                    .filter(t -> t.getLevel()
+                                                    .equals(troopLevel)) 
+                                                    .collect(Collectors.toList());
+        return troopsOfKingdomWithTheGivenLevel;
     }
 }
 
