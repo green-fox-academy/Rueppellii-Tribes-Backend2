@@ -15,9 +15,9 @@ public class CustomCorsFilter extends CorsFilter {
     private static UrlBasedCorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.setMaxAge(36000L);
+        config.addAllowedOrigin("Origin");
+        config.addAllowedHeader("Content-Type, Accept, X-Requested-With, remember-me");
+        config.setMaxAge(3600L);
         config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", config);
