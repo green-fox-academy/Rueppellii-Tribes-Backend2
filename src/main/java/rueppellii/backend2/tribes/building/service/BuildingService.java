@@ -99,18 +99,28 @@ public class BuildingService {
                 .collect(Collectors.toList()))).getLevel();
     }
 
+//    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
+//        Integer numberOfLevelOneBarracks = 0;
+//        Integer sumofLevelOfBarracks = 0;
+//        for (Building barracks : kingdom.getKingdomsBuildings()) {
+//            if (barracks.getType().getName().toUpperCase().equals("BARRACKS")) {
+//                sumofLevelOfBarracks += barracks.getLevel();
+//                if (barracks.getLevel().equals(1L)) {
+//                    numberOfLevelOneBarracks++;
+//                }
+//            }
+//        }
+//        return sumofLevelOfBarracks - numberOfLevelOneBarracks;
+//    }
+
     public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
-        Integer numberOfLevelOneBarracks = 0;
-        Integer sumofLevelOfBarracks = 0;
-        for (Building barracks : kingdom.getKingdomsBuildings()) {
-            if (barracks.getType().getName().toUpperCase().equals("BARRACKS")) {
-                sumofLevelOfBarracks += barracks.getLevel();
-                if (barracks.getLevel().equals(1L)) {
-                    numberOfLevelOneBarracks++;
-                }
-            }
-        }
-        return sumofLevelOfBarracks - numberOfLevelOneBarracks;
+        Integer numberOfLevelOneBarracks = (int) kingdom.getKingdomsBuildings()
+                .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
+                .filter(building -> building.getLevel().equals(1)).count();
+        Integer sumOfLevelOfBarracks = kingdom.getKingdomsBuildings()
+                .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
+                .mapToInt(Building::getLevel).sum();
+        return sumOfLevelOfBarracks - numberOfLevelOneBarracks;
     }
 
     public Double getTroopUpgradeTimeMultiplier(Kingdom kingdom) {

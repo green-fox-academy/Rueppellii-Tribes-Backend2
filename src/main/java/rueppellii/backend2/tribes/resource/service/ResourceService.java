@@ -66,7 +66,7 @@ public class ResourceService {
         starterResources.forEach(resource -> resource.setResourcesKingdom(kingdom));
         return starterResources;
     }
-
+    //TODO: Archie: Fix resource service to update resourcePerMinute in GOLD and FOOD entities
     public void updateResources(Kingdom kingdom) {
         List<Resource> resources = kingdom.getKingdomsResources();
         for (Resource r : resources) {
