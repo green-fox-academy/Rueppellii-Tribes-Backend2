@@ -3,13 +3,7 @@ package rueppellii.backend2.tribes.gameUtility.purchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
-import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
-import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
-import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
-import rueppellii.backend2.tribes.resource.utility.ResourceType;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
@@ -19,6 +13,7 @@ import java.util.List;
 
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_PRICE;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.TROOP_PRICE;
+
 
 @Service
 public class PurchaseService {
@@ -40,12 +35,13 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeTroops(List<Troop> troopsForUpgrade, Integer level, Kingdom kingdom) throws NoResourceException, TroopNotFoundException {
+    public void upgradeTroops(List<Troop> troopsForUpgrade) throws NoResourceException, TroopNotFoundException {
         int amountOfTroopToUpgrade = troopsForUpgrade.size();
-        Integer desiredLevel = level + 1;
-        Integer upgradePrice = TROOP_PRICE * (level + 1) * amountOfTroopToUpgrade;
-        if (resourceService.hasEnoughGold(kingdom.getId(), upgradePrice)) {
-            resourceService.minusGoldAmount(upgradePrice, kingdom.getId());
+        Integer levelOfTroops = troopsForUpgrade.get(0).getLevel();
+        Long kingdomId = troopsForUpgrade.get(0).getTroopsKingdom().getId();
+        Integer upgradePrice = TROOP_PRICE * (levelOfTroops + 1) * amountOfTroopToUpgrade;
+        if (resourceService.hasEnoughGold(kingdomId, upgradePrice)) {
+            resourceService.minusGoldAmount(upgradePrice, kingdomId);
             return;
         }
         throw new NoResourceException("You don't have enough gold!");

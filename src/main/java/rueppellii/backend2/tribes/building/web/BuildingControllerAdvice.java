@@ -32,13 +32,6 @@ public class BuildingControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse troopNotFoundHandler(TroopNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
     @ExceptionHandler(BuildingNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
@@ -72,4 +65,5 @@ public class BuildingControllerAdvice {
     ErrorResponse InvalidUpgradeEnumHandler(UpgradeFailedException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
 }
