@@ -20,7 +20,7 @@ public class RoleService {
         return roleRepository.findById(id).orElseThrow(() -> new UserRoleNotFoundException("User role found by this id: " + id));
     }
 
-    public void saveRole(ApplicationUserRole role) {
-        roleRepository.save(role);
+    public void saveRole(ApplicationUserRole applicationUserRole) {
+        roleRepository.save(applicationUserRole);
     }
 }
