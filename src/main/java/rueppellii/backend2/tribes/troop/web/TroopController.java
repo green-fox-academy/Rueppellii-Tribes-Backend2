@@ -60,12 +60,16 @@ public class TroopController {
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
 
+        //TODO: validate if troop really belongs to the user who makes the request
+        troopService.validateTroopsLevel(level);
+        progressionService.updateProgression(kingdom);
+
         resourceService.updateResources(kingdom);
         progressionService.updateProgression(kingdom);
 
         troopService.validateTroopsLevel(level);
         purchaseService.upgradeTroops(level, kingdom);
-        progressionService.generateTroopUpgradeModel(kingdom, troopService.getTroopsWithTheGivenLevel(level, kingdom));
+        progressionService.generateTroopUpgradeModel(level, kingdom, kingdom.getKingdomsTroops());
     }
 
     @ResponseBody

@@ -21,7 +21,6 @@ import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom/building")

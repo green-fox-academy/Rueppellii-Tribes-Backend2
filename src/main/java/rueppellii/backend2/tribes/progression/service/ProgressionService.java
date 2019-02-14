@@ -117,9 +117,10 @@ public class ProgressionService {
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
-    public void generateTroopUpgradeModel(Kingdom kingdom, List<Troop> troopForUpgrade) {
+    public void generateTroopUpgradeModel(Integer level, Kingdom kingdom, List<Troop> troops) {
+        List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
         ProgressionModel progressionModel = new ProgressionModel();
-        for (Troop troop : troopForUpgrade) {
+        for (Troop troop : troopsForUpgrade) {
             progressionModel.setGameObjectId(troop.getId());
             progressionModel.setType("TROOP"); //need a number of amount
             progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreationAndUpgrade(kingdom));

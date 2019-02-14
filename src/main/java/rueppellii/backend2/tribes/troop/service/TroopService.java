@@ -24,14 +24,6 @@ public class TroopService {
         this.troopRepository = troopRepository;
     }
 
-    public void saveTroop(Troop troop) {
-        troopRepository.save(troop);
-    }
-
-    public void deleteTroop(Long troop_id) {
-        troopRepository.deleteById(troop_id);
-    }
-
     public Troop findById(Long id) throws TroopNotFoundException {
         return troopRepository.findById(id).orElseThrow(() -> new TroopNotFoundException("Troop not found by id: " + id));
     }
@@ -50,7 +42,8 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
-    public List<Troop> getKingfomTroops(Kingdom kingdom) {
+
+    private List<Troop> getKingdomTroops(Kingdom kingdom) {
         return kingdom.getKingdomsTroops();
     }
 
@@ -61,8 +54,9 @@ public class TroopService {
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
-        return getKingfomTroops(kingdom).stream().filter(t -> t.getLevel().equals(troopLevel)).collect(Collectors.toList());
+        return getKingdomTroops(kingdom).stream()
+                .filter(t -> t.getLevel().equals(troopLevel))
+                .collect(Collectors.toList());
     }
-
 }
 
