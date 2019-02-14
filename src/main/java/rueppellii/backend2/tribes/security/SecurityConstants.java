@@ -2,7 +2,7 @@ package rueppellii.backend2.tribes.security;
 
 public class SecurityConstants {
     public static final String TOKEN_SIGNING_KEY = System.getenv("SIGNING_KEY"); // environment variable
-    public static final String AUTHENTICATION_HEADER_NAME = "Authorization";
+    public static final String AUTHENTICATION_HEADER_NAME = "x-tribes-token";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String AUTHENTICATION_URL = "/api/auth/login";
     public static final String REGISTRATION_URL = "/api/user/register";
