@@ -13,7 +13,6 @@ import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_CREATION_AND_UPGRADE_TIME;
 import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 
 @Service
@@ -52,7 +51,7 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
-    public List<Troop> getKingdomTroops(Kingdom kingdom) {
+    private List<Troop> getKingdomTroops(Kingdom kingdom) {
         return kingdom.getKingdomsTroops();
     }
 
@@ -63,7 +62,6 @@ public class TroopService {
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
-//        return troopRepository.findAllByLevelAndAndTroopsKingdom(troopLevel, kingdom);
         List<Troop> troopsOfKingdomWithTheGivenLevel = getKingdomTroops(kingdom).stream()
                                                     .filter(t -> t.getLevel()
                                                     .equals(troopLevel)) 

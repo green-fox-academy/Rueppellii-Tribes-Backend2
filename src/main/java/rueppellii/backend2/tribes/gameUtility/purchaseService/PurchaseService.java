@@ -35,7 +35,7 @@ public class PurchaseService {
         throw new NoResourceException("You don't have enough gold!");
     }
 
-    public void upgradeTroops(List<Troop> troopsForUpgrade) throws NoResourceException, TroopNotFoundException {
+    public void upgradeTroops(List<Troop> troopsForUpgrade) throws NoResourceException {
         int amountOfTroopToUpgrade = troopsForUpgrade.size();
         Integer levelOfTroops = troopsForUpgrade.get(0).getLevel();
         Long kingdomId = troopsForUpgrade.get(0).getTroopsKingdom().getId();

@@ -15,7 +15,6 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.service.TroopService;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 import java.security.Principal;
 
