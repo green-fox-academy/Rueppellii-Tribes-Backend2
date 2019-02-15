@@ -76,8 +76,8 @@ public class ResourceService {
                 r.setAmount(r.getAmount() + calculateGoldPerSecond(resourcePerMinute, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
             }
-            if (r instanceof Food && calculateFoodPerSecond(kingdom, resourcePerMinute, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateFoodPerSecond(kingdom, resourcePerMinute, elapsedSeconds));
+            if (r instanceof Food && calculateFoodPerSecond(resourcePerMinute, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateFoodPerSecond(resourcePerMinute, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
             }
         }
@@ -88,11 +88,8 @@ public class ResourceService {
         return (int) ((double) elapsedSeconds * ((double) resourcePerMinute / ONE_MINUTE_IN_SECONDS));
     }
 
-    private Integer calculateFoodPerSecond(Kingdom kingdom, Integer resourcePerMinute, Integer elapsedSeconds) {
-        if (kingdom.getKingdomsTroops() != null) {
-            return elapsedSeconds * (resourcePerMinute - kingdom.getKingdomsTroops().size()) / ONE_MINUTE_IN_SECONDS;
-        }
-        return elapsedSeconds * (resourcePerMinute / ONE_MINUTE_IN_SECONDS);
+    private Integer calculateFoodPerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
+        return (int)((double) elapsedSeconds * ((double)resourcePerMinute / ONE_MINUTE_IN_SECONDS));
     }
 
     public void setResourcePerMinute(String type, List<Resource> kingdomsResources) {
@@ -118,5 +115,11 @@ public class ResourceService {
         return (Food) Iterables.getOnlyElement(kingdomsResources.stream()
                 .filter(r -> r instanceof Food)
                 .collect(Collectors.toList()));
+    }
+
+    public void feedTheTroop(Kingdom kingdom) {
+        Food food = getFood(kingdom.getKingdomsResources());
+        food.setResourcePerMinute(food.getResourcePerMinute() - 1);
+        resourceRepository.save(food);
     }
 }

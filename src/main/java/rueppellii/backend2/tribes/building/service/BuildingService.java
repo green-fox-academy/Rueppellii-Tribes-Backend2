@@ -56,11 +56,11 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    public boolean isItTheTownhall(Building building) {
+    private boolean isItTheTownhall(Building building) {
         return building.getType().getName().toUpperCase().equals("TOWNHALL");
         }
 
-    public void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
+    private void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
         if (!isItTheTownhall(building)) {
             if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
                 throw new UpgradeFailedException("Upgrade Townhall first");
@@ -68,7 +68,7 @@ public class BuildingService {
         }
     }
 
-    public void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
+    private void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
         if (building.getLevel().equals(BUILDING_MAX_LEVEL)) {
             throw new UpgradeFailedException("Building has reached MAX level");
         }
@@ -82,13 +82,13 @@ public class BuildingService {
     }
 
     public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
-        Building buildingById = findById(progressionModel.getId());
+        Building buildingById = findById(progressionModel.getGameObjectId());
         buildingById.setLevel(buildingById.getLevel() + 1);
         resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         buildingRepository.save(buildingById);
     }
 
-    public Building findById(Long id) throws BuildingNotFoundException {
+    private Building findById(Long id) throws BuildingNotFoundException {
         return buildingRepository.findById(id).orElseThrow(() -> new BuildingNotFoundException("Building not found by id: " + id));
     }
 
@@ -99,21 +99,7 @@ public class BuildingService {
                 .collect(Collectors.toList()))).getLevel();
     }
 
-//    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
-//        Integer numberOfLevelOneBarracks = 0;
-//        Integer sumofLevelOfBarracks = 0;
-//        for (Building barracks : kingdom.getKingdomsBuildings()) {
-//            if (barracks.getType().getName().toUpperCase().equals("BARRACKS")) {
-//                sumofLevelOfBarracks += barracks.getLevel();
-//                if (barracks.getLevel().equals(1L)) {
-//                    numberOfLevelOneBarracks++;
-//                }
-//            }
-//        }
-//        return sumofLevelOfBarracks - numberOfLevelOneBarracks;
-//    }
-
-    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
+    private Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
         Integer numberOfLevelOneBarracks = (int) kingdom.getKingdomsBuildings()
                 .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
                 .filter(building -> building.getLevel().equals(1)).count();

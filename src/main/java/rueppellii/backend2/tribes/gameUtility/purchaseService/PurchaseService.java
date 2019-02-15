@@ -40,7 +40,7 @@ public class PurchaseService {
         throw new NoResourceException("Not enough gold!");
     }
 
-    public void upgradeTroops(Integer level, Kingdom kingdom) throws NoResourceException, TroopNotFoundException {
+    public void upgradeTroops(Integer level, Kingdom kingdom) throws NoResourceException {
         List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
         int amountOfTroopToUpgrade = troopsForUpgrade.size();
         Integer upgradePrice = TROOP_PRICE * (level + 1) * amountOfTroopToUpgrade;

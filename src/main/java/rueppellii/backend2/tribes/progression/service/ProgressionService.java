@@ -3,7 +3,6 @@ package rueppellii.backend2.tribes.progression.service;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
@@ -20,6 +19,8 @@ import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.List;
+
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_PROGRESSION_TIME;
 
 @Service
 public class ProgressionService {
@@ -41,7 +42,7 @@ public class ProgressionService {
         this.kingdomService = kingdomService;
     }
 
-    public List<ProgressionModel> findAllByKingdom(Kingdom kingdom) {
+    private List<ProgressionModel> findAllByKingdom(Kingdom kingdom) {
         return progressionModelRepository.findAllByProgressKingdom(kingdom);
     }
 
@@ -75,15 +76,14 @@ public class ProgressionService {
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
-    public void validateProgressionRequest(BindingResult bindingResult,
-                                           ProgressionDTO progressionDTO) throws InvalidProgressionRequestException {
-        if (bindingResult.hasErrors() || progressionDTO.getType() == null) {
-            throw new InvalidProgressionRequestException("Missing parameter: type");
-        } else if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
+    public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom) throws InvalidProgressionRequestException {
+        if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
-        } else if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
+        }
+         if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
             throw new InvalidProgressionRequestException("Only one town hall to a kingdom");
         }
+        checkIfBuildingIsAlreadyInProgress(kingdom);
     }
 
     public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom) throws InvalidProgressionRequestException {
@@ -95,35 +95,40 @@ public class ProgressionService {
     }
 
     public void generateBuildingCreationModel(Kingdom kingdom, ProgressionDTO progressionDTO) {
+        Long timeOfBuildingCreation = timeService.calculateTimeOfBuildingCreation();
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType(progressionDTO.getType());
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingCreation(kingdom));
+        progressionModel.setTimeToProgress(timeOfBuildingCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
     public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException {
         ProgressionModel progressionModel = new ProgressionModel();
         Building building = buildingService.findBuildingInKingdom(kingdom, buildingId);
+        Integer levelOfTownHall = buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings());
+        Long timeOfBuildingUpgrade = timeService.calculateTimeOfBuildingUpgrade(building.getLevel(), levelOfTownHall);
         progressionModel.setGameObjectId(buildingId);
         progressionModel.setType(building.getType().getName());
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfBuildingUpgrade(kingdom));
+        progressionModel.setTimeToProgress(timeOfBuildingUpgrade);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
     public void generateTroopCreationModel(Kingdom kingdom) {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreationAndUpgrade(kingdom));
+        progressionModel.setTimeToProgress(System.currentTimeMillis() + TROOP_PROGRESSION_TIME);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
-    public void generateTroopUpgradeModel(Integer level, Kingdom kingdom, List<Troop> troops) {
+    public void generateTroopUpgradeModel(Integer level, Kingdom kingdom) {
         List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
+        Double troopUpgradeTimeMultiplier = buildingService.getTroopUpgradeTimeMultiplier(kingdom);
+        Long timeOfTroopUpgrade = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, level);
         ProgressionModel progressionModel = new ProgressionModel();
         for (Troop troop : troopsForUpgrade) {
             progressionModel.setGameObjectId(troop.getId());
             progressionModel.setType("TROOP"); //need a number of amount
-            progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreationAndUpgrade(kingdom));
+            progressionModel.setTimeToProgress(timeOfTroopUpgrade);
             saveProgressionIntoKingdom(progressionModel, kingdom);
         }
     }
@@ -133,4 +138,5 @@ public class ProgressionService {
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
+
 }

@@ -20,6 +20,7 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -52,15 +53,14 @@ public class BuildingController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
-                               Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
+    public void createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO,
+                               Principal principal) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
 
-        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
-        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
+        progressionService.validateProgressionRequest(progressionDTO, kingdom);
 
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);

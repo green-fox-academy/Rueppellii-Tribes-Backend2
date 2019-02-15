@@ -46,8 +46,8 @@ public class TroopController {
             BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
 
-        resourceService.updateResources(kingdom);
         progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom);
 
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
@@ -59,51 +59,13 @@ public class TroopController {
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-
-        //TODO: validate if troop really belongs to the user who makes the request
-        troopService.validateTroopsLevel(level);
         progressionService.updateProgression(kingdom);
-
         resourceService.updateResources(kingdom);
-        progressionService.updateProgression(kingdom);
 
-        troopService.validateTroopsLevel(level);
+        troopService.validateUpgradeTroopRequest(level, kingdom);
+
         purchaseService.upgradeTroops(level, kingdom);
-        progressionService.generateTroopUpgradeModel(level, kingdom, kingdom.getKingdomsTroops());
+        progressionService.generateTroopUpgradeModel(level, kingdom);
     }
 
-    @ResponseBody
-    @ExceptionHandler(UsernameNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse userNotFoundHandler(UsernameNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(KingdomNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse kingdomNotFoundException(KingdomNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse troopNotFoundException(TroopNotFoundException ex)  {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(BuildingNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(NoResourceException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    ErrorResponse NoResourceHandler(NoResourceException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
 }

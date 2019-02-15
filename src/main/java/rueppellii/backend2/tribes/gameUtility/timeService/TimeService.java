@@ -1,9 +1,6 @@
 package rueppellii.backend2.tribes.gameUtility.timeService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
@@ -11,23 +8,20 @@ import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*
 @Service
 public class TimeService {
 
-    private BuildingService buildingService;
-
-    @Autowired
-    public TimeService(BuildingService buildingService) {
-        this.buildingService = buildingService;
+    public Long calculateTimeOfBuildingCreation() {
+        return System.currentTimeMillis() + BUILDING_PROGRESSION_TIME;
     }
 
-    public Long calculateTimeOfBuildingCreation(Kingdom kingdom) {
-        return System.currentTimeMillis() + (BUILDING_CREATION_TIME / buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings()));
+    public Long calculateTimeOfBuildingUpgrade(Integer buildingLevel, Integer townhallLevel) {
+        return System.currentTimeMillis() + (BUILDING_PROGRESSION_TIME * buildingLevel) / townhallLevel;
     }
 
-    public Long calculateTimeOfBuildingUpgrade(Kingdom kingdom) {
-        return System.currentTimeMillis() + (BUILDING_UPGRADE_TIME / buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings()));
+    public Long calculateTimeOfTroopCreation(Double troopUpgradeTimeMultiplier) {
+        return System.currentTimeMillis() + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier);
     }
 
-    public Long calculateTimeOfTroopCreationAndUpgrade(Kingdom kingdom) {
-        return System.currentTimeMillis() + (long) (TROOP_CREATION_AND_UPGRADE_TIME * buildingService.getTroopUpgradeTimeMultiplier(kingdom));
+    public Long calculateTimeOfTroopUpgrade(Double troopUpgradeTimeMultiplier, Integer troopLevel) {
+        return System.currentTimeMillis() + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier * troopLevel);
     }
 
     public Boolean timeIsUp(ProgressionModel progressionModel) {

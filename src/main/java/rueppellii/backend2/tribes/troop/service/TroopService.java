@@ -33,6 +33,7 @@ public class TroopService {
 
     public void createTroop(Kingdom kingdom) {
         Troop troop = makeTroop();
+        resourceService.feedTheTroop(kingdom);
         troop.setTroopsKingdom(kingdom);
         troopRepository.save(troop);
     }
@@ -49,10 +50,14 @@ public class TroopService {
         return kingdom.getKingdomsTroops();
     }
 
-    public void validateTroopsLevel(Integer troopLevel) throws InvalidProgressionRequestException {
-        if (troopLevel >= 3) {
-            throw new InvalidProgressionRequestException("Troops cannot be upgraded to level " + (troopLevel + 1));
+    public void validateUpgradeTroopRequest(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException, TroopNotFoundException {
+        if(getTroopsWithTheGivenLevel(troopLevel, kingdom).size() == 0) {
+            throw new TroopNotFoundException("Troops not found with the given level!");
         }
+        if(troopLevel == 3) {
+            throw new InvalidProgressionRequestException("Troops has reached the maximum level!");
+        }
+
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
