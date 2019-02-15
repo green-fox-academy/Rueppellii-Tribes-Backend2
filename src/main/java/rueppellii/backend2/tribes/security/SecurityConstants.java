@@ -11,5 +11,4 @@ public class SecurityConstants {
     public static final String TOKEN_ISSUER = "TRIBES2BACKEND";
     public static final Long ACCESS_TOKEN_EXP_TIME = 10L; // 10min
     public static final Long REFRESH_TOKEN_EXP_TIME = 20L; //20min
-
 }
