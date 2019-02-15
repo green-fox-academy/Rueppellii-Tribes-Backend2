@@ -55,7 +55,7 @@ public class TroopController {
             throws UsernameNotFoundException,KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        troopService.validateLevel(level);
+        troopService.validateUpgradeTroopRequest(level, kingdom);
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom);
         purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom));

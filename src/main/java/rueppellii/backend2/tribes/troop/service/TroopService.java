@@ -2,7 +2,6 @@ package rueppellii.backend2.tribes.troop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
@@ -51,22 +50,25 @@ public class TroopService {
         troopRepository.save(troop);
     }
 
+    //TODO get level: validate level, find kingdom troops.
     private List<Troop> getKingdomTroops(Kingdom kingdom) {
         return kingdom.getKingdomsTroops();
     }
 
-    public void validateLevel(Integer troopLevel) throws InvalidProgressionRequestException {
-        if (troopLevel >= 3) {
+    public void validateUpgradeTroopRequest(Integer troopLevel, Kingdom kingdom) throws InvalidProgressionRequestException, TroopNotFoundException {
+        if(troopLevel >= 3) {
             throw new InvalidProgressionRequestException("Troops cannot be upgraded to level " + (troopLevel + 1));
+        }
+        if(troopLevel > 0 && getTroopsWithTheGivenLevel(troopLevel, kingdom).size() == 0) {
+            throw new TroopNotFoundException("no troops with the given level found");
         }
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
-        List<Troop> troopsOfKingdomWithTheGivenLevel = getKingdomTroops(kingdom).stream()
-                                                    .filter(t -> t.getLevel()
-                                                    .equals(troopLevel)) 
-                                                    .collect(Collectors.toList());
-        return troopsOfKingdomWithTheGivenLevel;
+        return kingdom.getKingdomsTroops()
+                .stream()
+                .filter(t -> t.getLevel().equals(troopLevel))
+                .collect(Collectors.toList());
     }
 }
 
