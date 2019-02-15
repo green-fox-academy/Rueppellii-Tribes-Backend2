@@ -13,6 +13,7 @@ import rueppellii.backend2.tribes.user.util.ErrorResponse;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
+import rueppellii.backend2.tribes.user.util.ListUserNamesDTO;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,12 +38,15 @@ public class ApplicationUserController {
         return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
 
-    @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<ApplicationUserDTO> getUsers() {
-        return applicationUserService.getAllUsers();
+    @GetMapping("/users")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ListUserNamesDTO getAllUserName() {
+        List<String> usernames = applicationUserService.findAllUsernames();
+        ListUserNamesDTO listUserNamesDTO = new ListUserNamesDTO();
+        listUserNamesDTO.setUserNames(usernames);
+        return listUserNamesDTO;
     }
-
 
     @ResponseBody
     @ExceptionHandler(UserNameIsTakenException.class)

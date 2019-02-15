@@ -16,8 +16,15 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public ApplicationUserRole findById(Long id) throws UserRoleNotFoundException {
-        return roleRepository.findById(id).orElseThrow(() -> new UserRoleNotFoundException("User role found by this id: " + id));
+//    public ApplicationUserRole findById(Long id) throws UserRoleNotFoundException {
+//        return roleRepository.findById(id).orElseThrow(() -> new UserRoleNotFoundException("User role not found by this id: " + id));
+//    }
+
+    public ApplicationUserRole findById(Long id) {
+        if (roleRepository.findById(id).isPresent()) {
+            return roleRepository.findById(id).get();
+        }
+        return null;
     }
 
     public void saveRole(ApplicationUserRole applicationUserRole) {

@@ -95,6 +95,10 @@ public class ApplicationUserService {
 
             applicationUserRepository.save(applicationUser);
 
+            if (roleService.findById(2L) == null) {
+                createAdmin(applicationUserRole);
+            }
+
             return new RegisterResponse(applicationUser.getId(),
                     applicationUser.getUsername(),
                     applicationUser.getKingdom().getId());
@@ -104,5 +108,31 @@ public class ApplicationUserService {
 
     private Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
+    }
+
+    public List<String> findAllUsernames() {
+        List<ApplicationUser> allUsers = applicationUserRepository.findAll();
+        return allUsers.stream().map(ApplicationUser::getUsername).collect(Collectors.toList());
+    }
+
+    private void createAdmin(ApplicationUserRole applicationUserRole) {
+        ApplicationUserRole roleAdmin = new ApplicationUserRole(2L, Role.ADMIN);
+        roleService.saveRole(roleAdmin);
+        List<ApplicationUserRole> adminRoles = new ArrayList<>();
+        adminRoles.add(applicationUserRole);
+        adminRoles.add(roleAdmin);
+
+        ApplicationUserDTO adminDTO = new ApplicationUserDTO();
+        adminDTO.setUsername("admin");
+        adminDTO.setPassword("admin");
+        adminDTO.setKingdomName("admin");
+
+        ApplicationUser admin = new ApplicationUser();
+        admin.setUsername(adminDTO.getUsername());
+        admin.setPassword(encoder.encode(adminDTO.getPassword()));
+        admin.setKingdom(kingdomService.createNewKingdomAndSetNameIfNotExists(adminDTO));
+        admin.getKingdom().setApplicationUser(admin);
+        admin.setRoles(adminRoles);
+        applicationUserRepository.save(admin);
     }
 }
