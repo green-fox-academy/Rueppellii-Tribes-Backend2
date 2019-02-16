@@ -62,7 +62,7 @@ public class ResourceService {
         for (Resource r : resources) {
             Integer resourcePerMinute = r.getResourcePerMinute();
             Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
-            Long remainderSecondsInMillis = timeService.calculateRemainder(r.getUpdatedAt());
+            Long remainderSecondsInMillis = timeService.calculateRemainderInMillis(r.getUpdatedAt());
             if (calculateResourcePerSecond(resourcePerMinute, elapsedSeconds) != 0) {
                 r.setAmount(r.getAmount() + calculateResourcePerSecond(resourcePerMinute, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
