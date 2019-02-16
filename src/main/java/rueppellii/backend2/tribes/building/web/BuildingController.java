@@ -51,6 +51,7 @@ public class BuildingController {
         return dto;
     }
 
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
     public void createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO,
@@ -58,7 +59,7 @@ public class BuildingController {
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
 
         progressionService.validateProgressionRequest(progressionDTO, kingdom);
 
@@ -71,7 +72,7 @@ public class BuildingController {
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
 
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);

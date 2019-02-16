@@ -47,7 +47,7 @@ public class TroopController {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
 
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
 
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
@@ -60,7 +60,7 @@ public class TroopController {
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
 
         troopService.validateUpgradeTroopRequest(level, kingdom);
 

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
 import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
@@ -26,24 +25,18 @@ import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeRe
 public class ResourceService {
     private ResourceRepository resourceRepository;
     private TimeService timeService;
-    private KingdomService kingdomService;
 
     @Autowired
-    public ResourceService(ResourceRepository resourceRepository, TimeService timeService, KingdomService kingdomService) {
+    public ResourceService(ResourceRepository resourceRepository, TimeService timeService) {
         this.resourceRepository = resourceRepository;
         this.timeService = timeService;
-        this.kingdomService = kingdomService;
     }
 
-    public void saveResource(Resource resource) {
-        resourceRepository.save(resource);
-    }
-
-    public Resource returnResource(ResourceType type, Long id) throws NoResourceException {
+    private Resource returnResource(ResourceType type, Long id) throws NoResourceException {
         return resourceRepository.findByTypeAndResourcesKingdom_Id(type, id).orElseThrow(() -> new NoResourceException("No resource found!"));
     }
 
-    public Integer getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
+    private Integer getKingdomsGoldAmount(Long kingdomId) throws NoResourceException {
         return returnResource(ResourceType.GOLD, kingdomId).getAmount();
     }
 
@@ -54,7 +47,7 @@ public class ResourceService {
     public void minusGoldAmount(Integer gold, Long kingdomId) throws NoResourceException {
         Resource resource = returnResource(ResourceType.GOLD, kingdomId);
         resource.setAmount(resource.getAmount() - gold);
-        saveResource(resource);
+        resourceRepository.save(resource);
     }
 
     public static List<Resource> starterKit(Kingdom kingdom) {
@@ -66,30 +59,21 @@ public class ResourceService {
         return starterResources;
     }
 
-    public void updateResources(Kingdom kingdom) {
-        List<Resource> resources = kingdom.getKingdomsResources();
+    public void updateResources(List<Resource> resources) {
         for (Resource r : resources) {
             Integer resourcePerMinute = r.getResourcePerMinute();
             Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
             Long remainderSecondsInMillis = timeService.calculateRemainder(r.getUpdatedAt());
-            if (r instanceof Gold && calculateGoldPerSecond(resourcePerMinute, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateGoldPerSecond(resourcePerMinute, elapsedSeconds));
+            if (calculateResourcePerSecond(resourcePerMinute, elapsedSeconds) != 0) {
+                r.setAmount(r.getAmount() + calculateResourcePerSecond(resourcePerMinute, elapsedSeconds));
                 r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
-            }
-            if (r instanceof Food && calculateFoodPerSecond(resourcePerMinute, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateFoodPerSecond(resourcePerMinute, elapsedSeconds));
-                r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
+                resourceRepository.save(r);
             }
         }
-        kingdomService.save(kingdom);
     }
 
-    private Integer calculateGoldPerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
+    private Integer calculateResourcePerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
         return (int) ((double) elapsedSeconds * ((double) resourcePerMinute / ONE_MINUTE_IN_SECONDS));
-    }
-
-    private Integer calculateFoodPerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
-        return (int)((double) elapsedSeconds * ((double)resourcePerMinute / ONE_MINUTE_IN_SECONDS));
     }
 
     public void setResourcePerMinute(String type, List<Resource> kingdomsResources) {
