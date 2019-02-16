@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.resource.presistence.model.Food;
 import rueppellii.backend2.tribes.resource.presistence.model.Gold;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
