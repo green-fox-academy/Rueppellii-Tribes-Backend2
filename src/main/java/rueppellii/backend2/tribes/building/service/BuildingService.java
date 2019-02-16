@@ -82,10 +82,10 @@ public class BuildingService {
     }
 
     public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
-        Building buildingById = findById(progressionModel.getGameObjectId());
-        buildingById.setLevel(buildingById.getLevel() + 1);
+        Building building = findById(progressionModel.getGameObjectId());
+        building.setLevel(building.getLevel() + 1);
         resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
-        buildingRepository.save(buildingById);
+        buildingRepository.save(building);
     }
 
     private Building findById(Long id) throws BuildingNotFoundException {
@@ -109,7 +109,7 @@ public class BuildingService {
         return sumOfLevelOfBarracks - numberOfLevelOneBarracks;
     }
 
-    public Double getTroopUpgradeTimeMultiplier(Kingdom kingdom) {
+    public Double getTroopProgressionTimeMultiplier(Kingdom kingdom) {
         return Math.pow(0.95, sumOfLevelsOfUpgradedBarracks(kingdom));
     }
 

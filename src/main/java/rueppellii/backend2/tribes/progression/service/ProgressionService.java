@@ -20,8 +20,6 @@ import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.List;
 
-import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_PROGRESSION_TIME;
-
 @Service
 public class ProgressionService {
 
@@ -42,12 +40,8 @@ public class ProgressionService {
         this.kingdomService = kingdomService;
     }
 
-    private List<ProgressionModel> findAllByKingdom(Kingdom kingdom) {
-        return progressionModelRepository.findAllByProgressKingdom(kingdom);
-    }
-
     public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
-        List<ProgressionModel> progressions = findAllByKingdom(kingdom);
+        List<ProgressionModel> progressions = kingdom.getKingdomsProgresses();
         for (ProgressionModel p : progressions) {
             if (timeService.timeIsUp(p)) {
                 progress(p, kingdom);
@@ -116,13 +110,15 @@ public class ProgressionService {
     public void generateTroopCreationModel(Kingdom kingdom) {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType("TROOP");
-        progressionModel.setTimeToProgress(System.currentTimeMillis() + TROOP_PROGRESSION_TIME);
+        Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
+        Long timeOfTroopCreationTime = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
+        progressionModel.setTimeToProgress(timeOfTroopCreationTime);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
     public void generateTroopUpgradeModel(Integer level, Kingdom kingdom) {
         List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
-        Double troopUpgradeTimeMultiplier = buildingService.getTroopUpgradeTimeMultiplier(kingdom);
+        Double troopUpgradeTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopUpgrade = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, level);
         ProgressionModel progressionModel = new ProgressionModel();
         for (Troop troop : troopsForUpgrade) {
