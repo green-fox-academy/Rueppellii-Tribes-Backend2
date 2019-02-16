@@ -41,8 +41,9 @@ public class ProgressionService {
     }
 
     public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
-        List<ProgressionModel> progressions = kingdom.getKingdomsProgresses();
+        List<ProgressionModel> progressions = progressionModelRepository.findAllByProgressKingdom(kingdom);
         for (ProgressionModel p : progressions) {
+            System.out.println(p.getType());
             if (timeService.timeIsUp(p)) {
                 progress(p, kingdom);
             }
