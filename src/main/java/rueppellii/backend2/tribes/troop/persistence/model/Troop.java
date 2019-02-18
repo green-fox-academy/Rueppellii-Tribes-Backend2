@@ -3,6 +3,7 @@ package rueppellii.backend2.tribes.troop.persistence.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
+import rueppellii.backend2.tribes.common.Upgradeable;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import javax.persistence.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "troops")
-public class Troop {
+public class Troop implements Upgradeable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +34,13 @@ public class Troop {
         this.defense = 1;
     }
 
+    @Override
+    public void upgrade() {
+
+    }
+
+    @Override
+    public void create() {
+
+    }
 }

@@ -12,4 +12,9 @@ public class Mine extends Building {
         setType(BuildingType.MINE);
         setHP(5);
     }
+
+    @Override
+    public void upgrade() {
+        setLevel(getLevel() +1);
+    }
 }

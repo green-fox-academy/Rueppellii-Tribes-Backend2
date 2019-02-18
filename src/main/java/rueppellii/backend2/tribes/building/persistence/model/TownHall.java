@@ -12,4 +12,9 @@ public class TownHall extends Building {
         setType(BuildingType.TOWNHALL);
         setHP(10);
     }
+
+    @Override
+    public void upgrade() {
+
+    }
 }

@@ -12,4 +12,9 @@ public class Barracks extends Building {
         setType(BuildingType.BARRACKS);
         setHP(100);
     }
+
+    @Override
+    public void upgrade() {
+
+    }
 }

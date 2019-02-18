@@ -7,7 +7,7 @@ public enum BuildingType {
     TOWNHALL {
         @Override
         public Building buildBuilding() {
-                return new TownHall();
+            return new TownHall();
         }
     }, FARM {
         @Override
