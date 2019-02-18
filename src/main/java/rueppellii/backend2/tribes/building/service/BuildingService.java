@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
-import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_CREATION_AND_UPGRADE_TIME;
 
 @Service
 public class BuildingService {
@@ -53,12 +52,12 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    public boolean isItTheTownhall(Building building) {
+    public boolean isTownhall(Building building) {
         return building.getType().getName().toUpperCase().equals("TOWNHALL");
         }
 
     public void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
-        if (!isItTheTownhall(building)) {
+        if (!isTownhall(building)) {
             if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
                 throw new UpgradeFailedException("Upgrade Townhall first");
             }
