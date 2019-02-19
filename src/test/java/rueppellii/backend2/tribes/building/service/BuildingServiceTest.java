@@ -16,6 +16,8 @@ import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
+import rueppellii.backend2.tribes.progression.service.ProgressionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
@@ -26,9 +28,16 @@ class BuildingServiceTest {
     private Kingdom kingdom;
     private Building farm;
     private ProgressionModel progressionModel;
+    private Building barracks;
 
     @InjectMocks
     BuildingService buildingService;
+
+    @Mock
+    ProgressionService progressionService;
+
+    @Mock
+    ProgressionModelRepository progressionModelRepository;
 
     @Mock
     BuildingRepository buildingRepository;
@@ -49,7 +58,9 @@ class BuildingServiceTest {
         kingdom.setKingdomsBuildings(BuildingService.starterKit(kingdom));
         townhall = makeBuilding(BuildingType.TOWNHALL);
         farm = makeBuilding(BuildingType.FARM);
+        barracks = makeBuilding(BuildingType.BARRACKS);
         kingdom.getKingdomsBuildings().add(farm);
+        progressionModel = new ProgressionModel();
     }
 
     @Test
@@ -59,20 +70,12 @@ class BuildingServiceTest {
     @Test
     void isTownhall() {
         assertTrue(buildingService.isTownhall(townhall));
-    }
-
-    @Test
-    void isNotTownhall() {
         assertFalse(buildingService.isTownhall(farm));
     }
 
     @Test
-    void buildingIsSameLevelAsTownhall() {
+    void isBelowTownhallLevel() {
         assertThrows(UpgradeFailedException.class, () -> buildingService.checkIfBuildingIsUnderTownhallLevel(kingdom, farm));
-    }
-
-    @Test
-    void buildingIsBelowTownhallLevel() {
         farm.setLevel(0);
         assertDoesNotThrow(() -> buildingService.checkIfBuildingIsUnderTownhallLevel(kingdom, farm));
     }
@@ -87,18 +90,13 @@ class BuildingServiceTest {
 
     @Test
     void upgradeBuilding() throws BuildingNotFoundException {
-        Integer expectedLevel = farm.getLevel() + 1;
-        progressionModel.setType("FARM");
-        progressionModel.setProgressKingdom(kingdom);
-        progressionModel.setGameObjectId(farm.getId());
-        Mockito.when(buildingService.findById(progressionModel.getGameObjectId())).thenReturn(farm);
-        buildingService.upgradeBuilding(progressionModel);
-        Integer upgradedBuildingLevel = farm.getLevel();
-        assertEquals(expectedLevel, upgradedBuildingLevel);
+        Mockito.when(buildingService.findById(progressionModel.getId())).thenReturn(farm);
+        farm.setLevel(2);
+        assertEquals(farm, buildingService.upgradeBuilding(progressionModel));
     }
 
     @Test
-    void levelOfTownHallIsOne() {
+    void getLevelOfTownHall() {
         Integer expectedLevel = 1;
         Integer townhallLevel = buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings());
         assertEquals(expectedLevel, townhallLevel);
@@ -106,10 +104,20 @@ class BuildingServiceTest {
 
     @Test
     void sumOfLevelsOfUpgradedBarracks() {
+        barracks.setLevel(3);
+        kingdom.getKingdomsBuildings().add(barracks);
+        Integer expected = 3;
+        Integer method = buildingService.sumOfLevelsOfUpgradedBarracks(kingdom);
+        assertEquals(expected, method);
     }
 
     @Test
     void getTroopUpgradeTimeMultiplier() {
+        barracks.setLevel(2);
+        kingdom.getKingdomsBuildings().add(barracks);
+        Double multiplier = buildingService.getTroopUpgradeTimeMultiplier(kingdom);
+        Double expected = 0.9025;
+        assertEquals(expected, multiplier);
     }
 
     @Test
