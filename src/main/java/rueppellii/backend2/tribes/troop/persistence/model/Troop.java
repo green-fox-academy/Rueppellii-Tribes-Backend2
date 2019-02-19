@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "troops")
-public class Troop implements Upgradeable {
+public class Troop extends Upgradeable<Troop> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class Troop implements Upgradeable {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Troop troop) {
 
     }
 

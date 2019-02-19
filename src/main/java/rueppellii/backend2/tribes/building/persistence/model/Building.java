@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "buildings")
-public abstract class Building implements Upgradeable<Building> {
+public abstract class Building extends Upgradeable<Building> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

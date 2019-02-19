@@ -1,6 +1,6 @@
 package rueppellii.backend2.tribes.common;
 
-public interface Updateable {
+public abstract class Updateable<T,U> {
 
-    void update();
+    abstract void update(T t, U u);
 }

@@ -1,7 +1,20 @@
 package rueppellii.backend2.tribes.common;
 
-public interface Upgradeable<T> {
+import lombok.Getter;
+import lombok.Setter;
 
-    void upgrade(T t);
-    void create();
+import javax.persistence.*;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "upgradeables")
+public abstract class Upgradeable<T> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    public abstract void upgrade(T t);
+    public abstract void create();
 }

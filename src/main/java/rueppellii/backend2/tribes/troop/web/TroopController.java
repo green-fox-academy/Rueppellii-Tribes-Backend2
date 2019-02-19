@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.common.Updateable;
+import rueppellii.backend2.tribes.common.Upgradeable;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
@@ -45,6 +48,7 @@ public class TroopController {
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+
 
         progressionService.updateProgression(kingdom);
         resourceService.updateResources(kingdom.getKingdomsResources());

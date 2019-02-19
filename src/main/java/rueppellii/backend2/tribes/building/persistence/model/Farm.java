@@ -13,7 +13,12 @@ public class Farm extends Building{
     }
 
     @Override
-    public void upgrade() {
-        setLevel(getLevel() +1);
+    public void upgrade(Building building) {
+
+    }
+
+    @Override
+    public void create() {
+
     }
 }
