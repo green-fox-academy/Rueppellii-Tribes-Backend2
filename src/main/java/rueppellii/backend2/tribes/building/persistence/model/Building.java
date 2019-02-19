@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
-import rueppellii.backend2.tribes.common.Upgradeable;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 
 import javax.persistence.*;
@@ -15,7 +14,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "buildings")
-public abstract class Building implements Upgradeable<Building> {
+public abstract class Building {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +35,4 @@ public abstract class Building implements Upgradeable<Building> {
     public Building() {
         this.level = 1;
     }
-
-
 }

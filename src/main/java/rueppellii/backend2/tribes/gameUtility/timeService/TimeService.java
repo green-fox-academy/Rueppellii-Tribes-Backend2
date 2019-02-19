@@ -28,14 +28,13 @@ public class TimeService {
         return progressionModel.getTimeToProgress() <= System.currentTimeMillis();
     }
 
-    public Integer calculateElapsedSeconds(Long updatedAt){
-        long elapsedTimeInMillis = System.currentTimeMillis() - updatedAt;
-        return (int) ((double) elapsedTimeInMillis / ONE_SECOND_IN_MILLIS);
+    public Long calculateElapsedMillis(Long updatedAt){
+        return (System.currentTimeMillis() - updatedAt);
     }
 
-    public Long calculateRemainderInMillis(Long updatedAt) {
-        long elapsedTimeInMillis = System.currentTimeMillis() - updatedAt;
-        return elapsedTimeInMillis % ONE_SECOND_IN_MILLIS;
+    public Long calculateRemainderMillis(Integer resourcePerMinute, Long elapsedMillis){
+        double remainderResource = ((double) elapsedMillis * ((double) resourcePerMinute / ONE_MINUTE_IN_MILLIS)) % 1;
+        return ((long)(remainderResource * ONE_MINUTE_IN_MILLIS) / resourcePerMinute);
     }
 
 }

@@ -4,18 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
+import rueppellii.backend2.tribes.gameUtility.gameChain.GameChainService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
-import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
-import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
-import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.troop.service.TroopService;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
+import rueppellii.backend2.tribes.troop.utility.ListKingdomsTroopsDTO;
 
 import java.security.Principal;
 
@@ -23,20 +19,22 @@ import java.security.Principal;
 @RequestMapping("/api/kingdom/troop")
 public class TroopController {
 
+    private GameChainService gameChainService;
     private KingdomService kingdomService;
-    private ProgressionService progressionService;
-    private PurchaseService purchaseService;
-    private ResourceService resourceService;
-    private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService,
-                           PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
+    public TroopController(GameChainService gameChainService, KingdomService kingdomService) {
+        this.gameChainService = gameChainService;
         this.kingdomService = kingdomService;
-        this.progressionService = progressionService;
-        this.purchaseService = purchaseService;
-        this.resourceService = resourceService;
-        this.troopService = troopService;
+    }
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public ListKingdomsTroopsDTO showTroops(Principal principal)
+            throws KingdomNotFoundException {
+        ListKingdomsTroopsDTO dto = new ListKingdomsTroopsDTO();
+        dto.setTroops(kingdomService.findByPrincipal(principal).getKingdomsTroops());
+        return dto;
     }
 
     @PostMapping("")
@@ -44,13 +42,7 @@ public class TroopController {
     public void createTroop(Principal principal)
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException {
-        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-
-        progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom.getKingdomsResources());
-
-        purchaseService.buyTroop(kingdom.getId());
-        progressionService.generateTroopCreationModel(kingdom);
+        gameChainService.createTroopGameChain(principal);
     }
 
     @PutMapping("{level}")
@@ -58,14 +50,7 @@ public class TroopController {
     public void upgradeTroop(@PathVariable Integer level, Principal principal)
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
-        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom.getKingdomsResources());
-
-        troopService.validateUpgradeTroopRequest(level, kingdom);
-
-        purchaseService.upgradeTroops(level, kingdom);
-        progressionService.generateTroopUpgradeModel(level, kingdom);
+        gameChainService.upgradeTroopGameChain(level, principal);
     }
 
 }

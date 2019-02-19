@@ -23,12 +23,14 @@ public class KingdomService {
         this.kingdomRepository = kingdomRepository;
     }
 
-    public Kingdom findByUsername(String loggedInUser) throws KingdomNotFoundException {
-        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by user: " + loggedInUser));
+    private Kingdom findByUsername(String loggedInUser) throws KingdomNotFoundException {
+        return kingdomRepository.findByApplicationUser_Username(loggedInUser).orElseThrow(() ->
+                new KingdomNotFoundException("Kingdom not found by user: " + loggedInUser));
     }
 
-    public Kingdom findById(Long id) throws KingdomNotFoundException {
-        return kingdomRepository.findById(id).orElseThrow(() -> new KingdomNotFoundException("Kingdom not found by id: " + id));
+    private Kingdom findById(Long id) throws KingdomNotFoundException {
+        return kingdomRepository.findById(id).orElseThrow(() ->
+                new KingdomNotFoundException("Kingdom not found by id: " + id));
     }
 
     public void save(Kingdom kingdom) {
@@ -61,5 +63,4 @@ public class KingdomService {
         Kingdom kingdom = findById(id);
         return mapKingdomDTO(kingdom);
     }
-
 }

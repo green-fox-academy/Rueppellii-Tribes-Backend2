@@ -38,7 +38,7 @@ public class BuildingService {
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(progressionModel.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
-                resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
+                resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
                 building.setBuildingsKingdom(kingdom);
                 buildingRepository.save(building);
                 return;
@@ -56,12 +56,12 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    private boolean isItTheTownhall(Building building) {
+    private Boolean isTownhall(Building building) {
         return building.getType().getName().toUpperCase().equals("TOWNHALL");
         }
 
     private void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
-        if (!isItTheTownhall(building)) {
+        if (!isTownhall(building)) {
             if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
                 throw new UpgradeFailedException("Upgrade Townhall first");
             }
@@ -74,7 +74,8 @@ public class BuildingService {
         }
     }
 
-    public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException, UpgradeFailedException {
+    public Building validateBuildingUpgrade(Kingdom kingdom, Long buildingId)
+            throws BuildingNotFoundException, UpgradeFailedException {
         Building building = findBuildingInKingdom(kingdom, buildingId);
         checkIfBuildingIsUnderMaxLevel(building);
         checkIfBuildingIsUnderTownhallLevel(kingdom, building);
@@ -89,11 +90,12 @@ public class BuildingService {
     }
 
     private Building findById(Long id) throws BuildingNotFoundException {
-        return buildingRepository.findById(id).orElseThrow(() -> new BuildingNotFoundException("Building not found by id: " + id));
+        return buildingRepository.findById(id).orElseThrow(() ->
+                new BuildingNotFoundException("Building not found by id: " + id));
     }
 
     public Integer getLevelOfTownHall(List<Building> kingdomsBuildings) {
-        return ((TownHall) Iterables.getOnlyElement(kingdomsBuildings
+        return (Iterables.getOnlyElement(kingdomsBuildings
                 .stream()
                 .filter(building -> building instanceof TownHall)
                 .collect(Collectors.toList()))).getLevel();
@@ -114,7 +116,8 @@ public class BuildingService {
     }
 
     public static List<Building> starterKit(Kingdom kingdom) {
-        List<BuildingType> starterBuildingTypes = Arrays.stream(BuildingType.values()).limit(4).collect(Collectors.toList());
+        List<BuildingType> starterBuildingTypes = Arrays.stream(BuildingType.values())
+                .limit(4).collect(Collectors.toList());
         List<Building> starterBuildings = new ArrayList<>();
         for (BuildingType t : starterBuildingTypes) {
             starterBuildings.add(makeBuilding(t));

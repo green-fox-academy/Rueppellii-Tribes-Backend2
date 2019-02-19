@@ -3,7 +3,6 @@ package rueppellii.backend2.tribes.progression.persistence;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
-import rueppellii.backend2.tribes.common.Updateable;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 
 import javax.persistence.*;
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "progression")
-public class ProgressionModel implements Updateable {
+public class ProgressionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +25,4 @@ public class ProgressionModel implements Updateable {
     @ManyToOne
     @JoinColumn(name = "kingdom_id")
     private Kingdom progressKingdom;
-
-    @Override
-    public void update() {
-
-    }
 }

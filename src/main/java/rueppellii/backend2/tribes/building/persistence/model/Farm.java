@@ -11,9 +11,4 @@ public class Farm extends Building{
         setType(BuildingType.FARM);
         setHP(1);
     }
-
-    @Override
-    public void upgrade() {
-        setLevel(getLevel() +1);
-    }
 }

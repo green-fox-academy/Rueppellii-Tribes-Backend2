@@ -41,11 +41,8 @@ public class ProgressionService {
     }
 
     public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
-        System.out.println("kingdomprogresses:");
-        List<ProgressionModel> progressions = kingdom.getKingdomsProgresses();
-        System.out.println(kingdom.getKingdomsProgresses().size());
+        List<ProgressionModel> progressions = progressionModelRepository.findAllByProgressKingdom(kingdom);
         for (ProgressionModel p : progressions) {
-            System.out.println(p.getType());
             if (timeService.timeIsUp(p)) {
                 progress(p, kingdom);
             }
@@ -57,7 +54,7 @@ public class ProgressionService {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
-                progressionModelRepository.deleteById(progressionModel.getId());
+                progressionModelRepository.delete(progressionModel);
                 return;
             }
             buildingService.createBuilding(progressionModel, kingdom);
@@ -70,7 +67,7 @@ public class ProgressionService {
             return;
         }
         buildingService.upgradeBuilding(progressionModel, kingdom);
-        progressionModelRepository.deleteById(progressionModel.getId());
+        progressionModelRepository.delete(progressionModel);
     }
 
     public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom) throws InvalidProgressionRequestException {
@@ -137,5 +134,4 @@ public class ProgressionService {
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
-
 }
