@@ -1,19 +1,11 @@
 package rueppellii.backend2.tribes.security.auth.ajax;
 
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -23,7 +15,6 @@ import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 
 @Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
-
 
     private BCryptPasswordEncoder encoder;
     private ApplicationUserService applicationUserService;
