@@ -15,7 +15,11 @@ public class CustomCorsFilter extends CorsFilter {
     private static UrlBasedCorsConfigurationSource configurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+<<<<<<< HEAD
         config.addAllowedOrigin("*");  //front end
+=======
+        config.addAllowedOrigin("http://localhost:3000");
+>>>>>>> 1b2baebdfb63c5d32f5f4b8e742db214cc2e2922
         config.addAllowedHeader("*");
         config.setMaxAge(36000L);
         config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"));

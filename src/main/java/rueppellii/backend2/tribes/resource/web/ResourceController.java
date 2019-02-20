@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
+import rueppellii.backend2.tribes.resource.utility.ResourceDTO;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,19 +21,19 @@ import java.util.List;
 @RequestMapping("/api/kingdom/resources")
 public class ResourceController {
 
-    private ResourceService resourceService;
     private KingdomService kingdomService;
 
     @Autowired
-    public ResourceController(ResourceService resourceService, KingdomService kingdomService) {
-        this.resourceService = resourceService;
+    public ResourceController(KingdomService kingdomService) {
         this.kingdomService = kingdomService;
     }
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<Resource> listKingdomsResources(Principal principal) throws KingdomNotFoundException {
+    public ResourceDTO listKingdomsResources(Principal principal) throws KingdomNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        return kingdom.getKingdomsResources();
+        ResourceDTO resourceDTO = new ResourceDTO();
+        resourceDTO.setResources(kingdom.getKingdomsResources());
+        return resourceDTO;
     }
 }

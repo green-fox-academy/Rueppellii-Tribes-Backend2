@@ -34,7 +34,7 @@ public class KingdomController {
     public KingdomDTO showKingdom(Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
         return kingdomService.mapKingdomDTO(kingdom);
     }
 

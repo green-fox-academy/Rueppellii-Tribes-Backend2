@@ -1,6 +1,10 @@
 package rueppellii.backend2.tribes.troop.web;
 
 import org.springframework.http.HttpStatus;
+<<<<<<< HEAD
+=======
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+>>>>>>> 1b2baebdfb63c5d32f5f4b8e742db214cc2e2922
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +19,16 @@ import rueppellii.backend2.tribes.user.util.ErrorResponse;
 public class TroopControllerAdvice {
 
     @ResponseBody
+<<<<<<< HEAD
+=======
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse userNotFoundHandler(UsernameNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+>>>>>>> 1b2baebdfb63c5d32f5f4b8e742db214cc2e2922
     @ExceptionHandler(KingdomNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ErrorResponse kingdomNotFoundException(KingdomNotFoundException ex) {

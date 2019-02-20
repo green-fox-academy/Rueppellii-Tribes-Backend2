@@ -40,11 +40,14 @@ public class TroopController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+    public void createTroop(Principal principal)
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
@@ -52,6 +55,7 @@ public class TroopController {
     @PutMapping("{level}")
     @ResponseStatus(HttpStatus.OK)
     public void upgradeTroop(@PathVariable Integer level, Principal principal)
+<<<<<<< HEAD
             throws UsernameNotFoundException,KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
@@ -61,4 +65,18 @@ public class TroopController {
         purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom));
         progressionService.generateTroopUpgradeModel(troopService.getTroopsWithTheGivenLevel(level, kingdom));
     }
+=======
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
+        troopService.validateUpgradeTroopRequest(level, kingdom);
+
+        purchaseService.upgradeTroops(level, kingdom);
+        progressionService.generateTroopUpgradeModel(level, kingdom);
+    }
+
+>>>>>>> 1b2baebdfb63c5d32f5f4b8e742db214cc2e2922
 }

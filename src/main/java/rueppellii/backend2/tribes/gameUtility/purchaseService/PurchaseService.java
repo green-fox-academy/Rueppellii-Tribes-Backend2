@@ -32,9 +32,10 @@ public class PurchaseService {
             resourceService.minusGoldAmount(TROOP_PRICE, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
+<<<<<<< HEAD
     public void upgradeTroops(List<Troop> troopsForUpgrade) throws NoResourceException {
         int amountOfTroopToUpgrade = troopsForUpgrade.size();
         Integer levelOfTroops = troopsForUpgrade.get(0).getLevel();
@@ -42,9 +43,17 @@ public class PurchaseService {
         Integer upgradePrice = TROOP_PRICE * (levelOfTroops + 1) * amountOfTroopToUpgrade;
         if (resourceService.hasEnoughGold(kingdomId, upgradePrice)) {
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
+=======
+    public void upgradeTroops(Integer level, Kingdom kingdom) throws NoResourceException {
+        List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
+        int amountOfTroopToUpgrade = troopsForUpgrade.size();
+        Integer upgradePrice = TROOP_PRICE * (level + 1) * amountOfTroopToUpgrade;
+        if (resourceService.hasEnoughGold(kingdom.getId(), upgradePrice)) {
+            resourceService.minusGoldAmount(upgradePrice, kingdom.getId());
+>>>>>>> 1b2baebdfb63c5d32f5f4b8e742db214cc2e2922
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
     public void buyBuilding(Long kingdomId) throws NoResourceException {
@@ -52,7 +61,7 @@ public class PurchaseService {
             resourceService.minusGoldAmount(BUILDING_PRICE, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
     public void payForBuildingUpgrade(Long kingdomId, Building building) throws NoResourceException {
@@ -61,6 +70,6 @@ public class PurchaseService {
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 }
