@@ -15,7 +15,7 @@ public class KingdomDTO {
 
     private Long id;
     private String name;
-    private List<Location> kingdomsLocation;
+    private List<Location> kingdomsLocations;
     private List<Troop> kingdomsTroops;
     private List<Resource> kingdomsResources;
     private List<Building> kingdomsBuildings;
