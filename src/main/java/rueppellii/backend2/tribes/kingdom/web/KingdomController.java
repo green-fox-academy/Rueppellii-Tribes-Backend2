@@ -9,11 +9,17 @@ import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomNameDTO;
+import rueppellii.backend2.tribes.location.persistence.model.Location;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
+import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
+import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom")
@@ -51,4 +57,13 @@ public class KingdomController {
     public KingdomDTO showOtherKingdom(@PathVariable Long id) throws KingdomNotFoundException {
         return kingdomService.findOtherKingdom(id);
     }
+
+    @PostMapping("/register/map")
+    @ResponseStatus(HttpStatus.OK)
+    public void addLocationToKingdom(@RequestBody @Valid Location location, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, InvalidProgressionRequestException {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        List<Location> locations = new ArrayList<>();
+        kingdom.setKingdomsLocation(locations);
+    }
+
 }
