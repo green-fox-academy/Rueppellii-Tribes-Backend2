@@ -14,6 +14,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
@@ -28,16 +29,18 @@ public class ProgressionService {
     private TroopService troopService;
     private TimeService timeService;
     private KingdomService kingdomService;
+    private ResourceService resourceService;
 
     @Autowired
     public ProgressionService(ProgressionModelRepository progressionModelRepository,
                               BuildingService buildingService,
-                              TroopService troopService, TimeService timeService, KingdomService kingdomService) {
+                              TroopService troopService, TimeService timeService, KingdomService kingdomService, ResourceService resourceService) {
         this.progressionModelRepository = progressionModelRepository;
         this.buildingService = buildingService;
         this.troopService = troopService;
         this.timeService = timeService;
         this.kingdomService = kingdomService;
+        this.resourceService = resourceService;
     }
 
     public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
@@ -54,10 +57,12 @@ public class ProgressionService {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
+                resourceService.feedTheTroop(kingdom);
                 progressionModelRepository.delete(progressionModel);
                 return;
             }
             buildingService.createBuilding(progressionModel, kingdom);
+            resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
             progressionModelRepository.delete(progressionModel);
             return;
         }
@@ -67,6 +72,7 @@ public class ProgressionService {
             return;
         }
         buildingService.upgradeBuilding(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         progressionModelRepository.delete(progressionModel);
     }
 
