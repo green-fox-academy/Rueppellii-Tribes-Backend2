@@ -54,7 +54,7 @@ public class Kingdom {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "locationsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Location> kingdomsLocation;
+    private List<Location> kingdomsLocations;
 
     public Kingdom() {
         kingdomsBuildings = BuildingService.starterKit(this);
