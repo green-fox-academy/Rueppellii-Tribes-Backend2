@@ -74,7 +74,7 @@ public class ProgressionService {
             return;
         }
         buildingService.upgradeBuilding(progressionModel, kingdom);
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
