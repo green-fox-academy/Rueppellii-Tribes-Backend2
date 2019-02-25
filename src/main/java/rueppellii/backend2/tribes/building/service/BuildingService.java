@@ -25,7 +25,6 @@ public class BuildingService {
 
     private BuildingRepository buildingRepository;
 
-
     @Autowired
     public BuildingService(BuildingRepository buildingRepository) {
         this.buildingRepository = buildingRepository;
@@ -53,19 +52,19 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    private boolean isItTheTownhall(Building building) {
+    public boolean isTownhall(Building building) {
         return building.getType().getName().toUpperCase().equals("TOWNHALL");
     }
 
-    private void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
-        if (!isItTheTownhall(building)) {
+    public void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
+        if (!isTownhall(building)) {
             if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
                 throw new UpgradeFailedException("Upgrade Townhall first");
             }
         }
     }
 
-    private void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
+    public void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
         if (building.getLevel().equals(BUILDING_MAX_LEVEL)) {
             throw new UpgradeFailedException("Building has reached MAX level");
         }
@@ -95,14 +94,11 @@ public class BuildingService {
                 .collect(Collectors.toList()))).getLevel();
     }
 
-    private Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
-        Integer numberOfLevelOneBarracks = (int) kingdom.getKingdomsBuildings()
+    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
+        return kingdom.getKingdomsBuildings()
                 .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
-                .filter(building -> building.getLevel().equals(1)).count();
-        Integer sumOfLevelOfBarracks = kingdom.getKingdomsBuildings()
-                .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
+                .filter(building -> building.getLevel() > 1)
                 .mapToInt(Building::getLevel).sum();
-        return sumOfLevelOfBarracks - numberOfLevelOneBarracks;
     }
 
     public Double getTroopProgressionTimeMultiplier(Kingdom kingdom) {
