@@ -89,7 +89,7 @@ public class BuildingService {
     }
 
     public Integer getLevelOfTownHall(List<Building> kingdomsBuildings) {
-        return ((TownHall) Iterables.getOnlyElement(kingdomsBuildings
+        return (Iterables.getOnlyElement(kingdomsBuildings
                 .stream()
                 .filter(building -> building instanceof TownHall)
                 .collect(Collectors.toList()))).getLevel();
