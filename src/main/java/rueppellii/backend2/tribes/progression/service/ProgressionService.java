@@ -74,6 +74,7 @@ public class ProgressionService {
             return;
         }
         buildingService.upgradeBuilding(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
@@ -103,7 +104,6 @@ public class ProgressionService {
         progressionModel.setType(progressionDTO.getType());
         progressionModel.setTimeToProgress(timeOfBuildingCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
     }
 
     public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId)
@@ -124,7 +124,6 @@ public class ProgressionService {
         progressionModel.setType("TROOP");
         Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopCreationTime = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
-        progressionModel.setTimeToProgress(timeOfTroopCreationTime);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
