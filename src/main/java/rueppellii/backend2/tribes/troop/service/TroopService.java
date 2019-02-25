@@ -19,7 +19,6 @@ public class TroopService {
 
     private TroopRepository troopRepository;
 
-
     @Autowired
     public TroopService(TroopRepository troopRepository) {
         this.troopRepository = troopRepository;

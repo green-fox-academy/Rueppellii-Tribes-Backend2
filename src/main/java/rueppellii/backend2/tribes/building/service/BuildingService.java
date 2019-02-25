@@ -11,7 +11,6 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.resource.service.ResourceService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +24,11 @@ import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeCons
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
-    private ResourceService resourceService;
+
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository, ResourceService resourceService) {
+    public BuildingService(BuildingRepository buildingRepository) {
         this.buildingRepository = buildingRepository;
-        this.resourceService = resourceService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -38,7 +36,6 @@ public class BuildingService {
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(progressionModel.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
-                resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
                 building.setBuildingsKingdom(kingdom);
                 buildingRepository.save(building);
                 return;
@@ -84,7 +81,6 @@ public class BuildingService {
     public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
         Building building = findById(progressionModel.getGameObjectId());
         building.setLevel(building.getLevel() + 1);
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         buildingRepository.save(building);
     }
 

@@ -33,8 +33,9 @@ public class ProgressionService {
 
     @Autowired
     public ProgressionService(ProgressionModelRepository progressionModelRepository,
-                              BuildingService buildingService,
-                              TroopService troopService, TimeService timeService, KingdomService kingdomService, ResourceService resourceService) {
+                              BuildingService buildingService, TroopService troopService,
+                              TimeService timeService, KingdomService kingdomService,
+                              ResourceService resourceService) {
         this.progressionModelRepository = progressionModelRepository;
         this.buildingService = buildingService;
         this.troopService = troopService;
@@ -43,7 +44,8 @@ public class ProgressionService {
         this.resourceService = resourceService;
     }
 
-    public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+    public void updateProgression(Kingdom kingdom)
+            throws TroopNotFoundException, BuildingNotFoundException {
         List<ProgressionModel> progressions = progressionModelRepository.findAllByProgressKingdom(kingdom);
         for (ProgressionModel p : progressions) {
             System.out.println(p.getType());
@@ -53,8 +55,8 @@ public class ProgressionService {
         }
     }
 
-    private void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException,
-            BuildingNotFoundException {
+    private void progress(ProgressionModel progressionModel, Kingdom kingdom)
+            throws TroopNotFoundException, BuildingNotFoundException {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
@@ -75,7 +77,8 @@ public class ProgressionService {
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
-    public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom) throws InvalidProgressionRequestException {
+    public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom)
+            throws InvalidProgressionRequestException {
         if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
         }
@@ -85,7 +88,8 @@ public class ProgressionService {
         checkIfBuildingIsAlreadyInProgress(kingdom);
     }
 
-    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom) throws InvalidProgressionRequestException {
+    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom)
+            throws InvalidProgressionRequestException {
         for (ProgressionModel p : kingdom.getKingdomsProgresses()) {
             if (EnumUtils.isValidEnum(BuildingType.class, p.getType())) {
                 throw new InvalidProgressionRequestException("Building is already in progress");
@@ -97,15 +101,18 @@ public class ProgressionService {
         Long timeOfBuildingCreation = timeService.calculateTimeOfBuildingCreation();
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType(progressionDTO.getType());
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
         progressionModel.setTimeToProgress(timeOfBuildingCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
-    public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException {
+    public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId)
+            throws BuildingNotFoundException {
         ProgressionModel progressionModel = new ProgressionModel();
         Building building = buildingService.findBuildingInKingdom(kingdom, buildingId);
         Integer levelOfTownHall = buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings());
         Long timeOfBuildingUpgrade = timeService.calculateTimeOfBuildingUpgrade(building.getLevel(), levelOfTownHall);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         progressionModel.setGameObjectId(buildingId);
         progressionModel.setType(building.getType().getName());
         progressionModel.setTimeToProgress(timeOfBuildingUpgrade);
