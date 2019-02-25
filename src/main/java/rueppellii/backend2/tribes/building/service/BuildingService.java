@@ -4,7 +4,6 @@ import com.google.common.collect.Iterables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
-import rueppellii.backend2.tribes.building.persistence.model.Barracks;
 import rueppellii.backend2.tribes.building.persistence.model.TownHall;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.building.persistence.repository.BuildingRepository;
