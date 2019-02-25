@@ -14,6 +14,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
+import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
@@ -28,19 +29,23 @@ public class ProgressionService {
     private TroopService troopService;
     private TimeService timeService;
     private KingdomService kingdomService;
+    private ResourceService resourceService;
 
     @Autowired
     public ProgressionService(ProgressionModelRepository progressionModelRepository,
-                              BuildingService buildingService,
-                              TroopService troopService, TimeService timeService, KingdomService kingdomService) {
+                              BuildingService buildingService, TroopService troopService,
+                              TimeService timeService, KingdomService kingdomService,
+                              ResourceService resourceService) {
         this.progressionModelRepository = progressionModelRepository;
         this.buildingService = buildingService;
         this.troopService = troopService;
         this.timeService = timeService;
         this.kingdomService = kingdomService;
+        this.resourceService = resourceService;
     }
 
-    public void updateProgression(Kingdom kingdom) throws TroopNotFoundException, BuildingNotFoundException {
+    public void updateProgression(Kingdom kingdom)
+            throws TroopNotFoundException, BuildingNotFoundException {
         List<ProgressionModel> progressions = progressionModelRepository.findAllByProgressKingdom(kingdom);
         for (ProgressionModel p : progressions) {
             System.out.println(p.getType());
@@ -50,12 +55,13 @@ public class ProgressionService {
         }
     }
 
-    private void progress(ProgressionModel progressionModel, Kingdom kingdom) throws TroopNotFoundException,
-            BuildingNotFoundException {
+    private void progress(ProgressionModel progressionModel, Kingdom kingdom)
+            throws TroopNotFoundException, BuildingNotFoundException {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
                 progressionModelRepository.deleteById(progressionModel.getId());
+                resourceService.feedTheTroop(kingdom);
                 return;
             }
             buildingService.createBuilding(progressionModel, kingdom);
@@ -71,17 +77,19 @@ public class ProgressionService {
         progressionModelRepository.deleteById(progressionModel.getId());
     }
 
-    public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom) throws InvalidProgressionRequestException {
+    public void validateProgressionRequest(ProgressionDTO progressionDTO, Kingdom kingdom)
+            throws InvalidProgressionRequestException {
         if (!EnumUtils.isValidEnum(BuildingType.class, progressionDTO.getType())) {
             throw new InvalidProgressionRequestException("Wrong type!");
         }
-         if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
+        if (progressionDTO.getType().toUpperCase().equals("TOWNHALL")) {
             throw new InvalidProgressionRequestException("Only one town hall to a kingdom");
         }
         checkIfBuildingIsAlreadyInProgress(kingdom);
     }
 
-    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom) throws InvalidProgressionRequestException {
+    public void checkIfBuildingIsAlreadyInProgress(Kingdom kingdom)
+            throws InvalidProgressionRequestException {
         for (ProgressionModel p : kingdom.getKingdomsProgresses()) {
             if (EnumUtils.isValidEnum(BuildingType.class, p.getType())) {
                 throw new InvalidProgressionRequestException("Building is already in progress");
@@ -95,9 +103,11 @@ public class ProgressionService {
         progressionModel.setType(progressionDTO.getType());
         progressionModel.setTimeToProgress(timeOfBuildingCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
     }
 
-    public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId) throws BuildingNotFoundException {
+    public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId)
+            throws BuildingNotFoundException {
         ProgressionModel progressionModel = new ProgressionModel();
         Building building = buildingService.findBuildingInKingdom(kingdom, buildingId);
         Integer levelOfTownHall = buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings());
@@ -106,6 +116,7 @@ public class ProgressionService {
         progressionModel.setType(building.getType().getName());
         progressionModel.setTimeToProgress(timeOfBuildingUpgrade);
         saveProgressionIntoKingdom(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
     }
 
     public void generateTroopCreationModel(Kingdom kingdom) {
@@ -124,7 +135,7 @@ public class ProgressionService {
         ProgressionModel progressionModel = new ProgressionModel();
         for (Troop troop : troopsForUpgrade) {
             progressionModel.setGameObjectId(troop.getId());
-            progressionModel.setType("TROOP"); //need a number of amount
+            progressionModel.setType("TROOP");
             progressionModel.setTimeToProgress(timeOfTroopUpgrade);
             saveProgressionIntoKingdom(progressionModel, kingdom);
         }
@@ -135,5 +146,4 @@ public class ProgressionService {
         kingdom.getKingdomsProgresses().add(progressionModel);
         kingdomService.save(kingdom);
     }
-
 }
