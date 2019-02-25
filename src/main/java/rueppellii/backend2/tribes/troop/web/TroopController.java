@@ -30,7 +30,8 @@ public class TroopController {
     private TroopService troopService;
 
     @Autowired
-    public TroopController(KingdomService kingdomService, ProgressionService progressionService, PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
+    public TroopController(KingdomService kingdomService, ProgressionService progressionService,
+                           PurchaseService purchaseService, ResourceService resourceService, TroopService troopService) {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.purchaseService = purchaseService;
@@ -40,60 +41,31 @@ public class TroopController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createTroop(Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException {
+    public void createTroop(Principal principal)
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
         purchaseService.buyTroop(kingdom.getId());
         progressionService.generateTroopCreationModel(kingdom);
     }
 
     @PutMapping("{level}")
     @ResponseStatus(HttpStatus.OK)
-    public void upgradeTroop(@PathVariable Integer level, Principal principal) throws UsernameNotFoundException,
-            KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
+    public void upgradeTroop(@PathVariable Integer level, Principal principal)
+            throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
+            BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        //TODO: validate if troop really belongs to the user who makes the request
-        troopService.validateLevel(level);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
-        purchaseService.upgradeTroops(troopService.getTroopsWithTheGivenLevel(level, kingdom), level, kingdom);
-        progressionService.generateTroopUpgradeModel(kingdom, troopService.getTroopsWithTheGivenLevel(level, kingdom));
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
+        troopService.validateUpgradeTroopRequest(level, kingdom);
+
+        purchaseService.upgradeTroops(level, kingdom);
+        progressionService.generateTroopUpgradeModel(level, kingdom);
     }
 
-    @ResponseBody
-    @ExceptionHandler(UsernameNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse userNotFoundHandler(UsernameNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(KingdomNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse kingdomNotFoundException(KingdomNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(TroopNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse troopNotFoundException(TroopNotFoundException ex)  {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(BuildingNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse buildingNotFoundHandler(BuildingNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(NoResourceException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    ErrorResponse NoResourceHandler(NoResourceException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
 }

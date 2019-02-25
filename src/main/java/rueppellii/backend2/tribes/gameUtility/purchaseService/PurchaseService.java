@@ -37,18 +37,18 @@ public class PurchaseService {
             resourceService.minusGoldAmount(TROOP_PRICE, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
-    public void upgradeTroops(List<Troop> troopsForUpgrade, Integer level, Kingdom kingdom) throws NoResourceException, TroopNotFoundException {
+    public void upgradeTroops(Integer level, Kingdom kingdom) throws NoResourceException {
+        List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
         int amountOfTroopToUpgrade = troopsForUpgrade.size();
-        Integer desiredLevel = level + 1;
         Integer upgradePrice = TROOP_PRICE * (level + 1) * amountOfTroopToUpgrade;
         if (resourceService.hasEnoughGold(kingdom.getId(), upgradePrice)) {
             resourceService.minusGoldAmount(upgradePrice, kingdom.getId());
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
     public void buyBuilding(Long kingdomId) throws NoResourceException {
@@ -56,7 +56,7 @@ public class PurchaseService {
             resourceService.minusGoldAmount(BUILDING_PRICE, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 
     public void payForBuildingUpgrade(Long kingdomId, Building building) throws NoResourceException {
@@ -65,6 +65,6 @@ public class PurchaseService {
             resourceService.minusGoldAmount(upgradePrice, kingdomId);
             return;
         }
-        throw new NoResourceException("You don't have enough gold!");
+        throw new NoResourceException("Not enough gold!");
     }
 }

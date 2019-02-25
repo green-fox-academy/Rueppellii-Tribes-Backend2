@@ -20,6 +20,7 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,29 +35,12 @@ public class ApplicationUserService {
     private RoleService roleService;
 
     @Autowired
-    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository, PasswordEncoder encoder, RoleService roleService) {
+    public ApplicationUserService(KingdomService kingdomService, ApplicationUserRepository applicationUserRepository,
+                                  PasswordEncoder encoder, RoleService roleService) {
         this.kingdomService = kingdomService;
         this.applicationUserRepository = applicationUserRepository;
         this.encoder = encoder;
         this.roleService = roleService;
-    }
-
-    public List<ApplicationUserDTO> getAllUsers() {
-        List<ApplicationUser> allUsers = applicationUserRepository.findAll();
-        List<ApplicationUserDTO> allUserDTO = new ArrayList<>();
-
-        for (ApplicationUser user : allUsers) {
-            ApplicationUserDTO dto = new ApplicationUserDTO();
-            dto.setUsername(user.getUsername());
-            dto.setKingdomName(user.getKingdom().getName());
-            List<Role> roles = new ArrayList<>();
-            for (int i = 0; i < user.getRoles().size(); i++) {
-                roles.add(user.getRoles().get(i).getRoleEnum());
-            }
-            dto.setRoles(roles);
-            allUserDTO.add(dto);
-        }
-        return allUserDTO;
     }
 
     public UserContext createUserContext(String username) {
@@ -76,7 +60,7 @@ public class ApplicationUserService {
     }
 
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
-            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+            throws UserNameIsTakenException, UserRoleNotFoundException {
 
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
@@ -104,5 +88,10 @@ public class ApplicationUserService {
 
     private Boolean existsByUsername(String username) {
         return applicationUserRepository.existsByUsername(username);
+    }
+
+    public List<String> findAllUsernames() {
+        List<ApplicationUser> allUsers = applicationUserRepository.findAll();
+        return allUsers.stream().map(ApplicationUser::getUsername).collect(Collectors.toList());
     }
 }

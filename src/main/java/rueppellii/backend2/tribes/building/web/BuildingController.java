@@ -20,8 +20,8 @@ import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
+import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom/building")
@@ -51,16 +51,18 @@ public class BuildingController {
         return dto;
     }
 
+
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createBuilding(@RequestBody ProgressionDTO progressionDTO,
-                               Principal principal, BindingResult bindingResult) throws KingdomNotFoundException,
+    public void createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO,
+                               Principal principal) throws KingdomNotFoundException,
             TroopNotFoundException, BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
-        progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
-        progressionService.validateProgressionRequest(bindingResult, progressionDTO);
         progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
+        progressionService.validateProgressionRequest(progressionDTO, kingdom);
+
         purchaseService.buyBuilding(kingdom.getId());
         progressionService.generateBuildingCreationModel(kingdom, progressionDTO);
     }
@@ -69,11 +71,13 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeBuilding(@PathVariable Long id, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        progressionService.updateProgression(kingdom);
+        resourceService.updateResources(kingdom.getKingdomsResources());
+
         Building building = buildingService.validateBuildingUpgrade(kingdom, id);
         progressionService.checkIfBuildingIsAlreadyInProgress(kingdom);
-        progressionService.updateProgression(kingdom);
-        resourceService.updateResources(kingdom);
         purchaseService.payForBuildingUpgrade(kingdom.getId(), building);
+
         progressionService.generateBuildingUpgradeModel(kingdom, id);
     }
 }
