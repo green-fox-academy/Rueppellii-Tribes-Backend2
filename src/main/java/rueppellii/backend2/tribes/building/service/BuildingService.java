@@ -33,6 +33,10 @@ public class BuildingService {
         this.resourceService = resourceService;
     }
 
+    public List<Building> findAll() {
+        return buildingRepository.findAll();
+    }
+
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
         Building building;
         for (BuildingType t : BuildingType.values()) {
