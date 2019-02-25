@@ -101,9 +101,9 @@ public class ProgressionService {
         Long timeOfBuildingCreation = timeService.calculateTimeOfBuildingCreation();
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType(progressionDTO.getType());
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
         progressionModel.setTimeToProgress(timeOfBuildingCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
     }
 
     public void generateBuildingUpgradeModel(Kingdom kingdom, Long buildingId)
@@ -112,11 +112,11 @@ public class ProgressionService {
         Building building = buildingService.findBuildingInKingdom(kingdom, buildingId);
         Integer levelOfTownHall = buildingService.getLevelOfTownHall(kingdom.getKingdomsBuildings());
         Long timeOfBuildingUpgrade = timeService.calculateTimeOfBuildingUpgrade(building.getLevel(), levelOfTownHall);
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         progressionModel.setGameObjectId(buildingId);
         progressionModel.setType(building.getType().getName());
         progressionModel.setTimeToProgress(timeOfBuildingUpgrade);
         saveProgressionIntoKingdom(progressionModel, kingdom);
+        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
     }
 
     public void generateTroopCreationModel(Kingdom kingdom) {
