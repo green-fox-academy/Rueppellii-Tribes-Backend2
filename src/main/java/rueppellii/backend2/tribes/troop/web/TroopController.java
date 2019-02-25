@@ -52,5 +52,4 @@ public class TroopController {
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         gameChainService.upgradeTroopGameChain(level, principal);
     }
-
 }
