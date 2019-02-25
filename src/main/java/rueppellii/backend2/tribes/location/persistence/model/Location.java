@@ -17,7 +17,7 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String location;
+    private String country;
 
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
