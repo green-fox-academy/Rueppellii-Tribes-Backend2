@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes.kingdom.service;
 
+import com.google.common.collect.Iterables;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,11 +8,14 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomWithLocationDTO;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class KingdomService {
@@ -62,4 +66,13 @@ public class KingdomService {
         return mapKingdomDTO(kingdom);
     }
 
+    public KingdomWithLocationDTO mapKingdomMapData(Kingdom kingdom) {
+        KingdomWithLocationDTO kingdomWithLocationDTO = new KingdomWithLocationDTO();
+        List<String> locations = new ArrayList<>();
+        locations = Iterables.get(kingdom.getKingdomsLocations()).
+        kingdomWithLocationDTO.setId(kingdom.getId());
+        kingdomWithLocationDTO.setName(kingdom.getName());
+        kingdomWithLocationDTO.setPopulation(kingdom.getKingdomsTroops().size());
+        kingdomWithLocationDTO.setLocation(kingdom.getKingdomsLocations());
+    }
 }
