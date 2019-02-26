@@ -3,6 +3,7 @@ package rueppellii.backend2.tribes.kingdom.service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.utility.BuildingLeaderBoardDTO;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
@@ -12,8 +13,8 @@ import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class KingdomService {
@@ -68,10 +69,28 @@ public class KingdomService {
         return kingdomRepository.findAll();
     }
 
-    public List<String> findAllKingdomNames()
-    {
-        List<Kingdom> allKingdoms = findall();
-        return allKingdoms.stream().map(Kingdom::getName).collect(Collectors.toList());
+    public List<BuildingLeaderBoardDTO> findAllKingdomNames() throws KingdomNotFoundException {
+        List<BuildingLeaderBoardDTO> kingdomsBuildings = new ArrayList<>();
+        List<Kingdom> kingdomList = findall();
+
+        for (int i = 0; i < kingdomList.size(); i++) {
+            if (kingdomList.get(i).getName() != null) {
+                kingdomsBuildings.add(getOneKingdom(kingdomList.get(i).getId()));
+            }
+        }
+        return kingdomsBuildings;
+    }
+
+    public BuildingLeaderBoardDTO getOneKingdom(Long id) throws KingdomNotFoundException {
+        BuildingLeaderBoardDTO buildingLeaderBoardDTO = createListNumberObject(findById(id));
+        return buildingLeaderBoardDTO;
+    }
+
+    private BuildingLeaderBoardDTO createListNumberObject(Kingdom kingdom) {
+        BuildingLeaderBoardDTO buildingLeaderBoardDTO = new BuildingLeaderBoardDTO();
+        buildingLeaderBoardDTO.setKingdomName(kingdom.getName());
+        buildingLeaderBoardDTO.setNumberOfBuildings(kingdom.getKingdomsBuildings().size());
+        return buildingLeaderBoardDTO;
     }
 
 }
