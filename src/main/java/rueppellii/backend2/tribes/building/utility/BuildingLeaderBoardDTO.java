@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ListNumberOfKingdomsBuildingsDTO {
+public class BuildingLeaderBoardDTO {
 
     String kingdomName;
     Integer numberOfBuildings;
