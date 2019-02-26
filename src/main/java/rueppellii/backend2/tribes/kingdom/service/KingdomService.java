@@ -7,6 +7,8 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomRepository;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomWithLocationDTO;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomListWithLocationDTO;
 import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.location.persistence.model.Location;
 import rueppellii.backend2.tribes.location.service.LocationService;
@@ -98,5 +100,29 @@ public class KingdomService {
         } catch (IOException e) {
             throw new IOException("Could not read file");
         }
+    }
+
+    public KingdomWithLocationDTO mapKingdomWithLocationDTO(Kingdom kingdom) {
+        KingdomWithLocationDTO kingdomWithLocationDTO = new KingdomWithLocationDTO();
+        List<String> locations = new ArrayList<>();
+        for (Location location : kingdom.getKingdomsLocations()) {
+            locations.add(location.getCountryCode());
+        }
+        kingdomWithLocationDTO.setId(kingdom.getId());
+        kingdomWithLocationDTO.setName(kingdom.getName());
+        kingdomWithLocationDTO.setPopulation(kingdom.getKingdomsTroops().size());
+        kingdomWithLocationDTO.setLocation(locations);
+        return kingdomWithLocationDTO;
+    }
+
+    public KingdomListWithLocationDTO listKingdomsWithLocation() {
+        KingdomListWithLocationDTO dto = new KingdomListWithLocationDTO();
+        List<KingdomWithLocationDTO> kingdomDTOList = new ArrayList<>();
+        List<Kingdom> kingdomList = kingdomRepository.findAll();
+        for (Kingdom kingdom : kingdomList) {
+            kingdomDTOList.add(mapKingdomWithLocationDTO(kingdom));
+        }
+        dto.setKingdoms(kingdomDTOList);
+        return dto;
     }
 }

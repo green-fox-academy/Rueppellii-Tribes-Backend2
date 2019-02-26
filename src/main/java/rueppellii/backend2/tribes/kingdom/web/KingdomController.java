@@ -8,7 +8,9 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomListWithLocationDTO;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomNameDTO;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomWithLocationDTO;
 import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
@@ -50,5 +52,11 @@ public class KingdomController {
     @ResponseStatus(HttpStatus.OK)
     public KingdomDTO showOtherKingdom(@PathVariable Long id) throws KingdomNotFoundException {
         return kingdomService.findOtherKingdom(id);
+    }
+
+    @GetMapping("/map")
+    @ResponseStatus(HttpStatus.OK)
+    public KingdomListWithLocationDTO showLocation() throws KingdomNotFoundException {
+        return kingdomService.listKingdomsWithLocation();
     }
 }

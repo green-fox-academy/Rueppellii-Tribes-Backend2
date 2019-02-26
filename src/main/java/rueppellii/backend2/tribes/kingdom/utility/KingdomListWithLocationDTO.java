@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class KingdomWithLocationListDTO {
+public class KingdomListWithLocationDTO {
 
     private List<KingdomWithLocationDTO> kingdoms;
 }
