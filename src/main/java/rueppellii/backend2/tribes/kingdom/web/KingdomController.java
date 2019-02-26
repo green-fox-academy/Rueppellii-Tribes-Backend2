@@ -23,7 +23,6 @@ public class KingdomController {
     private KingdomService kingdomService;
     private ProgressionService progressionService;
     private ResourceService resourceService;
-//    private LocationService locationService;
 
 
     @Autowired
@@ -31,7 +30,6 @@ public class KingdomController {
         this.kingdomService = kingdomService;
         this.progressionService = progressionService;
         this.resourceService = resourceService;
-//        this.locationService = locationService;
     }
 
     @GetMapping("")
@@ -55,14 +53,5 @@ public class KingdomController {
     public KingdomDTO showOtherKingdom(@PathVariable Long id) throws KingdomNotFoundException {
         return kingdomService.findOtherKingdom(id);
     }
-
-//    @PostMapping(path = "/map", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-//    @ResponseStatus(HttpStatus.OK)
-//    public Kingdom addLocationToKingdom(@RequestBody Location location, Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException, InvalidProgressionRequestException {
-//        Kingdom kingdom = kingdomService.findByPrincipal(principal);
-//        locationService.save(location);
-//        return kingdom;
-//
-//    }
 
 }
