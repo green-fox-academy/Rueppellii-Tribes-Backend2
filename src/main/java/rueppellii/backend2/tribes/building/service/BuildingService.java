@@ -11,7 +11,6 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.resource.service.ResourceService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +24,10 @@ import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeCons
 public class BuildingService {
 
     private BuildingRepository buildingRepository;
-    private ResourceService resourceService;
 
     @Autowired
-    public BuildingService(BuildingRepository buildingRepository, ResourceService resourceService) {
+    public BuildingService(BuildingRepository buildingRepository) {
         this.buildingRepository = buildingRepository;
-        this.resourceService = resourceService;
     }
 
     public void createBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws IllegalArgumentException {
@@ -38,7 +35,6 @@ public class BuildingService {
         for (BuildingType t : BuildingType.values()) {
             if (BuildingType.valueOf(progressionModel.getType().toUpperCase()).equals(t)) {
                 building = makeBuilding(t);
-                resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.kingdomsResources);
                 building.setBuildingsKingdom(kingdom);
                 buildingRepository.save(building);
                 return;
@@ -56,19 +52,19 @@ public class BuildingService {
         throw new BuildingNotFoundException("Building not found");
     }
 
-    private boolean isItTheTownhall(Building building) {
+    public boolean isTownhall(Building building) {
         return building.getType().getName().toUpperCase().equals("TOWNHALL");
-        }
+    }
 
-    private void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
-        if (!isItTheTownhall(building)) {
+    public void checkIfBuildingIsUnderTownhallLevel(Kingdom kingdom, Building building) throws UpgradeFailedException {
+        if (!isTownhall(building)) {
             if (building.getLevel() >= getLevelOfTownHall(kingdom.getKingdomsBuildings())) {
                 throw new UpgradeFailedException("Upgrade Townhall first");
             }
         }
     }
 
-    private void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
+    public void checkIfBuildingIsUnderMaxLevel(Building building) throws UpgradeFailedException {
         if (building.getLevel().equals(BUILDING_MAX_LEVEL)) {
             throw new UpgradeFailedException("Building has reached MAX level");
         }
@@ -84,7 +80,6 @@ public class BuildingService {
     public void upgradeBuilding(ProgressionModel progressionModel, Kingdom kingdom) throws BuildingNotFoundException {
         Building building = findById(progressionModel.getGameObjectId());
         building.setLevel(building.getLevel() + 1);
-        resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
         buildingRepository.save(building);
     }
 
@@ -93,20 +88,17 @@ public class BuildingService {
     }
 
     public Integer getLevelOfTownHall(List<Building> kingdomsBuildings) {
-        return ((TownHall) Iterables.getOnlyElement(kingdomsBuildings
+        return (Iterables.getOnlyElement(kingdomsBuildings
                 .stream()
                 .filter(building -> building instanceof TownHall)
                 .collect(Collectors.toList()))).getLevel();
     }
 
-    private Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
-        Integer numberOfLevelOneBarracks = (int) kingdom.getKingdomsBuildings()
+    public Integer sumOfLevelsOfUpgradedBarracks(Kingdom kingdom) {
+        return kingdom.getKingdomsBuildings()
                 .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
-                .filter(building -> building.getLevel().equals(1)).count();
-        Integer sumOfLevelOfBarracks = kingdom.getKingdomsBuildings()
-                .stream().filter(building -> building.getType().getName().matches("BARRACKS"))
+                .filter(building -> building.getLevel() > 1)
                 .mapToInt(Building::getLevel).sum();
-        return sumOfLevelOfBarracks - numberOfLevelOneBarracks;
     }
 
     public Double getTroopProgressionTimeMultiplier(Kingdom kingdom) {
