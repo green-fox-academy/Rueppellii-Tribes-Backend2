@@ -82,15 +82,15 @@ public class KingdomService {
     }
 
     public BuildingLeaderBoardDTO getOneKingdom(Long id) throws KingdomNotFoundException {
-        BuildingLeaderBoardDTO buildingLeaderBoardDTO = createListNumberObject(findById(id));
-        return buildingLeaderBoardDTO;
+        BuildingLeaderBoardDTO leaderBoardDTO = createLeaderBoardDTO(findById(id));
+        return leaderBoardDTO;
     }
 
-    private BuildingLeaderBoardDTO createListNumberObject(Kingdom kingdom) {
-        BuildingLeaderBoardDTO buildingLeaderBoardDTO = new BuildingLeaderBoardDTO();
-        buildingLeaderBoardDTO.setKingdomName(kingdom.getName());
-        buildingLeaderBoardDTO.setNumberOfBuildings(kingdom.getKingdomsBuildings().size());
-        return buildingLeaderBoardDTO;
+    private BuildingLeaderBoardDTO createLeaderBoardDTO(Kingdom kingdom) {
+        BuildingLeaderBoardDTO leaderBoardDTO = new BuildingLeaderBoardDTO();
+        leaderBoardDTO.setKingdomName(kingdom.getName());
+        leaderBoardDTO.setNumberOfBuildings(kingdom.getKingdomsBuildings().size());
+        return leaderBoardDTO;
     }
 
 }
