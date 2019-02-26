@@ -8,7 +8,7 @@ import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
-import rueppellii.backend2.tribes.building.utility.ListNumberOfKingdomsBuildingsDTO;
+import rueppellii.backend2.tribes.building.utility.BuildingLeaderBoardDTO;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
@@ -21,9 +21,7 @@ import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -84,14 +82,8 @@ public class BuildingController {
 
     @GetMapping("/leaderboard/buildings")
     @ResponseStatus(HttpStatus.OK)
-    public ListNumberOfKingdomsBuildingsDTO showKingdomsAndBuildings() {
-        ListNumberOfKingdomsBuildingsDTO numberDto = new ListNumberOfKingdomsBuildingsDTO();
-        List<Kingdom> kingdoms = kingdomService.findall();
-        for (Kingdom k : kingdoms) {
-            numberDto.setKingdomName(k.getName());
-            numberDto.setNumberOfBuildings(k.getKingdomsBuildings().size());
-        }
-        return numberDto;
+    public List<BuildingLeaderBoardDTO> showKingdomsAndBuildings() throws KingdomNotFoundException {
+        return kingdomService.findAllKingdomNames();
     }
 
 
