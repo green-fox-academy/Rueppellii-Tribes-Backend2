@@ -2,12 +2,12 @@ package rueppellii.backend2.tribes.building.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
+import rueppellii.backend2.tribes.building.utility.ListNumberOfKingdomsBuildingsDTO;
 import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
@@ -79,5 +79,13 @@ public class BuildingController {
         purchaseService.payForBuildingUpgrade(kingdom.getId(), building);
 
         progressionService.generateBuildingUpgradeModel(kingdom, id);
+    }
+
+    @GetMapping("/leaderboard/buildings")
+    @ResponseStatus(HttpStatus.OK)
+    public ListNumberOfKingdomsBuildingsDTO showKingdomsAndBuildings(Principal principal) throws KingdomNotFoundException {
+        ListNumberOfKingdomsBuildingsDTO numberDto = new ListNumberOfKingdomsBuildingsDTO();
+        Kingdom kingdom
+        return numberDto;
     }
 }
