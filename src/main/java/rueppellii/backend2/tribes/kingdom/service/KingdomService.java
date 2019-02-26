@@ -59,6 +59,7 @@ public class KingdomService {
     }
 
     public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) throws IOException, IllegalArgumentException, LocationIsTakenException {
+        System.out.println(listCountryCodes());
         Kingdom kingdom = new Kingdom();
         Location location = new Location();
         List<Location> kingdomsLocations = new ArrayList<>();
@@ -88,14 +89,14 @@ public class KingdomService {
             List<String[]> splitLines = new ArrayList<>();
             List<String> countryCodes = new ArrayList<>();
             for (String line : lines) {
-                splitLines.add(line.trim().split(" "));
+                splitLines.add(line.split("- "));
             }
-            for (String[] countryCode : splitLines) {
-                countryCodes.add(countryCode[0]);
+            for (String[] splitLine : splitLines) {
+                countryCodes.add(splitLine[1]);
             }
             return countryCodes;
         } catch (IOException e) {
-            throw new IOException("Could not read CountryCodes file");
+            throw new IOException("Could not read file");
         }
     }
 }
