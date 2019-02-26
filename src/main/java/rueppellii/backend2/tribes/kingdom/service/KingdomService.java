@@ -12,6 +12,8 @@ import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KingdomService {
@@ -60,6 +62,16 @@ public class KingdomService {
     public KingdomDTO findOtherKingdom(Long id) throws KingdomNotFoundException {
         Kingdom kingdom = findById(id);
         return mapKingdomDTO(kingdom);
+    }
+
+    public List<Kingdom> findall(){
+        return kingdomRepository.findAll();
+    }
+
+    public List<String> findAllKingdomNames()
+    {
+        List<Kingdom> allKingdoms = findall();
+        return allKingdoms.stream().map(Kingdom::getName).collect(Collectors.toList());
     }
 
 }
