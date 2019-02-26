@@ -17,6 +17,8 @@ import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.util.Role;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +46,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);
@@ -64,7 +66,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);

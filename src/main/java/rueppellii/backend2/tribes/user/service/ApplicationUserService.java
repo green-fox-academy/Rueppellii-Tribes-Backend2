@@ -21,6 +21,7 @@ import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class ApplicationUserService {
     }
 
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
-            throws UserNameIsTakenException, UserRoleNotFoundException {
+            throws UserNameIsTakenException, UserRoleNotFoundException, IOException, IllegalArgumentException {
 
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 

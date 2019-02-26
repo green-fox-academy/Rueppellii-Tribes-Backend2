@@ -16,6 +16,7 @@ import rueppellii.backend2.tribes.user.service.ApplicationUserService;
 import rueppellii.backend2.tribes.user.util.ListUserNamesDTO;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,7 +43,7 @@ public class ApplicationUserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public RegisterResponse registerUser(@RequestBody @Valid ApplicationUserDTO applicationUserDTO)
-            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException {
         return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
 
