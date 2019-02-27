@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
 import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
@@ -47,7 +48,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException, LocationIsTakenException {
+    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);
@@ -67,7 +68,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException, LocationIsTakenException {
+    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);

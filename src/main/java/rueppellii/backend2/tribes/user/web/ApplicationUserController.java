@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
 import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
@@ -44,7 +45,7 @@ public class ApplicationUserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
     public RegisterResponse registerUser(@RequestBody @Valid ApplicationUserDTO applicationUserDTO)
-            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, IllegalArgumentException, IOException, LocationIsTakenException {
+            throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
 

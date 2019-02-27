@@ -9,6 +9,7 @@ import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomReposito
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomWithLocationDTO;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomListWithLocationDTO;
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
 import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.location.persistence.model.Location;
 import rueppellii.backend2.tribes.location.service.LocationService;
@@ -60,7 +61,7 @@ public class KingdomService {
         return findByUsername(loggedInUser);
     }
 
-    public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) throws IOException, IllegalArgumentException, LocationIsTakenException {
+    public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) throws IOException, CountryCodeNotValidException, LocationIsTakenException {
         System.out.println(listCountryCodes());
         Kingdom kingdom = new Kingdom();
         Location location = new Location();
@@ -70,7 +71,7 @@ public class KingdomService {
         if (listCountryCodes().contains(location.getCountryCode()) && (locationService.findLocation(location.getCountryCode()) == null)) {
                 kingdom.setKingdomsLocations(kingdomsLocations);
                 location.setLocationsKingdom(kingdom);
-            } else throw new IllegalArgumentException("Not a valid country code");
+            } else throw new CountryCodeNotValidException("Not a valid country code");
         if (applicationUserDTO.getKingdomName().isEmpty()) {
             kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
         } else {

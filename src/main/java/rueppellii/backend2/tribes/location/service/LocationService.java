@@ -22,8 +22,4 @@ public class LocationService {
         }
         return null;
     }
-
-    public void saveLocation(Location location) {
-        locationRepository.save(location);
-    }
 }

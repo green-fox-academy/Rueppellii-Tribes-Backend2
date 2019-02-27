@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
 import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
@@ -62,7 +63,7 @@ public class ApplicationUserService {
     }
 
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
-            throws UserNameIsTakenException, UserRoleNotFoundException, IOException, IllegalArgumentException, LocationIsTakenException {
+            throws UserNameIsTakenException, UserRoleNotFoundException, IOException, CountryCodeNotValidException, LocationIsTakenException {
 
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
