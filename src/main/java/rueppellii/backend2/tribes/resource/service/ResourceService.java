@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_SECONDS;
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.ONE_MINUTE_IN_MILLIS;
 import static rueppellii.backend2.tribes.resource.utility.ResourceConstants.RESOURCE_PER_MINUTE_BUILDING_LEVEL_MULTIPLIER;
 import static rueppellii.backend2.tribes.resource.utility.ResourceFactory.makeResource;
 
@@ -61,18 +61,21 @@ public class ResourceService {
     public void updateResources(List<Resource> resources) {
         for (Resource r : resources) {
             Integer resourcePerMinute = r.getResourcePerMinute();
-            Integer elapsedSeconds = timeService.calculateElapsedSeconds(r.getUpdatedAt());
-            Long remainderSecondsInMillis = timeService.calculateRemainderInMillis(r.getUpdatedAt());
-            if (calculateResourcePerSecond(resourcePerMinute, elapsedSeconds) != 0) {
-                r.setAmount(r.getAmount() + calculateResourcePerSecond(resourcePerMinute, elapsedSeconds));
-                r.setUpdatedAt(System.currentTimeMillis() + remainderSecondsInMillis);
+            Long elapsedMillis = timeService.calculateElapsedMillis(r.getUpdatedAt());
+            if (calculateResourceForElapsedTime(resourcePerMinute, elapsedMillis) != 0) {
+                Integer calculateResourceForElapsedTime = calculateResourceForElapsedTime(resourcePerMinute, elapsedMillis);
+                r.setAmount(r.getAmount() + calculateResourceForElapsedTime);
+                r.setUpdatedAt(System.currentTimeMillis() -
+                        timeService.calculateRemainderMillis(resourcePerMinute, elapsedMillis));
                 resourceRepository.save(r);
             }
         }
     }
 
-    private Integer calculateResourcePerSecond(Integer resourcePerMinute, Integer elapsedSeconds) {
-        return (int) ((double) elapsedSeconds * ((double) resourcePerMinute / ONE_MINUTE_IN_SECONDS));
+    private Integer calculateResourceForElapsedTime(Integer resourcePerMinute, Long elapsedMillis) {
+        double resourcePerMillis = (double) resourcePerMinute / ONE_MINUTE_IN_MILLIS;
+        double resourceForElapsedMillis = (double) elapsedMillis * resourcePerMillis;
+        return (int)resourceForElapsedMillis;
     }
 
     public void setResourcePerMinute(String type, List<Resource> kingdomsResources) {
