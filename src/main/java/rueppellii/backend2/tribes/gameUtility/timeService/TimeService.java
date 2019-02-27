@@ -22,7 +22,7 @@ public class TimeService {
     }
 
     public Long calculateTimeOfTroopUpgrade(Double troopUpgradeTimeMultiplier, Integer troopLevel) {
-        return System.currentTimeMillis() + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier * troopLevel);
+        return (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier * troopLevel);
     }
 
     public Boolean timeIsUp(ProgressionModel progressionModel) {

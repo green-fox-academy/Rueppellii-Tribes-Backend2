@@ -19,7 +19,11 @@ import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.service.TroopService;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_PROGRESSION_TIME;
 
 @Service
 public class ProgressionService {
@@ -126,7 +130,16 @@ public class ProgressionService {
         Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopCreation = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
         progressionModel.setTimeToProgress(timeOfTroopCreation);
+        if (findTroopProgressionWithLongestTime(kingdom).isPresent()) {
+            progressionModel.setTimeToProgress(findTroopProgressionWithLongestTime(kingdom).get().getTimeToProgress() + TROOP_PROGRESSION_TIME);
+        }
         saveProgressionIntoKingdom(progressionModel, kingdom);
+    }
+
+    public Optional<ProgressionModel> findTroopProgressionWithLongestTime(Kingdom kingdom) {
+        return kingdom.getKingdomsProgresses().stream()
+                .filter(troop -> troop.getType().equals("TROOP"))
+                .max(Comparator.comparing(ProgressionModel::getTimeToProgress));
     }
 
     public void generateTroopUpgradeModel(Integer level, Kingdom kingdom) {
@@ -138,7 +151,7 @@ public class ProgressionService {
             Troop troop = troopsForUpgrade.get(i);
             progressionModel.setGameObjectId(troop.getId());
             progressionModel.setType("TROOP");
-            progressionModel.setTimeToProgress(timeOfTroopUpgrade * (i + 1));
+            progressionModel.setTimeToProgress(System.currentTimeMillis() + (timeOfTroopUpgrade * (i + 1)));
             saveProgressionIntoKingdom(progressionModel, kingdom);
         }
     }
