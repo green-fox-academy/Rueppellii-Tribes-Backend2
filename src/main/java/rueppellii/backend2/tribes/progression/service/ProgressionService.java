@@ -134,10 +134,11 @@ public class ProgressionService {
         Double troopUpgradeTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopUpgrade = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, level);
         ProgressionModel progressionModel = new ProgressionModel();
-        for (Troop troop : troopsForUpgrade) {
+        for (int i = 0; i < troopsForUpgrade.size(); i++) {
+            Troop troop = troopsForUpgrade.get(i);
             progressionModel.setGameObjectId(troop.getId());
             progressionModel.setType("TROOP");
-            progressionModel.setTimeToProgress(timeOfTroopUpgrade);
+            progressionModel.setTimeToProgress(timeOfTroopUpgrade * (i + 1));
             saveProgressionIntoKingdom(progressionModel, kingdom);
         }
     }
