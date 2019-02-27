@@ -55,7 +55,7 @@ public class KingdomController {
 
     @GetMapping("/map")
     @ResponseStatus(HttpStatus.OK)
-    public KingdomListWithLocationDTO showLocation() throws KingdomNotFoundException {
+    public KingdomListWithLocationDTO showLocation() {
         return kingdomService.listKingdomsWithLocation();
     }
 }
