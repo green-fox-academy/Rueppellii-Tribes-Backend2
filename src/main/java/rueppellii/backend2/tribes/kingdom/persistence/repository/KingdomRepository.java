@@ -14,5 +14,5 @@ public interface KingdomRepository extends JpaRepository<Kingdom, Long> {
     Kingdom findByName(String name);
 
     Optional<Kingdom> findByApplicationUser_Username(String name);
-    
+
 }
