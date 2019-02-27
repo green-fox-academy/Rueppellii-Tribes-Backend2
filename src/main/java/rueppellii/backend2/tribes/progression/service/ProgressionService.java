@@ -60,11 +60,12 @@ public class ProgressionService {
         if (progressionModel.getGameObjectId() == null) {
             if (progressionModel.getType().equals("TROOP")) {
                 troopService.createTroop(kingdom);
-                progressionModelRepository.deleteById(progressionModel.getId());
                 resourceService.feedTheTroop(kingdom);
+                progressionModelRepository.deleteById(progressionModel.getId());
                 return;
             }
             buildingService.createBuilding(progressionModel, kingdom);
+            resourceService.setResourcePerMinute(progressionModel.getType(), kingdom.getKingdomsResources());
             progressionModelRepository.deleteById(progressionModel.getId());
             return;
         }
@@ -123,7 +124,8 @@ public class ProgressionService {
         ProgressionModel progressionModel = new ProgressionModel();
         progressionModel.setType("TROOP");
         Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
-        Long timeOfTroopCreationTime = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
+        Long timeOfTroopCreation = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
+        progressionModel.setTimeToProgress(timeOfTroopCreation);
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
 
