@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS locations (
-  id BIGINT auto_increment,
-  country VARCHAR (20),
-  PRIMARY KEY (id),
+  country_code VARCHAR (3),
+  kingdom_id BIGINT,
+  PRIMARY KEY (country_code),
   FOREIGN KEY (kingdom_id) REFERENCES kingdoms(id)
 );
