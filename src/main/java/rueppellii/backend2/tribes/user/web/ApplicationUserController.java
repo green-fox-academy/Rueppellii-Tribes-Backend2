@@ -48,26 +48,4 @@ public class ApplicationUserController {
             throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         return applicationUserService.registerApplicationUser(applicationUserDTO);
     }
-
-    @ResponseBody
-    @ExceptionHandler(UserNameIsTakenException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    ErrorResponse usernameIsTakenHandler() {
-        return new ErrorResponse("Username already taken, please choose an other one.");
-    }
-
-
-    @ResponseBody
-    @ExceptionHandler(UserRoleNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ErrorResponse userRoleNotFoundHandler(UserRoleNotFoundException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    ErrorResponse userRoleNotFoundHandler(AccessDeniedException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
 }
