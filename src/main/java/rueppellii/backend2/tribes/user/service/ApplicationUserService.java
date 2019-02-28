@@ -7,7 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 
 import rueppellii.backend2.tribes.security.model.UserContext;
@@ -17,11 +16,9 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.web.RegisterResponse;
 import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
-import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
-import rueppellii.backend2.tribes.user.util.Role;
+import rueppellii.backend2.tribes.user.utility.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.utility.Role;
 
-import javax.validation.Valid;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

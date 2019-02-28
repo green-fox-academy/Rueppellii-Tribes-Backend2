@@ -36,19 +36,19 @@ public class Kingdom {
     private ApplicationUser applicationUser;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "troopsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "troopsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Troop> kingdomsTroops;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "resourcesKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "resourcesKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     public List<Resource> kingdomsResources;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "buildingsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buildingsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Building> kingdomsBuildings;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "progressKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "progressKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ProgressionModel> kingdomsProgresses;
 
     public Kingdom() {

@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.user.util;
+package rueppellii.backend2.tribes.user.utility;
 
 import lombok.Getter;
 import lombok.Setter;

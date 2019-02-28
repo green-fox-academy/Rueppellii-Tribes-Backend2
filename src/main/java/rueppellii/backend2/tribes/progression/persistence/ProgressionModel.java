@@ -18,6 +18,7 @@ public class ProgressionModel {
     private Long id;
 
     private String type;
+    private Long startingTime;
     private Long timeToProgress;
     private Long gameObjectId;
 
@@ -25,4 +26,8 @@ public class ProgressionModel {
     @ManyToOne
     @JoinColumn(name = "kingdom_id")
     private Kingdom progressKingdom;
+
+    public ProgressionModel() {
+        this.startingTime = System.currentTimeMillis();
+    }
 }

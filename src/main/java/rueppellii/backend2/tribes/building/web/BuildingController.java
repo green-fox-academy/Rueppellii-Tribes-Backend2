@@ -13,6 +13,7 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.user.utility.ErrorResponse;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -40,10 +41,13 @@ public class BuildingController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO, Principal principal)
+    public ConfirmDTO createBuilding(@RequestBody @Valid ProgressionDTO progressionDTO, Principal principal)
             throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException,
             NoResourceException, InvalidProgressionRequestException {
         gameChainService.createBuildingChain(progressionDTO, principal);
+        ConfirmDTO confirmDTO = new ConfirmDTO();
+        confirmDTO.setConfirm("ok");
+        return confirmDTO;
     }
 
     @PutMapping("{id}")

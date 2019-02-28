@@ -17,6 +17,7 @@ import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeCons
 @Service
 public class PurchaseService {
 
+    //TODO: this should be an interface
     private ResourceService resourceService;
     private TroopService troopService;
 

@@ -9,7 +9,7 @@ import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomReposito
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
-import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.utility.ApplicationUserDTO;
 
 import java.security.Principal;
 

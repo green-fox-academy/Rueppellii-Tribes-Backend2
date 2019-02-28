@@ -9,11 +9,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
+import rueppellii.backend2.tribes.user.utility.ErrorResponse;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
-import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.utility.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
-import rueppellii.backend2.tribes.user.util.ListUserNamesDTO;
+import rueppellii.backend2.tribes.user.utility.ListUserNamesDTO;
 
 import javax.validation.Valid;
 import java.util.List;

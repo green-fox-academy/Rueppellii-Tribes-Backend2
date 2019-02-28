@@ -22,7 +22,7 @@ public class GetCountryCodesController {
     @ResponseStatus(HttpStatus.OK)
     public CountryCodesDTO getCountryCodes() throws UnirestException {
         HttpResponse<JsonNode> response = Unirest.get("https://restcountries-v1.p.rapidapi.com/all")
-                .header("X-RapidAPI-Key", "62ecb153f5mshc9134e66c2e716bp13f7a7jsn7c8bd11b8be3")
+                .header("X-RapidAPI-Key", System.getenv("RAPID_API_KEY"))
                 .asJson();
         JSONArray jsonArray = response.getBody().getArray();
         CountryCodesDTO countryCodesDTO = new CountryCodesDTO();

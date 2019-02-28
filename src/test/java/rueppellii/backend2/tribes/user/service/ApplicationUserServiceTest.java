@@ -13,9 +13,9 @@ import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRepository;
-import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
+import rueppellii.backend2.tribes.user.utility.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
-import rueppellii.backend2.tribes.user.util.Role;
+import rueppellii.backend2.tribes.user.utility.Role;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

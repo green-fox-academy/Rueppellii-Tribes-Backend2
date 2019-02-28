@@ -1,5 +1,6 @@
 package rueppellii.backend2.tribes;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import rueppellii.backend2.tribes.security.model.UserContext;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class TestTokenProvider {
 
+    @Autowired
     private JwtTokenFactory jwtTokenFactory;
 
     public TestTokenProvider(JwtTokenFactory jwtTokenFactory) {

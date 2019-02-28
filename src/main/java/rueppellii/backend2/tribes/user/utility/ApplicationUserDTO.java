@@ -1,9 +1,8 @@
-package rueppellii.backend2.tribes.user.util;
+package rueppellii.backend2.tribes.user.utility;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rueppellii.backend2.tribes.user.util.Role;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;

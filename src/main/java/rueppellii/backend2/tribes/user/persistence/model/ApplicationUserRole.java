@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
-import rueppellii.backend2.tribes.user.util.Role;
+import rueppellii.backend2.tribes.user.utility.Role;
 
 import java.util.ArrayList;
 import java.util.List;

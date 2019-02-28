@@ -12,7 +12,7 @@ import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
+import rueppellii.backend2.tribes.user.utility.ErrorResponse;
 
 @ControllerAdvice(assignableTypes = BuildingController.class)
 public class BuildingControllerAdvice {

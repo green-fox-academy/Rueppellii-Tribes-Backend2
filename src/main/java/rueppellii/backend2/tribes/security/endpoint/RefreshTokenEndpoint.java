@@ -1,8 +1,6 @@
 package rueppellii.backend2.tribes.security.endpoint;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 
@@ -13,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +22,8 @@ import rueppellii.backend2.tribes.security.model.token.JwtToken;
 import rueppellii.backend2.tribes.security.model.token.JwtTokenFactory;
 import rueppellii.backend2.tribes.security.model.token.RawAccessJwtToken;
 import rueppellii.backend2.tribes.security.model.token.RefreshToken;
-import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.service.ApplicationUserService;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
+import rueppellii.backend2.tribes.user.utility.ErrorResponse;
 
 import static rueppellii.backend2.tribes.security.SecurityConstants.AUTHENTICATION_HEADER_NAME;
 import static rueppellii.backend2.tribes.security.SecurityConstants.TOKEN_SIGNING_KEY;

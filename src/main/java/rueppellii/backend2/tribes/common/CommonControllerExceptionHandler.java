@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import rueppellii.backend2.tribes.user.util.ErrorResponse;
+import rueppellii.backend2.tribes.user.utility.ErrorResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
