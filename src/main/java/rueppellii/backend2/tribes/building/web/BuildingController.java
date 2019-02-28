@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
+import rueppellii.backend2.tribes.building.utility.BuildingLeaderBoardDTO;
+import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.gameUtility.gameChainService.GameChainService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -16,6 +18,7 @@ import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom/building")
@@ -44,6 +47,7 @@ public class BuildingController {
             throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException,
             NoResourceException, InvalidProgressionRequestException {
         gameChainService.createBuildingChain(progressionDTO, principal);
+
     }
 
     @PutMapping("{id}")
@@ -52,5 +56,11 @@ public class BuildingController {
             throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException,
             NoResourceException, UpgradeFailedException, InvalidProgressionRequestException {
         gameChainService.upgradeBuildingChain(id, principal);
+    }
+
+    @GetMapping("/leaderboard/buildings")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BuildingLeaderBoardDTO> showKingdomsAndBuildings() throws KingdomNotFoundException {
+        return kingdomService.findAllKingdomNames();
     }
 }

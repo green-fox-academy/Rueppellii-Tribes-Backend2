@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import rueppellii.backend2.tribes.building.persistence.model.*;
 import rueppellii.backend2.tribes.building.service.BuildingService;
-import rueppellii.backend2.tribes.location.persistence.model.Location;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
@@ -51,10 +50,6 @@ public class Kingdom {
     @JsonManagedReference
     @OneToMany(mappedBy = "progressKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProgressionModel> kingdomsProgresses;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "locationsKingdom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Location> kingdomsLocations;
 
     public Kingdom() {
         kingdomsBuildings = BuildingService.starterKit(this);
