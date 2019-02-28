@@ -1,118 +1,111 @@
 package rueppellii.backend2.tribes.gameUtility.timeService;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import rueppellii.backend2.tribes.gameUtility.timeService.TimeService;
+import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class TimeServiceTest {
 
     @InjectMocks
     private TimeService timeService;
 
-    private Long calculationSystemTime = System.currentTimeMillis();
     private Integer buildingLevel;
     private Integer townhallLevel;
     private Integer troopLevel;
     private Double troopUpgradeTimeMultiplier;
-
+    private Double troopCreationTimeMultiplier;
+    private ProgressionModel progressionModel;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        buildingLevel = 1;
+        townhallLevel = 1;
+        troopLevel = 1;
+        troopCreationTimeMultiplier = 1.0;
+        troopUpgradeTimeMultiplier = 1.0;
     }
 
     @Test
     void calculateTimeOfBuildingCreationTest() {
-        assertEquals(calculationSystemTime + BUILDING_PROGRESSION_TIME,
-                calculationSystemTime + 30000L);
+        Long buildingCreationTime = timeService.calculateTimeOfBuildingCreation();
+        Long actualCreatingTime = System.currentTimeMillis() + 30000L;
+        Assertions.assertEquals(buildingCreationTime, actualCreatingTime);
     }
 
     @Test
     void calculateTimeDifferenceOfBuildingUpgradeFromLevelOneAndTwoTest() {
-        buildingLevel = 1;
-        townhallLevel = 1;
-
-        Long TownHallLevelOneAndBuildingLevelOne = calculationSystemTime +
-                (BUILDING_PROGRESSION_TIME * buildingLevel) / townhallLevel;
+        Long TownHallLevelOneAndBuildingLevelOne = timeService.calculateTimeOfBuildingUpgrade(buildingLevel, townhallLevel);
 
         buildingLevel = 2;
-        Long TownHallLevelOneAndBuildingLevelTwo = calculationSystemTime +
-                (BUILDING_PROGRESSION_TIME * buildingLevel) / townhallLevel;
+        Long TownHallLevelOneAndBuildingLevelTwo = timeService.calculateTimeOfBuildingUpgrade(buildingLevel, townhallLevel);
 
         Long actualDifference = TownHallLevelOneAndBuildingLevelTwo - TownHallLevelOneAndBuildingLevelOne;
 
-        assertEquals(BUILDING_PROGRESSION_TIME, actualDifference);
+        Assertions.assertEquals(BUILDING_PROGRESSION_TIME, actualDifference);
     }
 
     @Test
     void calculateTimeDifferenceOfBuildingUpgradeFromLevelOneAndTwoAtTownhallLevelTwoTest() {
-        buildingLevel = 1;
         townhallLevel = 2;
-        Long TownHallLevelOneAndBuildingLevelOne = calculationSystemTime +
-                (BUILDING_PROGRESSION_TIME * buildingLevel) / townhallLevel;
+        Long TownHallLevelTwoAndBuildingLevelOne = timeService.calculateTimeOfBuildingUpgrade(buildingLevel, townhallLevel);
 
         buildingLevel = 2;
-        Long TownHallLevelOneAndBuildingLevelTwo = calculationSystemTime +
-                (BUILDING_PROGRESSION_TIME * buildingLevel) / townhallLevel;
+        Long TownHallLevelTwoAndBuildingLevelTwo = timeService.calculateTimeOfBuildingUpgrade(buildingLevel, townhallLevel);
 
-        Long actualDifference = TownHallLevelOneAndBuildingLevelTwo - TownHallLevelOneAndBuildingLevelOne;
+        Long actualDifference = TownHallLevelTwoAndBuildingLevelTwo - TownHallLevelTwoAndBuildingLevelOne;
         Long expectedDifference = BUILDING_PROGRESSION_TIME / 2;
 
-        assertEquals(expectedDifference, actualDifference);
+        Assertions.assertEquals(expectedDifference, actualDifference);
     }
 
     @Test
     void calculateTimeDifferenceOfTroopCreationAtBarrackLevelOneTest() {
-        troopUpgradeTimeMultiplier = 1.0;
-        Long timeWithMultiplierOne = calculationSystemTime + (long)(TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier);
+        Long timeWithMultiplierOne = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
 
-        troopUpgradeTimeMultiplier = 2.0;
-        Long timeWithMultiplierTwo = calculationSystemTime + (long)(TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier);
+        troopCreationTimeMultiplier = 2.0;
+        Long timeWithMultiplierTwo = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
 
-        Long actualTimeDifference = timeWithMultiplierTwo - timeWithMultiplierOne;
+        Long actualTimeDifference = timeWithMultiplierTwo - timeWithMultiplierOne -1; // -1 comes from the rounding value difference
 
-        assertEquals(TROOP_PROGRESSION_TIME, actualTimeDifference);
+        Assertions.assertEquals(TROOP_PROGRESSION_TIME, actualTimeDifference);
     }
 
     @Test
     void calculateTimeDifferenceOfTroopUpgradeAtLevelOneAndTwoTest() {
-        troopUpgradeTimeMultiplier = 1.0;
-        troopLevel = 1;
-        Long timeAtLevelOne = calculationSystemTime + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier * troopLevel);
+        Long timeAtLevelOne = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, troopLevel);
 
         troopLevel = 2;
-        Long timeAtLevelTwo = calculationSystemTime + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier * troopLevel);
+        Long timeAtLevelTwo = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, troopLevel);
 
         Long actualTimeDifference = timeAtLevelTwo - timeAtLevelOne;
 
-        assertEquals(TROOP_PROGRESSION_TIME, actualTimeDifference);
-    }
-
-    @Test
-    void timeIsUpAssertTrueTest() {
-        Long getTimeToProgress = 1551177396L;
-        Boolean expected;
-        if (getTimeToProgress <= calculationSystemTime) {
-            expected = true;
-        } else {
-            expected = false;
-        }
-        assertTrue(expected, "time is up");
+        Assertions.assertEquals(TROOP_PROGRESSION_TIME, actualTimeDifference);
     }
 
     @Test
     void timeIsUpAssertFalseTest() {
-        Long getTimeToProgress = 1551177396L;
-        Boolean expected;
-        if (getTimeToProgress > calculationSystemTime) {
-            expected = true;
-        } else {
-            expected = false;
-        }
-        assertFalse(expected, "already ready");
+        progressionModel = new ProgressionModel();
+        progressionModel.setId(1L);
+        progressionModel.setGameObjectId(7L);
+        progressionModel.setTimeToProgress(timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier));
+
+        Assertions.assertFalse(timeService.timeIsUp(progressionModel), "It cannot be true as the test finishes before time is up");
+    }
+
+    @Test
+    void timeIsUpAssertTrueTest() {
+        progressionModel = new ProgressionModel();
+        progressionModel.setId(1L);
+        progressionModel.setGameObjectId(7L);
+        progressionModel.setTimeToProgress(System.currentTimeMillis() - BUILDING_PROGRESSION_TIME);
+
+        Assertions.assertTrue(timeService.timeIsUp(progressionModel), "Deduct progression time in order to get time is up before the function ends");
     }
 }
