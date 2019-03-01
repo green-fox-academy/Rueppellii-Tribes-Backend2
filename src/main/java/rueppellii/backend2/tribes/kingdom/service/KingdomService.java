@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,16 +89,12 @@ public class KingdomService {
     public List<String> listCountryCodes() throws IOException {
         Path path = Paths.get("src/main/resources/CountryCodes.txt");
         try {
-            List<String> lines = Files.readAllLines(path);
-            List<String[]> splitLines = new ArrayList<>();
-            List<String> countryCodes = new ArrayList<>();
-            for (String line : lines) {
-                splitLines.add(line.split("- "));
-            }
-            for (String[] splitLine : splitLines) {
-                countryCodes.add(splitLine[1]);
-            }
-            return countryCodes;
+            return Files.readAllLines(path)
+                    .stream().map(l -> l.split("- "))
+                    .collect(Collectors.toList())
+                    .stream()
+                    .map(a -> a[1])
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new IOException("Could not read file");
         }
@@ -106,8 +103,10 @@ public class KingdomService {
     public KingdomListWithLocationDTO listKingdomsWithLocation() {
         List<Kingdom> kingdomList = kingdomRepository.findAll();
         List<KingdomWithLocationDTO> kingdomDTOList = kingdomList
-                .stream().map(k -> new KingdomWithLocationDTO(k.getId(), k.getName(), k.getKingdomsTroops().size(), k.getKingdomsLocations()
-                        .stream().map(Location::getCountryCode).collect(Collectors.toList())))
+                .stream().map(k ->
+                        new KingdomWithLocationDTO(k.getId(), k.getName(), k.getKingdomsTroops().size(), k.getKingdomsLocations()
+                        .stream().map(Location::getCountryCode)
+                        .collect(Collectors.toList())))
                 .collect(Collectors.toList());
         return new KingdomListWithLocationDTO(kingdomDTOList);
     }
