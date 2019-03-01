@@ -10,11 +10,13 @@ import rueppellii.backend2.tribes.kingdom.persistence.repository.KingdomReposito
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
+import rueppellii.backend2.tribes.troop.utility.TroopLeaderBoardDTO;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KingdomService {
@@ -69,28 +71,19 @@ public class KingdomService {
         return kingdomRepository.findAll();
     }
 
-    public List<BuildingLeaderBoardDTO> findAllKingdomNames() throws KingdomNotFoundException {
-        List<BuildingLeaderBoardDTO> kingdomsBuildings = new ArrayList<>();
+    public List<BuildingLeaderBoardDTO> createBuildingLeaderBoardList() {
         List<Kingdom> kingdomList = findall();
+        List<BuildingLeaderBoardDTO> kingdomsBuildings = kingdomList.stream().map(p -> new BuildingLeaderBoardDTO(p.getName(), p.getKingdomsBuildings().size())).collect(Collectors.toList());
 
-        for (int i = 0; i < kingdomList.size(); i++) {
-            if (kingdomList.get(i).getName() != null) {
-                kingdomsBuildings.add(getOneKingdom(kingdomList.get(i).getId()));
-            }
-        }
         return kingdomsBuildings;
     }
 
-    public BuildingLeaderBoardDTO getOneKingdom(Long id) throws KingdomNotFoundException {
-        BuildingLeaderBoardDTO leaderBoardDTO = createLeaderBoardDTO(findById(id));
-        return leaderBoardDTO;
+    public List<TroopLeaderBoardDTO> createTroopLeaderBoardList() {
+        List<Kingdom> kingdomList = findall();
+        List<TroopLeaderBoardDTO> kingdomsTroops = kingdomList.stream().map(p -> new TroopLeaderBoardDTO(p.getName(), p.getKingdomsTroops().size())).collect(Collectors.toList());
+
+        return kingdomsTroops;
     }
 
-    private BuildingLeaderBoardDTO createLeaderBoardDTO(Kingdom kingdom) {
-        BuildingLeaderBoardDTO leaderBoardDTO = new BuildingLeaderBoardDTO();
-        leaderBoardDTO.setKingdomName(kingdom.getName());
-        leaderBoardDTO.setNumberOfBuildings(kingdom.getKingdomsBuildings().size());
-        return leaderBoardDTO;
-    }
 
 }
