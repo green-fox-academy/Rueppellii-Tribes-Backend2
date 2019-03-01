@@ -14,7 +14,6 @@ import rueppellii.backend2.tribes.troop.utility.TroopLeaderBoardDTO;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
