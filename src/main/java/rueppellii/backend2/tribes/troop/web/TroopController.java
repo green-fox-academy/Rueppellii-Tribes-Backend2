@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.gameUtility.gameChainService.GameChainService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
@@ -49,7 +50,7 @@ public class TroopController {
     @ResponseStatus(HttpStatus.OK)
     public void upgradeTroop(@PathVariable Integer level, Principal principal)
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
-            BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
+            BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException, UpgradeFailedException {
         gameChainService.upgradeTroopGameChain(level, principal);
     }
 }

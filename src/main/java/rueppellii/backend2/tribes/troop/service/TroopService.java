@@ -51,7 +51,7 @@ public class TroopService {
             throw new TroopNotFoundException("Troops not found with the given level!");
         }
         if(troopLevel == 3) {
-            throw new InvalidProgressionRequestException("Troops has reached the maximum level!");
+            throw new InvalidProgressionRequestException("Troops have reached the maximum level!");
         }
     }
 

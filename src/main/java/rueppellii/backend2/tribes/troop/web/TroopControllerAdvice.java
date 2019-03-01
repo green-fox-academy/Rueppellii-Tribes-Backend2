@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
@@ -47,6 +49,20 @@ public class TroopControllerAdvice {
     @ExceptionHandler(NoResourceException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ErrorResponse NoResourceHandler(NoResourceException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(InvalidProgressionRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse InvalidProgressionHandler(InvalidProgressionRequestException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UpgradeFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ErrorResponse UpgradeFailedHandler(UpgradeFailedException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }

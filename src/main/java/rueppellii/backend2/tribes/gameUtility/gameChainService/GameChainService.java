@@ -74,7 +74,7 @@ public class GameChainService {
 
     public void upgradeTroopGameChain(Integer level, Principal principal)
             throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException,
-            NoResourceException, InvalidProgressionRequestException {
+            NoResourceException, InvalidProgressionRequestException, UpgradeFailedException {
         Kingdom kingdom = kingdomService.findByPrincipal(principal);
         updateGameAssets(kingdom);
         troopService.validateUpgradeTroopRequest(level, kingdom);
