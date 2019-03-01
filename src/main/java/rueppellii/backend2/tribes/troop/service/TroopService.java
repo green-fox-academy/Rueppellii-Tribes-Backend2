@@ -53,7 +53,6 @@ public class TroopService {
         if(troopLevel == 3) {
             throw new InvalidProgressionRequestException("Troops has reached the maximum level!");
         }
-
     }
 
     public List<Troop> getTroopsWithTheGivenLevel(Integer troopLevel, Kingdom kingdom) {
