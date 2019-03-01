@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KingdomService {
@@ -62,7 +63,6 @@ public class KingdomService {
     }
 
     public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) throws IOException, CountryCodeNotValidException, LocationIsTakenException {
-        System.out.println(listCountryCodes());
         Kingdom kingdom = new Kingdom();
         Location location = new Location();
         List<Location> kingdomsLocations = new ArrayList<>();
@@ -103,27 +103,12 @@ public class KingdomService {
         }
     }
 
-    public KingdomWithLocationDTO mapKingdomWithLocationDTO(Kingdom kingdom) {
-        KingdomWithLocationDTO kingdomWithLocationDTO = new KingdomWithLocationDTO();
-        List<String> locations = new ArrayList<>();
-        for (Location location : kingdom.getKingdomsLocations()) {
-            locations.add(location.getCountryCode());
-        }
-        kingdomWithLocationDTO.setId(kingdom.getId());
-        kingdomWithLocationDTO.setName(kingdom.getName());
-        kingdomWithLocationDTO.setPopulation(kingdom.getKingdomsTroops().size());
-        kingdomWithLocationDTO.setLocation(locations);
-        return kingdomWithLocationDTO;
-    }
-
     public KingdomListWithLocationDTO listKingdomsWithLocation() {
-        KingdomListWithLocationDTO dto = new KingdomListWithLocationDTO();
-        List<KingdomWithLocationDTO> kingdomDTOList = new ArrayList<>();
         List<Kingdom> kingdomList = kingdomRepository.findAll();
-        for (Kingdom kingdom : kingdomList) {
-            kingdomDTOList.add(mapKingdomWithLocationDTO(kingdom));
-        }
-        dto.setKingdoms(kingdomDTOList);
-        return dto;
+        List<KingdomWithLocationDTO> kingdomDTOList = kingdomList
+                .stream().map(k -> new KingdomWithLocationDTO(k.getId(), k.getName(), k.getKingdomsTroops().size(), k.getKingdomsLocations()
+                        .stream().map(Location::getCountryCode).collect(Collectors.toList())))
+                .collect(Collectors.toList());
+        return new KingdomListWithLocationDTO(kingdomDTOList);
     }
 }

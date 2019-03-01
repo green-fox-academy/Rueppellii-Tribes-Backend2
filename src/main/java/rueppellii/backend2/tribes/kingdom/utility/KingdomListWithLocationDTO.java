@@ -10,4 +10,8 @@ import java.util.List;
 public class KingdomListWithLocationDTO {
 
     private List<KingdomWithLocationDTO> kingdoms;
+
+    public KingdomListWithLocationDTO(List<KingdomWithLocationDTO> kingdoms) {
+        this.kingdoms = kingdoms;
+    }
 }
