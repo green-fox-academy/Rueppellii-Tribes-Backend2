@@ -72,16 +72,12 @@ public class KingdomService {
 
     public List<BuildingLeaderBoardDTO> createBuildingLeaderBoardList() {
         List<Kingdom> kingdomList = findall();
-        List<BuildingLeaderBoardDTO> kingdomsBuildings = kingdomList.stream().map(p -> new BuildingLeaderBoardDTO(p.getName(), p.getKingdomsBuildings().size())).collect(Collectors.toList());
-
-        return kingdomsBuildings;
+        return kingdomList.stream().map(p -> new BuildingLeaderBoardDTO(p.getName(), p.getKingdomsBuildings().size())).collect(Collectors.toList());
     }
 
     public List<TroopLeaderBoardDTO> createTroopLeaderBoardList() {
         List<Kingdom> kingdomList = findall();
-        List<TroopLeaderBoardDTO> kingdomsTroops = kingdomList.stream().map(p -> new TroopLeaderBoardDTO(p.getName(), p.getKingdomsTroops().size())).collect(Collectors.toList());
-
-        return kingdomsTroops;
+        return kingdomList.stream().map(p -> new TroopLeaderBoardDTO(p.getName(), p.getKingdomsTroops().size())).collect(Collectors.toList());
     }
 
 
