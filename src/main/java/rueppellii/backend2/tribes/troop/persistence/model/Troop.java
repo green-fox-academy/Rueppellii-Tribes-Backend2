@@ -20,7 +20,7 @@ public class Troop {
     private Integer HP;
     private Integer attack;
     private Integer defense;
-    
+
     @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "kingdom_id")
