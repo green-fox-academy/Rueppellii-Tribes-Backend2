@@ -1,18 +1,26 @@
 buildscript {
     ext {
         springBootVersion = '2.1.2.RELEASE'
+        aspectjVersion = '1.8.12'
     }
     repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath ("gradle.plugin.aspectj:gradle-aspectj:0.1.6")
     }
 }
 
+
+apply plugin: "aspectj.gradle"
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
 
 group = 'rueppellii.backend2'
 version = '0.0.1-SNAPSHOT'
@@ -42,8 +50,9 @@ dependencies {
     compile('org.modelmapper:modelmapper:1.1.0')
     annotationProcessor("org.projectlombok:lombok")
     compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
-
-}
+    compile group: 'org.aspectj', name: 'aspectjrt', version: '1.7.3'
+    compile group: 'joda-time', name: 'joda-time', version: '2.10.1'
+    }
 
 test{
     environment "SIGNING_KEY", "secret"

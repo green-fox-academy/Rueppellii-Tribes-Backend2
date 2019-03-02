@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,14 @@ public class GetCountryCodesController {
         JSONArray jsonArray = response.getBody().getArray();
         CountryCodesDTO countryCodesDTO = new CountryCodesDTO();
         List<String> countryCodes = IntStream.range(0, jsonArray.length())
-                .mapToObj(index -> ((JSONObject)jsonArray.get(index)).optString("alpha3Code"))
+                .mapToObj(index -> {
+                    try {
+                        return ((JSONObject)jsonArray.get(index)).optString("alpha3Code");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
                 .collect(Collectors.toList());
         countryCodesDTO.setCountryCodes(countryCodes);
         return countryCodesDTO;
