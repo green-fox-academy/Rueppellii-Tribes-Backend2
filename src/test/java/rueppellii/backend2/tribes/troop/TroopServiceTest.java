@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
+import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
@@ -17,7 +18,6 @@ import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import javax.transaction.Transactional;
 
-//@ExtendWith(SpringExtension.class)
 @RunWith(SpringRunner.class)
 @ActiveProfiles("Test")
 @SpringBootTest
@@ -35,6 +35,7 @@ public class TroopServiceTest {
     public void findTroopById_Test() throws TroopNotFoundException {
         Long troopId = 1L;
         Troop testTroop = troopService.findById(troopId);
+
         int troopLevel = testTroop.getLevel();
 
         Assertions.assertEquals(troopLevel, 1);
@@ -61,10 +62,43 @@ public class TroopServiceTest {
         progressionModel.setGameObjectId(1L);
         progressionModel.setTimeToProgress(1551488461000L);
         troopService.upgradeTroop(progressionModel);
+
         int troopLevel = troopService.findById(1L).getLevel();
 
         Assertions.assertEquals(java.util.Optional.ofNullable(2), java.util.Optional.ofNullable(troopLevel));
-
     }
+
+    @Test
+    @Transactional
+    public void validateUpgradeTroopRequest_TroopLevelOne_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
+        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
+        int troopWithTheGivenLevel = 1;
+        troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
+    }
+
+    @Test
+    @Transactional
+    public void validateUpgradeTroopRequest_TroopLevelTwo_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
+        Kingdom kingdom = troopService.findById(4L).getTroopsKingdom();
+        int troopWithTheGivenLevel = 2;
+        troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
+    }
+
+    @Test(expected = TroopNotFoundException.class)
+    @Transactional
+    public void validateUpgradeTroopRequest_TroopNotFoundException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
+        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
+        int noTroopWithTheGivenLevel = 2;
+        troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
+    }
+
+    @Test(expected = InvalidProgressionRequestException.class)
+    @Transactional
+    public void validateUpgradeTroopRequest_InvalidProgressionRequestException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
+        Kingdom kingdom = troopService.findById(6L).getTroopsKingdom();
+        int noTroopWithTheGivenLevel = 3;
+        troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
+    }
+
 
 }
