@@ -12,8 +12,10 @@ import rueppellii.backend2.tribes.progression.exception.InvalidProgressionReques
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.utility.ListKingdomsTroopsDTO;
+import rueppellii.backend2.tribes.troop.utility.TroopLeaderBoardDTO;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/kingdom/troop")
@@ -51,5 +53,11 @@ public class TroopController {
             throws UsernameNotFoundException, KingdomNotFoundException, TroopNotFoundException,
             BuildingNotFoundException, NoResourceException, InvalidProgressionRequestException {
         gameChainService.upgradeTroopGameChain(level, principal);
+    }
+
+    @GetMapping("/leaderboard/troops")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TroopLeaderBoardDTO> showKingdomsAndTroops() {
+        return kingdomService.createTroopLeaderBoardList();
     }
 }
