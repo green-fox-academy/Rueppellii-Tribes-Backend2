@@ -18,7 +18,7 @@ public class TimeService {
     }
 
     public Long calculateTimeOfTroopCreation(Double troopUpgradeTimeMultiplier) {
-        return System.currentTimeMillis() + (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier);
+        return (long) (TROOP_PROGRESSION_TIME * troopUpgradeTimeMultiplier);
     }
 
     public Long calculateTimeOfTroopUpgrade(Double troopUpgradeTimeMultiplier, Integer troopLevel) {
