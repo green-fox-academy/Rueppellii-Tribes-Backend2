@@ -13,8 +13,10 @@ CREATE TABLE kingdoms (
 	FOREIGN KEY (application_user_id) REFERENCES users(id)
 );
 
-INSERT INTO users(id, username, password) VALUES (1, 'TestUser1', 'password');
-INSERT INTO users(id, username, password) VALUES (2, 'TestUser2', 'password');
+INSERT INTO users(id, username, password)
+	VALUES (1, 'TestUser1', 'password'),
+	       (2, 'TestUser2', 'password');
 
-INSERT INTO kingdoms(id, name, application_user_id) VALUES (1, 'TestVillage', 1);
-INSERT INTO kingdoms(id, name, application_user_id) VALUES (2, 'TestKingdom', 2);
+INSERT INTO kingdoms(id, name, application_user_id)
+	VALUES (1, 'TestVillage', 1),
+	       (2, 'TestKingdom', 2);
