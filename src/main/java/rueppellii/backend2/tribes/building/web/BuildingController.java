@@ -8,6 +8,7 @@ import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
 import rueppellii.backend2.tribes.gameUtility.gameChain.GameChainService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
@@ -33,7 +34,9 @@ public class BuildingController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public ListKingdomsBuildingsDTO showBuildings(Principal principal) throws KingdomNotFoundException {
+    public ListKingdomsBuildingsDTO showBuildings(Principal principal) throws KingdomNotFoundException, TroopNotFoundException, BuildingNotFoundException {
+        Kingdom kingdom = kingdomService.findByPrincipal(principal);
+        gameChainService.updateGameAssets(kingdom);
         ListKingdomsBuildingsDTO dto = new ListKingdomsBuildingsDTO();
         dto.setBuildings(kingdomService.findByPrincipal(principal).getKingdomsBuildings());
         return dto;
