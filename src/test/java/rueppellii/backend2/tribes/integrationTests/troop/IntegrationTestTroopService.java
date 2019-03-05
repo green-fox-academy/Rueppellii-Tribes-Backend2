@@ -32,16 +32,18 @@ public class IntegrationTestTroopService {
     private TroopService troopService;
 
     private Kingdom kingdom;
+    private Troop testTroop;
+    private int troopLevel;
     private int troopWithTheGivenLevel;
     private int noTroopWithTheGivenLevel;
+    private Long troopId;
 
 
     @Test
     public void findTroopById_Test() throws TroopNotFoundException {
-        Long troopId = 1L;
-        Troop testTroop = troopService.findById(troopId);
-
-        int troopLevel = testTroop.getLevel();
+        troopId = 1L;
+        testTroop = troopService.findById(troopId);
+        troopLevel = testTroop.getLevel();
 
         Assertions.assertEquals(troopLevel, 1);
     }
@@ -49,10 +51,10 @@ public class IntegrationTestTroopService {
     @Test
     @Transactional  //this solve the Lazy Initialization Exception
     public void createTroop_Test() throws TroopNotFoundException {
-        Long troopId = 1L;
-        Troop testTroop = troopService.findById(troopId);
-        Kingdom testKingdom = testTroop.getTroopsKingdom();
-        troopService.createTroop(testKingdom);
+        troopId = 1L;
+        testTroop = troopService.findById(troopId);
+        kingdom = testTroop.getTroopsKingdom();
+        troopService.createTroop(kingdom);
         Long expectedTroopId = 7L;
         Troop createdTroop = troopService.findById(expectedTroopId);
 
@@ -68,7 +70,7 @@ public class IntegrationTestTroopService {
         progressionModel.setTimeToProgress(1551488461000L);
         troopService.upgradeTroop(progressionModel);
 
-        int troopLevel = troopService.findById(1L).getLevel();
+        troopLevel = troopService.findById(1L).getLevel();
 
         Assertions.assertEquals(java.util.Optional.ofNullable(2), java.util.Optional.ofNullable(troopLevel));
     }
@@ -84,7 +86,7 @@ public class IntegrationTestTroopService {
     @Test
     @Transactional
     public void validateUpgradeTroopRequest_TroopLevelTwo_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(4L).getTroopsKingdom();
+        kingdom = troopService.findById(4L).getTroopsKingdom();
         troopWithTheGivenLevel = 2;
         troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
     }
