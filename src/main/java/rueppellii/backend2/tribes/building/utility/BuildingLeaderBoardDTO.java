@@ -10,4 +10,8 @@ public class BuildingLeaderBoardDTO {
     String kingdomName;
     Integer numberOfBuildings;
 
+    public BuildingLeaderBoardDTO(String kingdomName, Integer numberOfBuildings) {
+        this.kingdomName = kingdomName;
+        this.numberOfBuildings = numberOfBuildings;
+    }
 }

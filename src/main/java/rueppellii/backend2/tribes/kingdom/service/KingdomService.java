@@ -16,6 +16,7 @@ import rueppellii.backend2.tribes.location.persistence.model.Location;
 import rueppellii.backend2.tribes.location.service.LocationService;
 import rueppellii.backend2.tribes.security.auth.jwt.JwtAuthenticationToken;
 import rueppellii.backend2.tribes.security.model.UserContext;
+import rueppellii.backend2.tribes.troop.utility.TroopLeaderBoardDTO;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,27 +115,13 @@ public class KingdomService {
         return kingdomRepository.findAll();
     }
 
-    public List<BuildingLeaderBoardDTO> findAllKingdomNames() throws KingdomNotFoundException {
-        List<BuildingLeaderBoardDTO> kingdomsBuildings = new ArrayList<>();
+    public List<BuildingLeaderBoardDTO> createBuildingLeaderBoardList() {
         List<Kingdom> kingdomList = findall();
-
-        for (int i = 0; i < kingdomList.size(); i++) {
-            if (kingdomList.get(i).getName() != null) {
-                kingdomsBuildings.add(getOneKingdom(kingdomList.get(i).getId()));
-            }
-        }
-        return kingdomsBuildings;
+        return kingdomList.stream().map(p -> new BuildingLeaderBoardDTO(p.getName(), p.getKingdomsBuildings().size())).collect(Collectors.toList());
     }
 
-    public BuildingLeaderBoardDTO getOneKingdom(Long id) throws KingdomNotFoundException {
-        BuildingLeaderBoardDTO leaderBoardDTO = createLeaderBoardDTO(findById(id));
-        return leaderBoardDTO;
-    }
-
-    private BuildingLeaderBoardDTO createLeaderBoardDTO(Kingdom kingdom) {
-        BuildingLeaderBoardDTO leaderBoardDTO = new BuildingLeaderBoardDTO();
-        leaderBoardDTO.setKingdomName(kingdom.getName());
-        leaderBoardDTO.setNumberOfBuildings(kingdom.getKingdomsBuildings().size());
-        return leaderBoardDTO;
+    public List<TroopLeaderBoardDTO> createTroopLeaderBoardList() {
+        List<Kingdom> kingdomList = findall();
+        return kingdomList.stream().map(p -> new TroopLeaderBoardDTO(p.getName(), p.getKingdomsTroops().size())).collect(Collectors.toList());
     }
 }

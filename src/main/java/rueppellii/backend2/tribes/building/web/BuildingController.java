@@ -7,7 +7,6 @@ import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.utility.ListKingdomsBuildingsDTO;
 import rueppellii.backend2.tribes.building.utility.BuildingLeaderBoardDTO;
-import rueppellii.backend2.tribes.gameUtility.purchaseService.PurchaseService;
 import rueppellii.backend2.tribes.gameUtility.gameChainService.GameChainService;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
@@ -60,7 +59,7 @@ public class BuildingController {
 
     @GetMapping("/leaderboard/buildings")
     @ResponseStatus(HttpStatus.OK)
-    public List<BuildingLeaderBoardDTO> showKingdomsAndBuildings() throws KingdomNotFoundException {
-        return kingdomService.findAllKingdomNames();
+    public List<BuildingLeaderBoardDTO> showKingdomsAndBuildings() {
+        return kingdomService.createBuildingLeaderBoardList();
     }
 }
