@@ -64,22 +64,30 @@ public class KingdomService {
         return findByUsername(loggedInUser);
     }
 
-    public Kingdom createNewKingdomAndSetNameIfNotExists(ApplicationUserDTO applicationUserDTO) throws IOException, CountryCodeNotValidException, LocationIsTakenException {
+    public Kingdom createKingdom(ApplicationUserDTO applicationUserDTO) throws IOException, CountryCodeNotValidException, LocationIsTakenException {
         Kingdom kingdom = new Kingdom();
-        Location location = new Location();
-        List<Location> kingdomsLocations = new ArrayList<>();
-        location.setCountryCode(applicationUserDTO.getLocation());
-        kingdomsLocations.add(location);
-        if (listCountryCodes().contains(location.getCountryCode()) && (locationService.findLocation(location.getCountryCode()) == null)) {
-                kingdom.setKingdomsLocations(kingdomsLocations);
-                location.setLocationsKingdom(kingdom);
-            } else throw new CountryCodeNotValidException("Not a valid country code");
+        setKingdomLocation(kingdom, applicationUserDTO);
+        setKingdomName(kingdom, applicationUserDTO);
+        return kingdom;
+    }
+
+    public void setKingdomName(Kingdom kingdom, ApplicationUserDTO applicationUserDTO) {
         if (applicationUserDTO.getKingdomName().isEmpty()) {
             kingdom.setName(applicationUserDTO.getUsername() + "'s Kingdom");
         } else {
             kingdom.setName(applicationUserDTO.getKingdomName());
         }
-        return kingdom;
+    }
+
+    public void setKingdomLocation(Kingdom kingdom, ApplicationUserDTO applicationUserDTO) throws IOException, CountryCodeNotValidException, LocationIsTakenException {
+        Location location = new Location();
+        List<Location> kingdomsLocations = new ArrayList<>();
+        location.setCountryCode(applicationUserDTO.getLocation());
+        kingdomsLocations.add(location);
+        if (listCountryCodes().contains(location.getCountryCode()) && (locationService.findLocation(location.getCountryCode()) == null)) {
+            kingdom.setKingdomsLocations(kingdomsLocations);
+            location.setLocationsKingdom(kingdom);
+        } else throw new CountryCodeNotValidException("Not a valid country code");
     }
 
     public KingdomDTO findOtherKingdom(Long id) throws KingdomNotFoundException {

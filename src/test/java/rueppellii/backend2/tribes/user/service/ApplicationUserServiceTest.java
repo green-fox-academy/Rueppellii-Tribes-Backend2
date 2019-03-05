@@ -57,7 +57,7 @@ class ApplicationUserServiceTest {
         ApplicationUserRole applicationUserRole = new ApplicationUserRole();
         applicationUserRole.setRoleEnum(Role.USER);
         when(roleService.findById(1L)).thenReturn(applicationUserRole);
-        when(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO)).thenReturn(kingdom);
+        when(kingdomService.createKingdom(applicationUserDTO)).thenReturn(kingdom);
         applicationUserService.registerApplicationUser(applicationUserDTO);
 
         assertEquals(kingdom.getName(), applicationUserDTO.getUsername() + "'s Kingdom");
@@ -78,7 +78,7 @@ class ApplicationUserServiceTest {
         ApplicationUserRole applicationUserRole = new ApplicationUserRole();
         applicationUserRole.setRoleEnum(Role.USER);
         when(roleService.findById(1L)).thenReturn(applicationUserRole);
-        when(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO)).thenReturn(kingdom);
+        when(kingdomService.createKingdom(applicationUserDTO)).thenReturn(kingdom);
         applicationUserService.registerApplicationUser(applicationUserDTO);
 
         assertEquals(kingdom.getName(), applicationUserDTO.getKingdomName());
