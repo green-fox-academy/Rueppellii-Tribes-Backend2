@@ -12,7 +12,7 @@ import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
 
 import javax.validation.Valid;
 import java.security.Principal;

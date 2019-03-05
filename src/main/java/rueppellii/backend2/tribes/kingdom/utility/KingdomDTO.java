@@ -5,7 +5,7 @@ import lombok.Setter;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.location.persistence.model.Location;
 import rueppellii.backend2.tribes.resource.presistence.model.Resource;
-import rueppellii.backend2.tribes.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
 
 import java.util.List;
 

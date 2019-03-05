@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.troop.persistence.model;
+package rueppellii.backend2.tribes.integrationTests.troop.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;

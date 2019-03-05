@@ -1,18 +1,18 @@
-package rueppellii.backend2.tribes.troop.service;
+package rueppellii.backend2.tribes.integrationTests.troop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.troop.persistence.model.Troop;
-import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
+import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.integrationTests.troop.persistence.repository.TroopRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
+import static rueppellii.backend2.tribes.integrationTests.troop.utility.TroopFactory.*;
 
 @Service
 public class TroopService {
