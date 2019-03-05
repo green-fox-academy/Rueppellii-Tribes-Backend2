@@ -165,23 +165,13 @@ public class ProgressionService {
     }
 
     public void troopUpgradeValidator(Kingdom kingdom, List<Long> troopsForUpgradeIds) throws UpgradeFailedException {
-        if(kingdom.getKingdomsProgresses().stream()
-                .filter(t -> t.getType().equals("TROOP"))
-                .filter(g -> Objects.nonNull(g.getGameObjectId()))
-                .map(ProgressionModel::getGameObjectId).collect(Collectors.toList())
-                .contains(troopsForUpgradeIds.listIterator().next())) {
-            throw new UpgradeFailedException("Troops are already training");
+        for(ProgressionModel troopProgression : kingdom.getKingdomsProgresses()) {
+            if (troopProgression.getType().equals("TROOP")
+                    && troopProgression.getGameObjectId() != null
+                    && troopsForUpgradeIds.contains(troopProgression.getGameObjectId())) {
+                throw new UpgradeFailedException("Troops are already training");
+            }
         }
-
-//        for(ProgressionModel troopProgression : kingdom.getKingdomsProgresses()) {
-//            if (troopProgression.getType().equals("TROOP")) {
-//                if (troopProgression.getGameObjectId() != null) {
-//                    if (troopsForUpgradeIds.contains(troopProgression.getGameObjectId())) {
-//                        throw new UpgradeFailedException("Troops are already training");
-//                    }
-//                }
-//            }
-//        }
     }
 
     private void saveProgressionIntoKingdom(ProgressionModel progressionModel, Kingdom kingdom){
