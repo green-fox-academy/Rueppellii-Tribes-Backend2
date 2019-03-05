@@ -12,6 +12,7 @@
 .idea/**/contentModel.xml
 .idea/
 .gradle/
+*.class
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
