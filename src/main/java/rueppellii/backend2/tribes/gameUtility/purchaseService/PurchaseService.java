@@ -6,8 +6,8 @@ import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
-import rueppellii.backend2.tribes.integrationTests.troop.service.TroopService;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.List;
 

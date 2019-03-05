@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.integrationTests.troop;
+package rueppellii.backend2.tribes.troop;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -12,9 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
-import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
-import rueppellii.backend2.tribes.integrationTests.troop.service.TroopService;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import javax.transaction.Transactional;
 

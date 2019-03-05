@@ -1,8 +1,8 @@
-package rueppellii.backend2.tribes.integrationTests.troop.utility;
+package rueppellii.backend2.tribes.troop.utility;
 
 import lombok.Getter;
 import lombok.Setter;
-import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 
 import java.util.List;
 

@@ -15,8 +15,8 @@ import rueppellii.backend2.tribes.progression.service.ProgressionService;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
-import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.integrationTests.troop.service.TroopService;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.security.Principal;
 

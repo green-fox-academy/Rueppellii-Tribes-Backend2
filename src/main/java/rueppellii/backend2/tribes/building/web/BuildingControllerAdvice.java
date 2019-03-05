@@ -11,7 +11,7 @@ import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.kingdom.exception.KingdomNotFoundException;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.user.util.ErrorResponse;
 
 @ControllerAdvice(assignableTypes = BuildingController.class)

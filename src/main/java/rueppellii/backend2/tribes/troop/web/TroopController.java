@@ -1,4 +1,4 @@
-package rueppellii.backend2.tribes.integrationTests.troop.web;
+package rueppellii.backend2.tribes.troop.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,8 @@ import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 import rueppellii.backend2.tribes.progression.exception.InvalidProgressionRequestException;
 import rueppellii.backend2.tribes.resource.exception.NoResourceException;
-import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.integrationTests.troop.utility.ListKingdomsTroopsDTO;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.utility.ListKingdomsTroopsDTO;
 
 import java.security.Principal;
 

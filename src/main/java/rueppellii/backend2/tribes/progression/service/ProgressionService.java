@@ -15,9 +15,9 @@ import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModelRepository;
 import rueppellii.backend2.tribes.progression.util.ProgressionDTO;
 import rueppellii.backend2.tribes.resource.service.ResourceService;
-import rueppellii.backend2.tribes.integrationTests.troop.exception.TroopNotFoundException;
-import rueppellii.backend2.tribes.integrationTests.troop.persistence.model.Troop;
-import rueppellii.backend2.tribes.integrationTests.troop.service.TroopService;
+import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
+import rueppellii.backend2.tribes.troop.persistence.model.Troop;
+import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.List;
 
