@@ -31,6 +31,11 @@ public class TroopServiceTest {
     @Autowired
     private TroopService troopService;
 
+    private Kingdom kingdom;
+    private int troopWithTheGivenLevel;
+    private int noTroopWithTheGivenLevel;
+
+
     @Test
     public void findTroopById_Test() throws TroopNotFoundException {
         Long troopId = 1L;
@@ -71,8 +76,8 @@ public class TroopServiceTest {
     @Test
     @Transactional
     public void validateUpgradeTroopRequest_TroopLevelOne_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
-        int troopWithTheGivenLevel = 1;
+        kingdom = troopService.findById(1L).getTroopsKingdom();
+        troopWithTheGivenLevel = 1;
         troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
     }
 
@@ -80,25 +85,23 @@ public class TroopServiceTest {
     @Transactional
     public void validateUpgradeTroopRequest_TroopLevelTwo_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
         Kingdom kingdom = troopService.findById(4L).getTroopsKingdom();
-        int troopWithTheGivenLevel = 2;
+        troopWithTheGivenLevel = 2;
         troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
     }
 
     @Test(expected = TroopNotFoundException.class)
     @Transactional
     public void validateUpgradeTroopRequest_TroopNotFoundException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
-        int noTroopWithTheGivenLevel = 2;
+        kingdom = troopService.findById(1L).getTroopsKingdom();
+        noTroopWithTheGivenLevel = 2;
         troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
     }
 
     @Test(expected = InvalidProgressionRequestException.class)
     @Transactional
     public void validateUpgradeTroopRequest_InvalidProgressionRequestException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(6L).getTroopsKingdom();
-        int noTroopWithTheGivenLevel = 3;
+        kingdom = troopService.findById(6L).getTroopsKingdom();
+        noTroopWithTheGivenLevel = 3;
         troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
     }
-
-
 }
