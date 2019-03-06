@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
+import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("Test")
@@ -45,28 +46,28 @@ class BuildingServiceTest {
 
     @Test
     public void findBuildingById_Test() throws BuildingNotFoundException {
-        buildingId = 2L;
+        buildingId = 1L;
         testBuilding = buildingService.findById(buildingId);
         buildingLevel = testBuilding.getLevel();
 
         Assertions.assertEquals(buildingLevel, 1);
     }
 
-
+    @Test
     @Transactional
     void findBuildingInKingdom_Test() throws BuildingNotFoundException {
         buildingId = 1L;
         testBuilding = buildingService.findById(buildingId);
         testKingdom = testBuilding.getBuildingsKingdom();
-//        Building testBuilding = buildingService.findBuildingInKingdom(testKingdom, buildingId);
+        buildingService.findBuildingInKingdom(testKingdom, buildingId);
 
-        Assertions.assertEquals(3, testBuilding);
+        Assertions.assertEquals(testBuilding, testKingdom.getKingdomsBuildings().get(0));
     }
 
-//    @Test
-//    void isTownhall() {
-//
-//    }
+    @Test
+    void isTownhall() {
+
+    }
 
 //    @Test
 //    void validateBuildingUpgrade() {
@@ -105,7 +106,12 @@ class BuildingServiceTest {
     }
 
     @Test
-    void checkIfBuildingIsUnderMaxLevel() {
+    void checkIfBuildingIsUnderMaxLevel() throws BuildingNotFoundException {
+        buildingId = 3L;
+        testBuilding = buildingService.findById(buildingId);
+        buildingLevel = testBuilding.getLevel();
+
+        Assertions.assertTrue(buildingLevel <= BUILDING_MAX_LEVEL);
     }
 
     @Test
