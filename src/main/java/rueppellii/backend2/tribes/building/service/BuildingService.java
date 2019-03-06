@@ -83,7 +83,7 @@ public class BuildingService {
         buildingRepository.save(building);
     }
 
-    private Building findById(Long id) throws BuildingNotFoundException {
+    public Building findById(Long id) throws BuildingNotFoundException {
         return buildingRepository.findById(id).orElseThrow(() -> new BuildingNotFoundException("Building not found by id: " + id));
     }
 
