@@ -8,11 +8,10 @@ import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 import rueppellii.backend2.tribes.troop.exception.TroopNotFoundException;
 import rueppellii.backend2.tribes.troop.persistence.model.Troop;
 import rueppellii.backend2.tribes.troop.persistence.repository.TroopRepository;
+import rueppellii.backend2.tribes.troop.utility.TroopFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static rueppellii.backend2.tribes.troop.utility.TroopFactory.*;
 
 @Service
 public class TroopService {
@@ -29,7 +28,7 @@ public class TroopService {
     }
 
     public void createTroop(Kingdom kingdom) {
-        Troop troop = makeTroop();
+        Troop troop = TroopFactory.makeTroop();
         troop.setTroopsKingdom(kingdom);
         troopRepository.save(troop);
     }

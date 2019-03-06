@@ -26,17 +26,24 @@ import javax.transaction.Transactional;
         @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data.sql"),
         @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:clear.sql"),
 })
-public class TroopServiceTest {
+public class IntegrationTestTroopService {
 
     @Autowired
     private TroopService troopService;
 
+    private Kingdom kingdom;
+    private Troop testTroop;
+    private int troopLevel;
+    private int troopWithTheGivenLevel;
+    private int noTroopWithTheGivenLevel;
+    private Long troopId;
+
+
     @Test
     public void findTroopById_Test() throws TroopNotFoundException {
-        Long troopId = 1L;
-        Troop testTroop = troopService.findById(troopId);
-
-        int troopLevel = testTroop.getLevel();
+        troopId = 1L;
+        testTroop = troopService.findById(troopId);
+        troopLevel = testTroop.getLevel();
 
         Assertions.assertEquals(troopLevel, 1);
     }
@@ -44,10 +51,10 @@ public class TroopServiceTest {
     @Test
     @Transactional  //this solve the Lazy Initialization Exception
     public void createTroop_Test() throws TroopNotFoundException {
-        Long troopId = 1L;
-        Troop testTroop = troopService.findById(troopId);
-        Kingdom testKingdom = testTroop.getTroopsKingdom();
-        troopService.createTroop(testKingdom);
+        troopId = 1L;
+        testTroop = troopService.findById(troopId);
+        kingdom = testTroop.getTroopsKingdom();
+        troopService.createTroop(kingdom);
         Long expectedTroopId = 7L;
         Troop createdTroop = troopService.findById(expectedTroopId);
 
@@ -63,7 +70,7 @@ public class TroopServiceTest {
         progressionModel.setTimeToProgress(1551488461000L);
         troopService.upgradeTroop(progressionModel);
 
-        int troopLevel = troopService.findById(1L).getLevel();
+        troopLevel = troopService.findById(1L).getLevel();
 
         Assertions.assertEquals(java.util.Optional.ofNullable(2), java.util.Optional.ofNullable(troopLevel));
     }
@@ -71,34 +78,32 @@ public class TroopServiceTest {
     @Test
     @Transactional
     public void validateUpgradeTroopRequest_TroopLevelOne_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
-        int troopWithTheGivenLevel = 1;
+        kingdom = troopService.findById(1L).getTroopsKingdom();
+        troopWithTheGivenLevel = 1;
         troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
     }
 
     @Test
     @Transactional
     public void validateUpgradeTroopRequest_TroopLevelTwo_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(4L).getTroopsKingdom();
-        int troopWithTheGivenLevel = 2;
+        kingdom = troopService.findById(4L).getTroopsKingdom();
+        troopWithTheGivenLevel = 2;
         troopService.validateUpgradeTroopRequest(troopWithTheGivenLevel, kingdom);
     }
 
     @Test(expected = TroopNotFoundException.class)
     @Transactional
     public void validateUpgradeTroopRequest_TroopNotFoundException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(1L).getTroopsKingdom();
-        int noTroopWithTheGivenLevel = 2;
+        kingdom = troopService.findById(1L).getTroopsKingdom();
+        noTroopWithTheGivenLevel = 2;
         troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
     }
 
     @Test(expected = InvalidProgressionRequestException.class)
     @Transactional
     public void validateUpgradeTroopRequest_InvalidProgressionRequestException_Test() throws TroopNotFoundException, InvalidProgressionRequestException {
-        Kingdom kingdom = troopService.findById(6L).getTroopsKingdom();
-        int noTroopWithTheGivenLevel = 3;
+        kingdom = troopService.findById(6L).getTroopsKingdom();
+        noTroopWithTheGivenLevel = 3;
         troopService.validateUpgradeTroopRequest(noTroopWithTheGivenLevel, kingdom);
     }
-
-
 }
