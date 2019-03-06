@@ -1,29 +1,22 @@
 package rueppellii.backend2.tribes.building.service;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
 import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
-import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.progression.persistence.ProgressionModel;
 
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static rueppellii.backend2.tribes.building.utility.BuildingFactory.makeBuilding;
 import static rueppellii.backend2.tribes.gameUtility.purchaseService.UpgradeConstants.BUILDING_MAX_LEVEL;
 
 @RunWith(SpringRunner.class)
@@ -41,9 +34,6 @@ class BuildingServiceTest {
     private String buildingType;
     private int buildingLevel;
 
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     public void findBuildingById_Test() throws BuildingNotFoundException {
@@ -66,13 +56,8 @@ class BuildingServiceTest {
     }
 
     @Test
-    void isTownhall() {
-
-    }
-
-    @Test
     @Transactional
-    void getLevelOfTownHall() throws BuildingNotFoundException {
+    void getLevelOfTownHall_Test() throws BuildingNotFoundException {
         buildingId = 2L;
         testBuilding = buildingService.findById(buildingId);
         buildingType = testBuilding.getType().getName();
@@ -97,6 +82,14 @@ class BuildingServiceTest {
     }
 
     @Test
+    void isTownhall_Test() throws BuildingNotFoundException {
+        testBuilding = buildingService.findById(1L);
+        buildingType = testBuilding.getType().getName();
+
+        Assertions.assertEquals(buildingType, "TOWNHALL");
+    }
+
+    @Test
     void checkIfBuildingIsUnderTownhallLevel() {
     }
 
@@ -112,13 +105,12 @@ class BuildingServiceTest {
 
     @Test
     @Transactional
-    void validateBuildingUpgrade() throws BuildingNotFoundException, UpgradeFailedException {
+    void validateBuildingUpgrade_Test() throws BuildingNotFoundException, UpgradeFailedException {
         buildingId = 1L;
         testKingdom = buildingService.findById(buildingId).getBuildingsKingdom();
         testBuilding = testKingdom.getKingdomsBuildings().get(1);
 
         buildingService.validateBuildingUpgrade(testKingdom, buildingId);
-
     }
 
     @Test
