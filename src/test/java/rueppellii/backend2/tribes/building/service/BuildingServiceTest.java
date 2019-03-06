@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import rueppellii.backend2.tribes.building.exception.BuildingNotFoundException;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
@@ -69,11 +70,6 @@ class BuildingServiceTest {
 
     }
 
-//    @Test
-//    void validateBuildingUpgrade() {
-//    }
-//
-
     @Test
     @Transactional
     void getLevelOfTownHall() throws BuildingNotFoundException {
@@ -83,7 +79,6 @@ class BuildingServiceTest {
         buildingLevel = testBuilding.getLevel();
 
         Assertions.assertEquals(buildingLevel, 1);
-
     }
 
     @Test
@@ -106,7 +101,8 @@ class BuildingServiceTest {
     }
 
     @Test
-    void checkIfBuildingIsUnderMaxLevel() throws BuildingNotFoundException {
+    @Transactional
+    void checkIfBuildingIsUnderMaxLevel_Test() throws BuildingNotFoundException {
         buildingId = 3L;
         testBuilding = buildingService.findById(buildingId);
         buildingLevel = testBuilding.getLevel();
@@ -115,7 +111,14 @@ class BuildingServiceTest {
     }
 
     @Test
-    void validateBuildingUpgrade() {
+    @Transactional
+    void validateBuildingUpgrade() throws BuildingNotFoundException, UpgradeFailedException {
+        buildingId = 1L;
+        testKingdom = buildingService.findById(buildingId).getBuildingsKingdom();
+        testBuilding = testKingdom.getKingdomsBuildings().get(1);
+
+        buildingService.validateBuildingUpgrade(testKingdom, buildingId);
+
     }
 
     @Test
