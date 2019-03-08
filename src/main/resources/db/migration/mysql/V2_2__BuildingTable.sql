@@ -9,19 +9,11 @@ CREATE TABLE IF NOT EXISTS buildings (
 );
 
 INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (1, 'Townhall', 1, 10, 1);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (2, 'Farm', 1, 1, 1);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (3, 'Mine', 1, 5, 1);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-VALUES (4, 'Barrack', 1, 100, 1);
-
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (5, 'Townhall', 1, 10, 2);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (6, 'Farm', 1, 1, 2);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (7, 'Mine', 1, 5, 2);
-INSERT INTO buildings(id, type, level, hp, kingdom_id)
-  VALUES (8, 'Barrack', 1, 100, 2);
+  VALUES (1, 'Townhall', 1, 10, 1),
+         (2, 'Farm', 1, 1, 1),
+         (3, 'Mine', 1, 5, 1),
+         (4, 'Barrack', 1, 100, 1),
+         (5, 'Townhall', 1, 10, 2),
+         (6, 'Farm', 1, 1, 2),
+         (7, 'Mine', 1, 5, 2),
+         (8, 'Barrack', 1, 100, 2);
