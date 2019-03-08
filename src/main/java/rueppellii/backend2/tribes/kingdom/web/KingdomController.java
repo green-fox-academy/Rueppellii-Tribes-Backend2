@@ -3,6 +3,7 @@ package rueppellii.backend2.tribes.kingdom.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import rueppellii.backend2.tribes.kingdom.utility.KingdomListWithLocationDTO;
 import rueppellii.backend2.tribes.gameUtility.gameChainService.GameChainService;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.utility.KingdomDTO;
@@ -49,5 +50,11 @@ public class KingdomController {
     public KingdomDTO showOtherKingdom(@PathVariable Long id)
             throws KingdomNotFoundException {
         return kingdomService.findOtherKingdom(id);
+    }
+  
+    @GetMapping("/map")
+    @ResponseStatus(HttpStatus.OK)
+    public KingdomListWithLocationDTO showLocations() {
+        return kingdomService.listKingdomsWithLocation();
     }
 }

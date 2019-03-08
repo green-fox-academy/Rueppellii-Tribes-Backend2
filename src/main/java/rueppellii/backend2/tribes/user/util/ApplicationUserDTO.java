@@ -19,6 +19,8 @@ public class ApplicationUserDTO {
     String username;
     @NotBlank
     String password;
+    @NotBlank
+    String location;
 
     String kingdomName;
     List<Role> roles;
