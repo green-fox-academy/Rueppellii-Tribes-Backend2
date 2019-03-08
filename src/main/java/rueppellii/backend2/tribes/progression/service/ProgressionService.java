@@ -132,9 +132,9 @@ public class ProgressionService {
         progressionModel.setType("TROOP");
         Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopCreation = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
-        progressionModel.setTimeToProgress(timeOfTroopCreation);
+        progressionModel.setTimeToProgress(System.currentTimeMillis() + timeOfTroopCreation);
         if (findTroopProgressionWithLongestTime(kingdom).isPresent()) {
-            progressionModel.setTimeToProgress(findTroopProgressionWithLongestTime(kingdom).get().getTimeToProgress() + TROOP_PROGRESSION_TIME);
+            progressionModel.setTimeToProgress(findTroopProgressionWithLongestTime(kingdom).get().getTimeToProgress() + timeOfTroopCreation);
         }
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
