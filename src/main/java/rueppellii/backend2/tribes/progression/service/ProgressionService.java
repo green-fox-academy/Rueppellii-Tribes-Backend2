@@ -3,6 +3,7 @@ package rueppellii.backend2.tribes.progression.service;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rueppellii.backend2.tribes.building.exception.UpgradeFailedException;
 import rueppellii.backend2.tribes.building.persistence.model.Building;
 import rueppellii.backend2.tribes.building.service.BuildingService;
 import rueppellii.backend2.tribes.building.utility.BuildingType;
@@ -21,7 +22,9 @@ import rueppellii.backend2.tribes.troop.service.TroopService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static rueppellii.backend2.tribes.gameUtility.timeService.TimeConstants.TROOP_PROGRESSION_TIME;
 
@@ -129,9 +132,9 @@ public class ProgressionService {
         progressionModel.setType("TROOP");
         Double troopCreationTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopCreation = timeService.calculateTimeOfTroopCreation(troopCreationTimeMultiplier);
-        progressionModel.setTimeToProgress(timeOfTroopCreation);
+        progressionModel.setTimeToProgress(System.currentTimeMillis() + timeOfTroopCreation);
         if (findTroopProgressionWithLongestTime(kingdom).isPresent()) {
-            progressionModel.setTimeToProgress(findTroopProgressionWithLongestTime(kingdom).get().getTimeToProgress() + TROOP_PROGRESSION_TIME);
+            progressionModel.setTimeToProgress(findTroopProgressionWithLongestTime(kingdom).get().getTimeToProgress() + timeOfTroopCreation);
         }
         saveProgressionIntoKingdom(progressionModel, kingdom);
     }
@@ -142,8 +145,9 @@ public class ProgressionService {
                 .max(Comparator.comparing(ProgressionModel::getTimeToProgress));
     }
 
-    public void generateTroopUpgradeModel(Integer level, Kingdom kingdom) {
+    public void generateTroopUpgradeModel(Integer level, Kingdom kingdom) throws UpgradeFailedException {
         List<Troop> troopsForUpgrade = troopService.getTroopsWithTheGivenLevel(level, kingdom);
+        troopUpgradeValidator(kingdom, getTroopsForUpgradeIds(troopsForUpgrade));
         Double troopUpgradeTimeMultiplier = buildingService.getTroopProgressionTimeMultiplier(kingdom);
         Long timeOfTroopUpgrade = timeService.calculateTimeOfTroopUpgrade(troopUpgradeTimeMultiplier, level);
         ProgressionModel progressionModel = new ProgressionModel();
@@ -153,6 +157,20 @@ public class ProgressionService {
             progressionModel.setType("TROOP");
             progressionModel.setTimeToProgress(System.currentTimeMillis() + (timeOfTroopUpgrade * (i + 1)));
             saveProgressionIntoKingdom(progressionModel, kingdom);
+        }
+    }
+
+    public List<Long> getTroopsForUpgradeIds(List<Troop> troopsForUpgrade) {
+        return troopsForUpgrade.stream().map(Troop::getId).collect(Collectors.toList());
+    }
+
+    public void troopUpgradeValidator(Kingdom kingdom, List<Long> troopsForUpgradeIds) throws UpgradeFailedException {
+        for(ProgressionModel troopProgression : kingdom.getKingdomsProgresses()) {
+            if (troopProgression.getType().equals("TROOP")
+                    && troopProgression.getGameObjectId() != null
+                    && troopsForUpgradeIds.contains(troopProgression.getGameObjectId())) {
+                throw new UpgradeFailedException("Troops are already training");
+            }
         }
     }
 

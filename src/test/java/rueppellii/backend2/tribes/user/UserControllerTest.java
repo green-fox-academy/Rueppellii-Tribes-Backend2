@@ -70,7 +70,8 @@ public class UserControllerTest {
                 .content("{\n"
                         + " \"username\":\"TestUser\",\n"
                         + " \"password\":\"12345\",\n"
-                        + " \"kingdomName\":\"TestKingdom\"\n"
+                        + " \"kingdomName\":\"TestKingdom\",\n"
+                        + " \"location\":\"ANT\"\n"
                         + "}"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id", Is.is(1)))
@@ -88,7 +89,8 @@ public class UserControllerTest {
                 .content("{\n"
                         + " \"username\":\"TestUser\",\n"
                         + " \"password\":\"12345\",\n"
-                        + " \"kingdomName\":\"\"\n"
+                        + " \"kingdomName\":\"\",\n"
+                        + " \"location\":\"ANT\"\n"
                         + "}"))
                 .andExpect(status().isOk());
     }
@@ -100,7 +102,8 @@ public class UserControllerTest {
                 .content("{\n"
                         + " \"username\":\"TestUser\",\n"
                         + " \"password\":\"12345\",\n"
-                        + " \"kingdomName\":\"\"\n"
+                        + " \"kingdomName\":\"\",\n"
+                        + " \"location\":\"ANT\"\n"
                         + "}"))
                 .andExpect(status().isOk());
     }

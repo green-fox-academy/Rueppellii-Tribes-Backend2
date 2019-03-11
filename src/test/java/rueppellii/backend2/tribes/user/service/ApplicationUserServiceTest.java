@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.persistence.model.Kingdom;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
+import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
@@ -16,6 +18,8 @@ import rueppellii.backend2.tribes.user.persistence.repository.ApplicationUserRep
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.persistence.model.ApplicationUserRole;
 import rueppellii.backend2.tribes.user.util.Role;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -44,7 +48,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+    void testRegisterApplicationUserSuccess() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);
@@ -53,7 +57,7 @@ class ApplicationUserServiceTest {
         ApplicationUserRole applicationUserRole = new ApplicationUserRole();
         applicationUserRole.setRoleEnum(Role.USER);
         when(roleService.findById(1L)).thenReturn(applicationUserRole);
-        when(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO)).thenReturn(kingdom);
+        when(kingdomService.createKingdom(applicationUserDTO)).thenReturn(kingdom);
         applicationUserService.registerApplicationUser(applicationUserDTO);
 
         assertEquals(kingdom.getName(), applicationUserDTO.getUsername() + "'s Kingdom");
@@ -64,7 +68,7 @@ class ApplicationUserServiceTest {
     }
 
     @Test
-    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException {
+    void testRegisterApplicationUserSuccessWithKingdomName() throws MethodArgumentNotValidException, UserNameIsTakenException, UserRoleNotFoundException, CountryCodeNotValidException, IOException, LocationIsTakenException {
         ApplicationUserDTO applicationUserDTO = new ApplicationUserDTO();
         applicationUserDTO.setUsername(USER_NAME);
         applicationUserDTO.setPassword(PASSWORD);
@@ -74,7 +78,7 @@ class ApplicationUserServiceTest {
         ApplicationUserRole applicationUserRole = new ApplicationUserRole();
         applicationUserRole.setRoleEnum(Role.USER);
         when(roleService.findById(1L)).thenReturn(applicationUserRole);
-        when(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO)).thenReturn(kingdom);
+        when(kingdomService.createKingdom(applicationUserDTO)).thenReturn(kingdom);
         applicationUserService.registerApplicationUser(applicationUserDTO);
 
         assertEquals(kingdom.getName(), applicationUserDTO.getKingdomName());

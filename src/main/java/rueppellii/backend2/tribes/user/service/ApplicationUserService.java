@@ -7,9 +7,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import rueppellii.backend2.tribes.kingdom.service.KingdomService;
 
+import rueppellii.backend2.tribes.location.exception.CountryCodeNotValidException;
+import rueppellii.backend2.tribes.location.exception.LocationIsTakenException;
 import rueppellii.backend2.tribes.security.model.UserContext;
 import rueppellii.backend2.tribes.user.exceptions.UserNameIsTakenException;
 import rueppellii.backend2.tribes.user.exceptions.UserRoleNotFoundException;
@@ -20,8 +21,7 @@ import rueppellii.backend2.tribes.user.persistence.model.ApplicationUser;
 import rueppellii.backend2.tribes.user.util.ApplicationUserDTO;
 import rueppellii.backend2.tribes.user.util.Role;
 
-import javax.validation.Valid;
-import java.security.Principal;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ public class ApplicationUserService {
     }
 
     public RegisterResponse registerApplicationUser(ApplicationUserDTO applicationUserDTO)
-            throws UserNameIsTakenException, UserRoleNotFoundException {
+            throws UserNameIsTakenException, UserRoleNotFoundException, IOException, CountryCodeNotValidException, LocationIsTakenException {
 
         if (!existsByUsername(applicationUserDTO.getUsername())) {
 
@@ -73,7 +73,7 @@ public class ApplicationUserService {
 
             applicationUser.setUsername(applicationUserDTO.getUsername());
             applicationUser.setPassword(encoder.encode(applicationUserDTO.getPassword()));
-            applicationUser.setKingdom(kingdomService.createNewKingdomAndSetNameIfNotExists(applicationUserDTO));
+            applicationUser.setKingdom(kingdomService.createKingdom(applicationUserDTO));
             applicationUser.getKingdom().setApplicationUser(applicationUser);
             applicationUser.setRoles(userRoles);
 
