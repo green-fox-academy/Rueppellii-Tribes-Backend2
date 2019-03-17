@@ -20,22 +20,20 @@ import static org.mockito.Mockito.when;
 
 class BuildingServiceTest {
 
-    @InjectMocks
-    BuildingService buildingService;
-
     @Mock
     BuildingRepository buildingRepository;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
+        BuildingService buildingService = new BuildingService(buildingRepository);
     }
 
+    Kingdom kingdom = new Kingdom();
+    Building building = new Barracks();
 
     @Test
     void findBuildingInKingdom() {
-        Kingdom kingdom = new Kingdom();
-        Building building = new Barracks();
         kingdom.setId(1L);
         building.setId(1L);
         building.setBuildingsKingdom(kingdom);
@@ -45,7 +43,6 @@ class BuildingServiceTest {
 
     @Test
     void findById() {
-        Building building = new TownHall();
         long id = 1L;
         building.setId(id);
         when(buildingRepository.findById(id)).thenReturn(Optional.of(building));
